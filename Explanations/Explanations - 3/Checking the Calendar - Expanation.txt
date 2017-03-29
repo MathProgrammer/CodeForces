@@ -1,0 +1,28 @@
+You are given names of two days of the week.
+
+Please, determine whether it is possible that during some non-leap year the first day of some month was equal to the first day of the week you are given, 
+while the first day of the next month was equal to the second day of the week you are given. Both months should belong to one year.
+
+In this problem, we consider the Gregorian calendar to be used. The number of months in this calendar is equal to 12. 
+The number of days in months during any non-leap year is: 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31.
+
+Names of the days of the week are given with lowercase English letters: "monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday".
+
+Input
+The input consists of two lines, each of them containing the name of exactly one day of the week. 
+It's guaranteed that each string in the input is from the set "monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday".
+
+Output
+Print "YES" (without quotes) if such situation is possible during some non-leap year. Otherwise, print "NO" (without quotes).
+
+-------------------------------------------------------------------------------------------
+
+Let a month begin on day 1 and have x days. x = 7q + r, r is a number less than 7. The day 7q + 1 will have the same day of the week as the first day
+The next month begins at day r + 1. The difference in between 1(mod 7) and the allowable values of (r + 1) give us the answer.
+    
+All days of a week get a number assigned to them from 1 - 7 in the order they appear in the week. We only consider the (day2 - day1) mod 7.
+However, we don't want negative values, so (2-5) mod 7 should be 4 not -3. So, for computer implementation, write (day2 - day1 + 7) mod 7.
+
+1.If the month has 31 days, then 31 = 4(7) + 3. The first day is on 1(mod 7). The next month's first day is on 4(mod 7). So, difference of 3 is allowed
+ 2.IF the month has 30 = 4(7) + 2. A difference of 2 is allowed
+3. If the month has 28 = 7(4) days. Both the first days are on 1(mod 7) so a difference of 0 is allowed.
