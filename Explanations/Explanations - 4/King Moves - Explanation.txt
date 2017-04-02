@@ -1,0 +1,15 @@
+The only king stands on the standard chess board. You are given his position in format "cd", where c is the column from 'a' to 'h' and d is the row from '1' to '8'. 
+Find the number of moves permitted for the king.
+
+King moves from the position e4
+Input
+The only line contains the king's position in the format "cd", where 'c' is the column from 'a' to 'h' and 'd' is the row from '1' to '8'.
+
+Output
+Print the only integer x — the number of moves permitted for the king.
+
+---------------------------------------------------------------------------------------------
+
+Case 1 : King is at a corner piece [a/h][1/8] - There are 3 legal moves in these squares.
+Case 2 : King is at the last row or column [a/h][2-7] or [b-g][1/8] - There are 5 legal moves in these squares.
+Case 3 : King is anywhere else - 8 legal moves in these squares.
