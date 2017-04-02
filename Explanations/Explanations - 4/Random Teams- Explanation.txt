@@ -1,0 +1,33 @@
+
+---------------------------------------------------------------------------------------------------------------------------------
+
+Consider a set of teams t_1, t_2, ... , t_m with number of people p_1, p_2, .... , p_m.
+
+We describe a procedure for increasing the number of friendships in an arrangement, given an arrangement. 
+
+Case 1 : There is a single team which has more number of people than any other team. 
+
+Without loss of generality, let the team with maximum number of people be t_1. It has p_1 people.
+
+Choose any other team, say t_2. 
+
+Let F denote the total number of friendships. Then, F = F - (p_2 - 1) + p_1 = F + (p_1 - p_2 + 1)
+Since p_1 is the maximum number of people, p_1 - p_2 > 0. This means that the total number of friendships increases by atleast one by performing this procedure.
+
+Case 2: There are multiple teams which have the maximum number of people.
+We select any two of them and transfer one person from one team to another. The number of friendships increases by 1.
+The team we have transfered the person to now has more people than any other team. We now have a single maxima and it is reduced to the first case.
+
+--------------------------------------------------------------------------
+
+We can no longer perform this procedure when every team other than t_1 has only 1 person i.e. when all teams from t_2 to t_m have 1 person only 
+and t_1 has (n - (m - 1) ) people. The number of friendships in any other arrangement can be increased. This cannot. 
+
+Therefore, this is the configuration with the maximum number of friendships.
+
+Maximum number of friendships = (n - (m-1) ) C (2) = (n-m+1)(n-m)/2
+
+--------------------------------------------------------------------------------------
+
+Now, consider a procedure for reducing the number of friendships in an arrangement.
+
