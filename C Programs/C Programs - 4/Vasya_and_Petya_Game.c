@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define END_OF_PRIME_ARRAY 0
 void display(unsigned int *, unsigned int);
 void sundaram_sieve(unsigned int *, unsigned int, unsigned int *);
 void get_question_sequence(unsigned int *, unsigned int *, unsigned int);
