@@ -83,7 +83,6 @@ void get_maximum(long *maximum, long *city, unsigned int no_of_cities)
     unsigned int i;
 
     //The cities are given in ascending order. Clearly, the city at the maximum distance is either the first city or the last city.
-    //max{A[i], A[n] - A[i]} is the maximum cost from the i-th city
     for(i = 0; i < no_of_cities; i++)
     {
         *(maximum + i) = max(*(city + i) - *(city + 0), *(city + no_of_cities - 1) - *(city + i));
