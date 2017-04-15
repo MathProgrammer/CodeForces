@@ -12,7 +12,10 @@ int main()
     The greatest divisor of 2n + n, is n + n/2, which is less than 2n + 1 for all positive n.
     This means that the divisors of any number from this list are smaller than the smallest number in this sequence.
     So, this is a hungry sequence.
-    There is nothing special about the number 2. Any positive integer value m can be multiplied - nm + 1, nm + 2, ... , mn + n to get a Hungry sequence.*/
+    There is nothing special about the number 2. Any positive integer value m can be multiplied - nm + 1, nm + 2, ... , mn + n to get a Hungry sequence.
+    Conversely, choose any number from this sequence, x. The smallest multiple of x is 2x. If x = 2n + 1, then 2x = 4n + 2.
+    Now, 4n + 2 > 2n + n, for all positive integers n. 
+    Since, the smallest multiple of the smallest element is greater than the largest element of the list, it is a Hungry sequence.*/
     for(i = 1; i <= no_of_terms; i++)
     {
         printf("%d ", (2*no_of_terms+ i));
