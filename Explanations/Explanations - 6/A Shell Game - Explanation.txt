@@ -1,0 +1,34 @@
+Today the «Z» city residents enjoy a shell game competition. The residents are gathered on the main square to watch the breath-taking performance. 
+The performer puts 3 non-transparent cups upside down in a row. Then he openly puts a small ball under one of the cups and starts to shuffle the cups around very quickly so 
+that on the whole he makes exactly 3 shuffles. After that the spectators have exactly one attempt to guess in which cup they think the ball is and if the answer is correct
+ they get a prize. Maybe you can try to find the ball too?
+
+Input
+The first input line contains an integer from 1 to 3 — index of the cup which covers the ball before the shuffles. 
+The following three lines describe the shuffles. Each description of a shuffle contains two distinct integers from 1 to 3 — indexes of the cups which the performer shuffled 
+this time. The cups are numbered from left to right and are renumbered after each shuffle from left to right again. 
+In other words, the cup on the left always has index 1, the one in the middle — index 2 and the one on the right — index 3.
+
+Output
+In the first line output an integer from 1 to 3 — index of the cup which will have the ball after all the shuffles.
+
+-----------------------------------------------------------------------------------------
+
+This problem was interesting because of the way input and output had to be given - files. 
+I had to use a filepointer to open a file in read mode and another in write mode. Read and write into them. And then close the file at the end of the program.
+However, I didn't do error control (what happens in case the file pointer is NULL).
+
+Simple simulation suffices.
+
+for(i = 1; i <= NO_OF_SHUFFLES; i++)
+    {
+        fscanf(input,"%d %d",&shell_1, &shell_2);
+        if(ball_shell == shell_1)
+        {
+            ball_shell =  shell_2;
+        }
+        else if(ball_shell == shell_2)
+        {
+            ball_shell = shell_1;
+        }
+    }
