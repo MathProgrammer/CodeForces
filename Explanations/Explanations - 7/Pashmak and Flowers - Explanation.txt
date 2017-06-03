@@ -1,0 +1,41 @@
+Pashmak decided to give Parmida a pair of flowers from the garden. There are n flowers in the garden and the i-th of them has a beauty number bi. 
+Parmida is a very strange girl so she doesn't want to have the two most beautiful flowers necessarily. 
+She wants to have those pairs of flowers that their beauty difference is maximal possible!
+
+Your task is to write a program which calculates two things:
+
+The maximum beauty difference of flowers that Pashmak can give to Parmida.
+The number of ways that Pashmak can pick the flowers. Two ways are considered different if and only if there is at least one flower that is chosen in the first way and 
+not chosen in the second way.
+
+---------------------------------------------------------------------------------------------
+
+We need to count the number of maxima and the number of minima and multiply them. I had overlooked overflow at first in multiplication and the case where the 
+maxima and minima are equal. In that case, the answer is n(n-1)/2, where n is the number of flowers because all flowers are equally beautiful. Multiplying number of minima 
+and maxima will not be correct in that case since it will be overcounting pairs.
+
+    for(i = 1; i <= no_of_flowers; i++)
+    {
+        scanf("%d",&current_beauty);
+
+        if(current_beauty == most_beautiful)
+            no_of_maxima++;
+
+        if(current_beauty == least_beautiful)
+            no_of_minima++;
+
+        if(current_beauty < least_beautiful)
+            least_beautiful = current_beauty, no_of_minima = 1;
+
+        if(current_beauty > most_beautiful)
+            most_beautiful = current_beauty, no_of_maxima = 1;
+    }
+
+    //If all flowers are equally beautiful, then choices = n(n-1)/2
+    no_of_choices = ( most_beautiful == least_beautiful ? (no_of_flowers*1LL*(no_of_flowers - 1) )/2 : no_of_minima*1LL*no_of_maxima );
+
+    printf("%d %I64d\n",(most_beautiful - least_beautiful), no_of_choices);
+
+--------------------------------------------------------------------------------------------------
+
+Note - type casting by multiplying by 1LL is necessary to avoid overflow, otherwise 32 bit multiplication will be performed.
