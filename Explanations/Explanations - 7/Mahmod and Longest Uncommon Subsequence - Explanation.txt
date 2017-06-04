@@ -1,0 +1,16 @@
+While Mahmoud and Ehab were practicing for IOI, they found a problem which name was Longest common subsequence. 
+They solved it, and then Ehab challenged Mahmoud with another problem.
+
+Given two strings a and b, find the length of their longest uncommon subsequence, which is the longest string that is a subsequence of one of them and
+ not a subsequence of the other.
+
+A subsequence of some string is a sequence of characters that appears in the same order in the string, The appearances don't have to be consecutive, 
+for example, strings "ac", "bc", "abc" and "a" are subsequences of string "abc" while strings "abbc" and "acb" are not. 
+The empty string is a subsequence of any string. Any string is a subsequence of itself.
+
+-------------------------------------------------------------------------------------------------
+
+If the strings are not equal, then the longest uncommon subsequence is the larger string.
+If they are equal, there is no uncommon subsequence.
+
+printf("%d\n", (strcmp(string_1, string_2) != 0 ? max( strlen(string_1),strlen(string_2) ) : -1) );

@@ -1,0 +1,44 @@
+Petya and Vasya are playing a game. Petya's got n non-transparent glasses, standing in a row. The glasses' positions are indexed with integers from 1 to n from left to right.
+ Note that the positions are indexed but the glasses are not.
+
+First Petya puts a marble under the glass in position s. Then he performs some (possibly zero) shuffling operations. 
+One shuffling operation means moving the glass from the first position to position p1, the glass from the second position to position p2 and so on. 
+That is, a glass goes from position i to position pi. 
+Consider all glasses are moving simultaneously during one shuffling operation. 
+When the glasses are shuffled, the marble doesn't travel from one glass to another: it moves together with the glass it was initially been put in.
+
+After all shuffling operations Petya shows Vasya that the ball has moved to position t. Vasya's task is to say what minimum number of shuffling operations 
+Petya has performed or determine that Petya has made a mistake and the marble could not have got from position s to position t.
+
+-------------------------------------------------------------------------------------------------------------------------------------
+
+We keep going from i to p[i] till we reach t or detect a cycle before it. 
+
+Since no location is visited by two glasses, we only need to check if we reach s at some point.
+So, s-> u-> v -> t
+
+Since s visits u, no other glass visits u. Since u visits v, no other glass visits v. So, if there is a cycle if must end only at s.
+Otherwise we would need to maintain a boolean vector with each element to keep track of whether or not we have visited it.
+ 
+------------------------------
+
+    for(i = initial_position; ; i = *(shuffled_result + i), minimum_shuffles++)
+        if( (i == initial_position && minimum_shuffles!= 0) || (i == final_position) )
+            break;
+
+    printf("%d\n", (i == final_position ?  minimum_shuffles : -1) );
+
+-------------------------------------------
+
+We need to check that minimum shuffles is not 0 when i = initial position because it is always true in the starting iteration.
+Another way of doing it. 
+
+    do
+    {
+        if(i == final_position)
+            break;
+
+        i = *(shuffled_result + i);
+        minimum_shuffles++;
+    }
+    while(i != initial_position);
