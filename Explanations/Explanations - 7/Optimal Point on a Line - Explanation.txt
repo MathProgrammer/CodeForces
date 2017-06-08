@@ -1,0 +1,33 @@
+You are given n points on a line with their coordinates xi. Find the point x so the sum of distances to the given points is minimal.
+
+-----------------------------------------------------------------------
+
+The median minimises the distance. 
+
+If there is a sorted list of n elements, x1 x2 ... xn, then the element at position n/2 is the median. 
+
+Let us prove that the median has the least distance to all the points. 
+
+Case 1: n is even,
+
+If there are two points x1, and x2, the answer is one of these points. 
+
+(|xn - x| + |x1 - x|) + (|x(n-1) - x| + |x2 - x|) + ... + (|x(n/2) - x|  + |x(n/2+1) - x)|)
+
+The point that minimises this distance must lie inside each of these intervals. The two medians satisfy this property.
+
+Case 2: n is odd.
+
+Let there be 3 elements - x1, x2 and x3. Here, the minimum sum of distances from one point to the other 2 is by x2. 
+
+As we add pairs of points to this set - one at the extreme right and one at the extreme left. By the same logic, if there are 2n + 1 points, and we split it into 
+n pairs and xm, where xm is the median, xm is the only point that lies inside every interval. So, it minimises the distance.
+
+-------------------------------
+
+    sort(points, points + no_of_points);
+    median = points[(no_of_points - 1)/2];
+
+-----------------------
+
+Array is indexed from 0. So, we consider (n-1)/2 Instead of n/2 since the last element is (n-1)
