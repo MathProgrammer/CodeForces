@@ -1,0 +1,70 @@
+A few years ago, Hitagi encountered a giant crab, who stole the whole of her body weight. 
+Ever since, she tried to avoid contact with others, for fear that this secret might be noticed.
+
+To get rid of the oddity and recover her weight, a special integer sequence is needed. Hitagi's sequence has been broken for a long time, 
+but now Kaiki provides an opportunity.
+
+Hitagi's sequence a has a length of n. Lost elements in it are denoted by zeros. Kaiki provides another sequence b, whose length k equals the number of lost elements in a 
+(i.e. the number of zeros). Hitagi is to replace each zero in a with an element from b so that each element in b should be used exactly once. 
+Hitagi knows, however, that, apart from 0, no integer occurs in a and b more than once in total.
+
+If the resulting sequence is not an increasing sequence, then it has the power to recover Hitagi from the oddity. 
+You are to determine whether this is possible, or Kaiki's sequence is just another fake. 
+In other words, you should detect whether it is possible to replace each zero in a with an integer from b so that each integer from b is used exactly once, 
+and the resulting sequence is not increasing.
+
+
+---------------------------------------------------------------------------------------------
+
+Firstly, notice that if there was more than one zero, we can always make the sequence non-increasing by plugging in the values of b in any non-increasing order into a.
+
+The only case we need to check is when there is one 0. In that case, check if the number from b is non-increasing with respect to it's 
+existing neighbours(1 or 2, depending on the position of the 0). 
+
+Also, check if any non-zero element of a is smaller than or equal to it's predecessor while reading input. 
+It is possible for the replaced element to be in order with it's neighbours, but out of order with some other element. 
+
+For example, let m be place in between u and v. u < m < v.
+If there is some element k to the left of u, out of order with m, such that, k > m, then k > u as well.
+If there is some element k to the right of v out of order with m, such that, k < m, then k < v as well.
+That is why the elements of a need to be checked while reading the input.
+
+---------------------------------------------
+
+    for(i = 0; i < entire_length; i++)
+    {
+        scanf("%d", &a[i]);
+
+        if(a[i] == 0)
+            zero_index = i;
+        else if(i > 0 && a[i] <= a[i - 1])
+            is_possible = true;
+
+    }
+    for(i = 0; i < no_of_zeroes; i++)     Only the case where no of missing zeroes is 1 is interesting, so we don't use an array.
+        scanf("%d",&missing_number);
+
+---------------------------------
+
+    if(no_of_zeroes > 1)
+    {
+        is_possible = true;
+    }
+    else
+    {
+        if(zero_index == 0)
+        {
+            if(missing_number >= a[zero_index + 1])
+                is_possible = true;
+        }
+        else if(zero_index == entire_length - 1)
+        {
+            if(missing_number <= a[zero_index - 1])
+                is_possible = true;
+        }
+        else if(missing_number >= a[zero_index + 1] || missing_number <= a[zero_index - 1])
+        {
+            is_possible = true;
+        }
+    }
+-----------
