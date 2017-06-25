@@ -1,0 +1,48 @@
+Express a Fibonacci number as the sum of three not necissarily distinct Fibonacci numbers ...
+
+---------------------------------------------------
+
+F(n) = F(n - 1) + F(n - 2) = F(n - 1) + F(n - 3) + F(n - 4) 
+
+So, I precomputed the list of all Fibonacci numbers, handled the case up to n = 3 manually and then used the above recurrence to get the answer.
+
+-------------------------------------------------------------------
+
+void precompute_fibonacci()
+{
+    const int MAX = 1e9;
+
+    fibonacci.push_back(0);
+    fibonacci.push_back(1);
+
+    for(int i = 2; fibonacci[i - 1] + fibonacci[i - 2] <= MAX; i++)
+        fibonacci.push_back(fibonacci[i - 1] + fibonacci[i - 2]);
+}
+
+------------------------------
+
+precompute_fibonacci();
+
+    int n;
+    scanf("%d", &n);
+
+    if(n == 0) //F(0)
+        printf("0 0 0\n");
+    else if(n == 1)//F(1) and F(2)
+        printf("1 0 0\n");
+    else if(n == 2) //F(3)
+        printf("1 1 0\n");
+    else
+    {
+        int index = 4;
+
+        while(fibonacci[index] != n)
+         index++;
+
+        printf("%d %d %d\n",fibonacci[index - 1], fibonacci[index - 3], fibonacci[index - 4]);
+    }
+
+----------------------------------------------------------
+
+Good use of the recurrence but there is a much simpler solution  ! 
+n = 0 + 0 + n, n and 0 are all Fibonacci numbers and we are done !
