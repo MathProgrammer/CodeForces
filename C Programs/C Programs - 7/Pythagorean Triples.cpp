@@ -6,7 +6,7 @@ int main()
     long long side_2, side_3, k;
     scanf("%d", &side_1);
 
-	if(side_1 <= 2)
+    if(side_1 <= 2)
     {
         printf("-1\n");
         return 0;
