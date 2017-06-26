@@ -1,0 +1,28 @@
+F(i) = F(i - 1) + F(i + 1)
+
+----------------------------------------
+
+CodeChef had a very similar problem and a DP won't pass the time limit... Notice that the sequence is periodic with period 6. 
+Just handle the overflow.
+
+---------------------------------------------
+
+    X = (X + MOD)%MOD;
+    Y = (Y + MOD)%MOD;
+
+    switch(number_of_terms%6)
+    {
+        case 1: answer = X; break;
+
+        case 2: answer = Y; break;
+
+        case 3: answer = Y + MOD - X; break;
+
+        case 4: answer = 0 + MOD - X; break;
+
+        case 5: answer = 0 + MOD - Y; break;
+
+        case 0: answer = X + MOD - Y; break;
+    }
+
+    answer = (answer + MOD)%MOD;
