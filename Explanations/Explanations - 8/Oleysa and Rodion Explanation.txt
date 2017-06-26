@@ -1,0 +1,27 @@
+Olesya loves numbers consisting of n digits, and Rodion only likes numbers that are divisible by t. Find some number that satisfies both of them.
+
+Your task is: given the n and t print an integer strictly larger than zero consisting of n digits that is divisible by t. If such number doesn't exist, print -1
+
+--------------------------------------------------
+
+Use the simplest solution that works ...
+
+I was initially going for searching for the lcm and then pad it with zeroes ... But, there's a better solution !
+
+Print K and then fill the remaining N-1 spots with 0s. ... The only time we need to print -1 is when n = 1, k = 10
+
+----------------------------------------------
+
+    if(number_of_digits == 1 && multiple == 10)
+    {
+        printf("-1\n");
+    }
+    else
+    {
+        printf("%d", multiple);
+
+        int no_of_zeroes = (multiple == 10 ? number_of_digits - 2 : number_of_digits - 1);
+
+        for(int zero_count = 1; zero_count <= no_of_zeroes; zero_count++)
+            printf("0");
+    }
