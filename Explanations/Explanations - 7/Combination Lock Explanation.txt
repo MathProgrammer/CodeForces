@@ -1,0 +1,18 @@
+The combination lock is represented by n rotating disks with digits from 0 to 9 written on them. 
+Scrooge McDuck has to turn some disks so that the combination of digits on the disks forms a secret combination. 
+In one move, he can rotate one disk one digit forwards or backwards. In particular, in one move he can go from digit 0 to digit 9 and vice versa.
+
+-------------------------------------------------------------------------------------
+
+ What minimum number of actions does he need for that?On each turn check if it's optimal to go forwards or backwards ... Going backwards is simple b-a, forwards is (10 + a) - b because we need to cross 'a' locks after '0'
+
+-------------------------------------------------
+
+    for(int i = 0; i < number_of_locks; i++)
+    {
+        int start, ending;
+        start = min(current_state[i], final_state[i]) - '0';
+        ending = max(current_state[i], final_state[i]) - '0';
+
+        number_of_moves += min(ending - start,  10 + start - ending); //Optimal to go forwards or backwards
+    }
