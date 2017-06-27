@@ -1,0 +1,54 @@
+One beautiful July morning a terrible thing happened in Mainframe: a mean virus Megabyte somehow got access to the memory of his not less mean sister Hexadecimal. 
+He loaded there a huge amount of n different natural numbers from 1 to n to obtain total control over her energy.
+
+But his plan failed. The reason for this was very simple: Hexadecimal didn't perceive any information, apart from numbers written in binary format. 
+This means that if a number in a decimal representation contained characters apart from 0 and 1, it was not stored in the memory. 
+Now Megabyte wants to know, how many numbers were loaded successfully.
+
+----------------------------------------------
+
+All the numbers which survive are the ones containing only 1s and 0s in the DECIMAL representation...
+
+It isn't possible to check from 1 to 1e9, which numbers are good ... Instead Notice that all binary strings survive ... There are at most 2^10 - 1 of these numbers.
+
+We get this by summing over 2 + 2^2 + 2^3 + ... + 2^9 ... There are 2^n binary strings of length n. 
+
+So what is done is have a bitmask that goes from 1 to 2^10 - 1, get the decimal value of the bitmask ... and check if it is smaller than n.
+
+------------------------------------------
+
+Converting a bitmask to decimal
+
+int corresponding_decimal(int bitmask)
+{
+    int decimal = 0;
+
+    //Get the bitmask in decimal For example, 11 should be eleven .. So, we treat it like a polynomial, multiply decimal by 10 at each step and add
+    //it to whatever bit was there ... 11 will be 1*10 + 1.
+    for(int i = 31; i >= 0; i--)
+    {
+        decimal = decimal*10 + ( (bitmask & (1 << i) ) != 0) ;
+    }
+    return decimal;
+}
+
+Treat it like a polynomial ... Go from the MSB to the LSB MSB is x^31 ... LSB is x^0 ... To evaluate the polynomail use Horner's method.
+At each step, P = x*P + c, where c is the next coefficient. Here, x is 10 and coefficient is at most 1 ... So just check if it isn't zero and add it.
+
+A common bug is writing (bitmask & (1 << i)) == 1, that is not correct. We must check that it is NOT 0, instead of checking if it is 1.
+
+Because, the AND operation leaves a 1 at the i-th position ... This means the string is 100000...0 (i - 1) zeroes ... It is not 1.
+
+If the answer is non-zero, it means the i-th bit is set. So 1 is added as that is what the relational operator returns.
+
+-----------------------------------------------------
+
+    int max_numbers = (1 << 10) - 1; //At most 2^10 - 1 numbers
+    for(int bitmask = 1; bitmask <= max_numbers; bitmask++)
+    {
+        if(corresponding_decimal(bitmask) > limit)
+            break;
+
+
+        no_of_saved_numbers++;
+    }
