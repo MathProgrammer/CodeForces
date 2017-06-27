@@ -1,0 +1,27 @@
+Having watched the last Harry Potter film, little Gerald also decided to practice magic. 
+He found in his father's magical book a spell that turns any number in the sum of its digits. 
+At the moment Gerald learned that, he came across a number n. How many times can Gerald put a spell on it until the number becomes one-digit?
+
+----------------------------------------------
+
+This is similar to the big GCD problem ... We only need to use big numbers once ...
+
+If the initial number is 10^ ... the digit sum can't be greater than 9x10^5, and then can't be bigger than 54 and then one more ... So, since the number of spells can be 
+at most 4, first find digit sum on the string and then use the normal digit sum function.
+
+Single digit numbers require 0 spells.
+
+------------------------------------------
+
+   if(number[1] != '\0')
+    {
+        for(i = 0; number[i] != '\0'; i++)
+            digit_sum += (number[i] - '0');
+
+        no_of_spells = 1;
+        while(digit_sum >= 10)
+        {
+            no_of_spells++;
+            digit_sum = find_digit_sum(digit_sum);
+        }
+    }
