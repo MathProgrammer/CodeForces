@@ -1,0 +1,80 @@
+Nick is interested in prime numbers. Once he read about Goldbach problem. It states that every even integer greater than 2 can be expressed as the sum of two primes. 
+That got Nick's attention and he decided to invent a problem of his own and call it Noldbach problem. 
+Since Nick is interested only in prime numbers, Noldbach problem states that at least k prime numbers from 2 to n inclusively can be expressed as 
+the sum of three integer numbers: two neighboring prime numbers and 1. 
+
+For example, 19 = 7 + 11 + 1, or 13 = 5 + 7 + 1.
+
+Two prime numbers are called neighboring if there are no other prime numbers between them.
+
+You are to help Nick, and find out if he is right or wrong.
+
+------------------------------------------------------
+
+Here's what I did ... Precomputed a list of all primes till 1000.
+
+Maintained a boolean vector of length 1000 such that B[i] is true, if it is Noldbach number and false otherwise.
+
+Now, instead of iterating from i = 1 to N in the given range to check the given conditions ...
+
+Pick up the primes in the precomputed vector and check if they're Noldbach numbers ... This means we have to do log N iterations instead of O(N) for each query ...
+
+However precomputation is O(N log log N + log N).
+
+There were some answers that didn't precompute anythhing... Go from i = 1 to N, apply a O(root(n)) test on all numbers ... Push it into a vector
+Then for all primes in the given range, check if each prime is the sum of consecutive primes + 1.
+
+O(log^2 N).
+
+--------------------------------------
+
+vector <int> noldbach_number(1000 + 1, false);
+vector <int> primes;
+
+void precompute_noldbach()
+{
+    vector <int> is_prime(1000 + 1, true);
+
+    is_prime[0] = is_prime[1] = false;
+
+    for(int i = 2; i <= 1000; i++)
+    {
+        if(is_prime[i])
+        {
+            for(int multiple = 2*i; multiple <= 1000; multiple += i)
+            {
+                is_prime[multiple] = false;
+            }
+            primes.push_back(i);
+        }
+    }
+
+    for(int i = 0; primes[i] + primes[i + 1] <= 1000 ; i++)
+    {
+        noldbach_number[primes[i] + primes[i + 1] + 1] = true;
+    }
+
+}
+
+--------------------------------------------------------
+
+Sieve is done first to build a vector of primes ... Then the noldbach numbers are precomputed. 
+
+----------------------------------------------
+
+int main()
+{
+    precompute_noldbach();
+    int n, k;
+    scanf("%d %d", &n, &k);
+
+    int conjecture_count = 0;
+    for(int i = 0; primes[i] <= n; i++)
+    {
+        if(noldbach_number[primes[i]])
+            conjecture_count++;
+    }
+
+    printf(conjecture_count >= k ? "YES\n" : "NO\n");
+    return 0;
+}
