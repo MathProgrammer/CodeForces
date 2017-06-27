@@ -1,0 +1,39 @@
+A and B are preparing themselves for programming contests.
+
+An important part of preparing for a competition is sharing programming knowledge from the experienced members to those who are just beginning to deal with the contests. 
+Therefore, during the next team training A decided to make teams so that newbies are solving problems together with experienced participants.
+
+A believes that the optimal team of three people should consist of one experienced participant and two newbies. 
+Thus, each experienced participant can share the experience with a large number of people.
+
+However, B believes that the optimal team should have two experienced members plus one newbie. Thus, each newbie can gain more knowledge and experience.
+
+As a result, A and B have decided that all the teams during the training session should belong to one of the two types described above. 
+Furthermore, they agree that the total number of teams should be as much as possible.
+
+There are n experienced members and m newbies on the training session. Can you calculate what maximum number of teams can be formed?
+
+------------------------------------------------
+
+Each team must have one experienced and one new person ... So, the number of teams can never exceed min(experienced, new).
+
+So, we start from the maximum number of teams greedily and go down to 1 and choose the greatest configuration that is possible.
+
+To check if a configuration of i teams is possible ... We make i teams consisting of 1 experienced and 1 new person. Then, we check if we have enough people to fill the 
+third spot in all the i teams.
+
+-----------------------------------------
+
+    no_of_teams = min(experienced_people_no, newbie_no);
+
+    while(no_of_teams > 0)
+    {
+        no_of_available_people = (experienced_people_no + newbie_no) - 2*no_of_teams;
+
+        if(no_of_available_people >= no_of_teams)
+            break;
+
+        no_of_teams--;
+    }
+
+    printf("%d\n", no_of_teams);
