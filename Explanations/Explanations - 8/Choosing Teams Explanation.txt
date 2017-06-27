@@ -1,0 +1,35 @@
+The Saratov State University Olympiad Programmers Training Center (SSU OPTC) has n students. 
+For each student you know the number of times he/she has participated in the ACM ICPC world programming championship. 
+According to the ACM ICPC rules, each person can participate in the world championship at most 5 times.
+
+The head of the SSU OPTC is recently gathering teams to participate in the world championship. Each team must consist of exactly three people, at that,
+ any person cannot be a member of two or more teams. 
+What maximum number of teams can the head make if he wants each team to participate in the world championship with the same members at least k times?
+
+--------------------------------------------
+
+Sort the people by the number of attempts they have ... Look at people in batches of three .. If for a given i, A[i + 2] + k <= 5, then increment number of teams, i = i + 3.
+
+----------------------------------------
+
+int main()
+{
+    int number_of_people, number_of_attempts;
+    scanf("%d %d", &number_of_people, &number_of_attempts);
+
+    vector <int> attempts (number_of_people);
+    for(int i = 0; i < number_of_people; i++)
+        scanf("%d", &attempts[i]);
+
+    sort(all(attempts));
+
+    int no_of_teams = 0, i = 0;
+    while(i + 2 < number_of_people && (attempts[i +2] + number_of_attempts) <= 5)
+    {
+        i += 3;
+        no_of_teams++;
+    }
+
+    printf("%d\n",no_of_teams);
+    return 0;
+}
