@@ -1,0 +1,53 @@
+The hero of our story, Valera, and his best friend Arcady are still in school, and therefore they spend all the free time playing turn-based strategy 
+"GAGA: Go And Go Again". The gameplay is as follows.
+
+There are two armies on the playing field each of which consists of n men (n is always even). 
+The current player specifies for each of her soldiers an enemy's soldier he will shoot (a target) and then all the player's soldiers shot simultaneously. 
+This is a game world, and so each soldier shoots perfectly, that is he absolutely always hits the specified target. If an enemy soldier is hit, he will surely die.
+ It may happen that several soldiers had been indicated the same target. Killed soldiers do not participate in the game anymore.
+
+The game "GAGA" consists of three steps: first Valera makes a move, then Arcady, then Valera again and the game ends.
+
+You are asked to calculate the maximum total number of soldiers that may be killed during the game.
+
+-------------------------------------------------------
+
+This is one of those problems that's a lot harder to prove than to code ... 
+
+To maximise the number of killed soldiers, both sides will have to kill as many soldiers as possible ... 
+
+Notice that if there were only 2 turns, then n soldiers will always be killed no matter what.
+
+Proof - If the first side kills all n soldiers on it's turn, then n soldiers are killed and there are no alive soldiers on the other side for turn 2.
+
+If the first side kills k soldiers, .... then the n-k surviving soldiers will all kill 1 soldiers each. They have to do this because they only get 1 turn.
+
+So, number of soldiers dead after 2 turns = k + (n - k) = n.
+
+--------------------------------
+
+Now, on turn 3 ... the number of soldiers killed has to be maximised ... This is the strategy that needs to be optimised...
+
+For this, side 1 has to kill half of side 2's soldiers on it's first turn...
+
+IF side 1 kills less than half of their soldiers ... Then after all of side 2's soldiers kill a soldier ... side 1 will not have enough soldiers to completely kill side 1.
+
+If they killed more than half of their soldiers, then after two turns it would be n + r ... r < n/2 [r is all the people killed on turn 3 - survivors of side 1]
+... The way to maximise r is to set r = n/2.  If r is greater, we get a less than optimal result.
+
+---------------------------------------------
+
+Ans = n + n/2 = 3n/2 ... if n is even ... If n is odd then n/2 is rounded off to the higher side ... 
+
+------------------------------------------
+
+int main()
+{
+    int number_of_soldiers, killed;
+    scanf("%d", &number_of_soldiers);
+
+    killed = 3*((number_of_soldiers + 1)/2);
+    printf("%d\n", killed);
+    return 0;
+}
+
