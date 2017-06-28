@@ -1,0 +1,35 @@
+One Sunday Petr went to a bookshop and bought a new book on sports programming. The book had exactly n pages.
+
+Petr decided to start reading it starting from the next day, that is, from Monday. 
+Petr's got a very tight schedule and for each day of the week he knows how many pages he will be able to read on that day. 
+Some days are so busy that Petr will have no time to read whatsoever. However, we know that he will be able to read at least one page a week.
+
+Assuming that Petr will not skip days and will read as much as he can every day, determine on which day of the week he will read the last page of the book.
+
+------------------------------------------
+
+int main()
+{
+    int no_of_pages;
+    scanf("%d", &no_of_pages);
+
+    int i;
+    vector <int> pages_read_on_day(7);
+    for(i = 0; i < 7; i++)
+        scanf("%d", &pages_read_on_day[i]);
+
+
+    i = 0;
+    while(true)
+    {
+         no_of_pages -= pages_read_on_day[i];
+
+        if(no_of_pages <= 0)
+            break;
+
+        i = (i + 1)%7;
+    }
+
+    printf("%d\n",i + 1);
+    return 0;
+}
