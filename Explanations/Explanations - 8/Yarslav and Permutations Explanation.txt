@@ -1,0 +1,47 @@
+Yaroslav has an array that consists of n integers. In one second Yaroslav can swap two neighboring array elements. 
+Now Yaroslav is wondering if he can obtain an array where any two neighboring elements would be distinct in a finite time.
+
+Help Yaroslav.
+
+----------------------------------------------------
+
+We cannot stop two numbers from being placed next to each other if one of them occurs more than ceil(n/2) times.
+We can prove this using the pigonehole principle .... 
+If n is even, there are n adjacent pairs ... If one element occurs more than n/2 times, there must be one pair with both it's elements being the same.
+
+If n is odd, then there are n adjacent pairs and the last element ... So, if n occurs more than n/2 + 1 times, a same-pair can't be avoided.
+
+Also, it is easy to see that if there is an element that occurs more than n/2 times, it must be the most frequent element ...
+And if the most frequent element doesn't occur n/2 times, none of them do !
+
+I used a hash-map for this one ...
+
+While inserting an element into the map, first it checks if a node with the key exists ... If it doesn't exist, a node with the key value is created initialised to 0.
+Then, we increment it.
+
+While accessing the elements of the map, first create an iterator of map .. iterator goes from .begin() to end() .. These are references.
+Compare the frequency to it->second ... Because the second is the value, the first is the key ... In our case, the second is the frequency, the first is the element.
+
+--------------------------------
+
+int main()
+{
+    int number_of_elements, element_i;
+    scanf("%d", &number_of_elements);
+
+    map <int, int> frequency;
+    for(int i = 1; i <= number_of_elements; i++)
+    {
+        scanf("%d", &element_i);
+        frequency[element_i]++;
+    }
+
+    int max_frequency = 0;
+    for(map <int, int> :: iterator it = frequency.begin(); it != frequency.end(); it++)
+        max_frequency = max(max_frequency, it->second);
+
+    int half_size = number_of_elements/2 + number_of_elements%2;
+
+    printf(max_frequency > half_size ? "NO\n" : "YES\n");
+    return 0;
+}
