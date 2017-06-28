@@ -1,0 +1,114 @@
+You've got an n × m matrix. The matrix consists of integers. In one move, you can apply a single transformation to the matrix: 
+choose an arbitrary element of the matrix and increase it by 1. Each element can be increased an arbitrary number of times.
+
+You are really curious about prime numbers. Let us remind you that a prime number is a positive integer that has exactly two distinct positive integer divisors: 
+itself and number one. For example, numbers 2, 3, 5 are prime and numbers 1, 4, 6 are not.
+
+A matrix is prime if at least one of the two following conditions fulfills:
+
+the matrix has a row with prime numbers only;
+the matrix has a column with prime numbers only;
+Your task is to count the minimum number of moves needed to get a prime matrix from the one you've got.
+
+----------------------------------------------
+
+Learnt how to implement a matrix as a vector of vectors ... Also, learnt that it's not recommended in real life applications but fine in competitive programming.
+
+vector <vector<int> > matrix(no_of_rows, vector <int> (no_of_columns, 0) )
+
+Important to put a space in between the > ... vector <int> is the type of the vector and it is allocated, no_of_columns copies of vector <int>s.
+
+--------------------------------------
+
+Used a sieve ... Got a runtime error because I made a mistake in the inner loop of the sieve ... Used an i.
+
+Here's what I did ... Precomputed all primes till 1e5 + 3. 
+
+Made another vector called prime_distance ... where prime_distance[i] contains the minimum number which needs to be added to get to a prime number.
+
+To get it .. Start at i = 1e5 + 3 and go down to 0 ... Keep track of the latest prime encountered and prime_distance[i] = latest prime - i.
+
+-------------------------
+
+vector <int> prime_distance(1e5 + 4);
+
+void precompute_prime_distance()
+{
+    vector <int> is_prime(1e5 + 10, true);
+
+    is_prime[0] = is_prime[1] = false;
+    for(int i = 2; i <= 1e5 + 3; i++)
+    {
+        if(is_prime[i])
+        {
+            for(int multiple = 2*i; multiple <= 1e5 + 3; multiple += i)
+            {
+                is_prime[multiple] = false;
+            }
+        }
+    }
+
+    int last_prime;
+    for(int i = 1e5 + 3; i >= 0; i--)
+
+        if(is_prime[i])
+            last_prime = i;
+
+        prime_distance[i] = last_prime - i;
+    }
+}
+
+------------------------------------------
+
+While reading the matrix ... STore prime_distance[i][j] in [i][j].
+
+After that find the minimum row and column sum.
+
+-------------------------------------------
+
+int main()
+{
+    const int INFINITY = 1e9 + 1;
+    int no_of_rows, no_of_columns;
+    scanf("%d %d", &no_of_rows, &no_of_columns);
+
+    precompute_prime_distance();
+
+    vector <vector <int> > matrix(no_of_rows, vector<int> (no_of_columns) );
+
+    for(int row = 0; row < no_of_rows; row++)
+    {
+        for(int column = 0; column < no_of_columns; column++)
+        {
+            int element;
+            scanf("%d", &element);
+
+            matrix[row][column] = prime_distance[element];
+        }
+    }
+
+    int min_row_sum = INFINITY;
+    for(int row = 0; row < no_of_rows; row++)
+    {
+        int row_sum = 0;
+        for(int column = 0; column < no_of_columns; column++)
+        {
+            row_sum += matrix[row][column];
+        }
+        min_row_sum = min(min_row_sum, row_sum);
+    }
+
+    int min_column_sum = INFINITY;
+    for(int column = 0; column < no_of_columns; column++)
+    {
+        int column_sum = 0;
+        for(int row = 0; row < no_of_rows; row++)
+        {
+            column_sum += matrix[row][column];
+        }
+        min_column_sum = min(min_column_sum, column_sum);
+    }
+
+    printf("%d\n",min(min_row_sum, min_column_sum));
+    return 0;
+} 
