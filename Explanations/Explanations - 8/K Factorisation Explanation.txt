@@ -1,0 +1,52 @@
+
+--------------------------------------------------
+
+If we just run through the factors like i, n/i for i = 1 to root(n), we won't get a list of numbes who's product is n.
+
+For that, we need the prime factorisation of n ...
+
+Write all of the prime factors (with duplicity) of n down on a vector ... Replace any two numbers by their product and reduce the size of the list till it becomes = k.
+
+If the initial size of the list is less than k, then it is not possible.
+Given a positive integer n, find k integers (not necessary distinct) such that all these integers are strictly greater than 1, and their product is equal to n.
+
+--------------------------------
+
+TO find the prime factorisation, we start from i = 2 and go up to N. 
+
+Whenever i divides n, continuously divide n/i till it is no longer divisible by i (so that if N is divisible by i, it will not be divisible by any of i's factors when 
+we encounter them. ... This is similar to a sieve.) Add i to the list.
+
+----------------------------------------
+
+I have multiplied the last two elements of the vector once it crosses k.. Although the final solution didn't use it... I learnt how to pass vectors as parameters by reference
+
+--------------------------
+
+int main()
+{
+    unsigned int n, number_of_factors;
+    scanf("%d %d", &n, &number_of_factors);
+
+    vector <int> factor;
+    for(unsigned int i = 2; i <= n ; i++)
+    {
+        while(n%i == 0)
+        {
+            if(factor.size() == number_of_factors)
+                factor.back() *=i;
+            else
+                factor.push_back(i);
+
+            n = n/i;
+        }
+    }
+
+    if(factor.size() < number_of_factors)
+        printf("-1\n");
+    else
+        for(unsigned int i = 0; i < number_of_factors; i++)
+            printf("%d ",factor[i]);
+
+    return 0;
+}
