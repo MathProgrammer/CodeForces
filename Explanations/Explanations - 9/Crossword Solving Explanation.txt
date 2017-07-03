@@ -1,0 +1,61 @@
+
+----------------------------------------------------
+
+I thought there was a smarter and slicker solution than taking the smaller string, placing it at every allowable index and counting and keeping track of number of changes.
+I almost gave up and decided to code the brute force approach because I saw it would pass the time limit.
+In fact, the 'brute force' approach was the answer itself !
+
+It would have been simpler and more believeable if I had known that it is possible to copy one vector to another ... I had solved this question using boolean vectors first.
+And keeping track of changes at every iteration.
+
+There's a simpler and cleaner way.
+I learnt how to use clear() on a vector.
+Also, v1 = v2, copies v2 into v1, and v1 now has v2's size. 
+
+Compare at every allowable index and push all changes into a vector ... Compare the size of this vector with the minimum change vector, 
+If change. size() < minimum change.size(), minimum_change = change ... Simple as that ...No need of re-initialising an entire vector.
+
+---------------------------------------------------------
+
+Initially, size of change is m + 1, so anything replaces it.
+Remember clearing current change every iteration or it will just grow.
+
+-----------------------------------------------------------------
+
+int main()
+{
+    int key_length, text_length;
+    char key[MAX_LENGTH], text[MAX_LENGTH];
+    scanf("%d %d %s %s", &key_length, &text_length, key, text);
+
+    vector <int> change(key_length + 1);
+    vector <int> current_change;
+
+    for(int i = 0; i + key_length <= text_length ; i++)
+    {
+        current_change.clear();
+
+        for(int j = 0; j < key_length; j++)
+        {
+            if(key[j] != text[i + j])
+            {
+                current_change.push_back(j);
+            }
+        }
+
+        if(current_change.size() < change.size())
+        {
+            change = current_change;
+        }
+    }
+
+    printf("%u\n", change.size());
+
+    if(change.size() > 0)
+    {
+        for(unsigned int i = 0; i < change.size(); i++)
+            printf("%d ", change[i] + 1);
+    }
+
+    return 0;
+}
