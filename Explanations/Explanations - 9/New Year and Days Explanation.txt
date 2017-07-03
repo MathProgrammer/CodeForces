@@ -1,0 +1,44 @@
+Today is Wednesday, the third day of the week. What's more interesting is that tomorrow is the last day of the year 2015.
+
+Limak is a little polar bear. He enjoyed this year a lot. Now, he is so eager to the coming year 2016.
+
+Limak wants to prove how responsible a bear he is. He is going to regularly save candies for the entire year 2016! He considers various saving plans. 
+He can save one candy either on some fixed day of the week or on some fixed day of the month.
+
+Limak chose one particular plan. He isn't sure how many candies he will save in the 2016 with his plan. Please, calculate it and tell him.
+-----------------------------------------------------
+
+A simple problem, of course ... I found an elegant way of checking conditions.
+
+Dec 30 is Wed ... 31st is Thurs ... 1st is Friday ... Since 2016, is a leap year it will end two days after Jan 1st instead of one.
+
+So, it ends on Sat ... There is one extra Fri and Sat.
+
+
+Also, scanf only reads a string till it encounters a whitespace so I used two of them ... made things easier... No need to use string comparison to identify time period.
+
+--------------------------------------------------------
+
+int main()
+{
+    int savings = 0, date;
+    char of[2 + 1], time_period[MAX_TIME_LENGTH];
+    scanf("%d %s %s", &date ,of, time_period); //Scanf reads a string till it encounters a whitespace ... so I used two strings.
+
+    if(time_period[0] == 'm') //Month
+    {
+        savings = 12*(date <= 29) + 11*(date == 30) + 7*(date == 31); //Only one of these can be true.
+    }
+    else if(time_period[0] == 'w') //Week
+    {
+        savings = 52 + (date == 5 || date == 6); // Days 6 and 7 occur one more time
+    }
+
+    printf("%d\n", savings);
+    return 0;
+}
+
+------------------------------------------------------------
+
+The way savings is written looks like an equation in vector algebra with all the relational expressions resembling dimensions ...
+Only of the dimensions is true at a time for month, and for the day ... only 5 and 6 have an extra day.
