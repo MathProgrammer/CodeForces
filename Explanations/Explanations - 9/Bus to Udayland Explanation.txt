@@ -1,0 +1,50 @@
+ZS the Coder and Chris the Baboon are travelling to Udayland! To get there, they have to get on the special IOI bus. The IOI bus has n rows of seats.
+ There are 4 seats in each row, and the seats are separated into pairs by a walkway. When ZS and Chris came, some places in the bus was already occupied.
+
+ZS and Chris are good friends. They insist to get a pair of neighbouring empty seats. 
+Two seats are considered neighbouring if they are in the same row and in the same pair. 
+Given the configuration of the bus, can you help ZS and Chris determine where they should sit?
+
+-------------------------------------------------------------
+
+Simple implementation error ... I got a run time error because I embarassingly interchanged the rows and columns while declaring the matrix ...
+Rows come first ! lol.
+
+int main()
+{
+    char bus_seating[MAX_ROWS][ROW_LENGTH];
+    int no_of_rows;
+    scanf("%d", &no_of_rows);
+
+    bool can_sit_together = false;
+
+    for(int i = 0; i < no_of_rows; i++)
+    {
+        scanf("%s", bus_seating[i]);
+
+        if(bus_seating[i][0] == 'O' && bus_seating[i][1] == 'O' && can_sit_together == false)
+        {
+            bus_seating[i][0] = bus_seating[i][1] = '+';
+            can_sit_together = true;
+        }
+
+        if(bus_seating[i][3] == 'O' && bus_seating[i][4] == 'O' && can_sit_together == false)
+        {
+            bus_seating[i][3] = bus_seating[i][4] = '+';
+            can_sit_together = true;
+        }
+    }
+
+    if(can_sit_together)
+    {
+        printf("YES\n");
+        for(int i = 0; i < no_of_rows; i++)
+            printf("%s\n",bus_seating[i]);
+    }
+    else
+    {
+        printf("NO\n");
+    }
+
+    return 0;
+}
