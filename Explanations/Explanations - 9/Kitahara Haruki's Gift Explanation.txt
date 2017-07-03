@@ -1,0 +1,52 @@
+itahara Haruki has bought n apples for Touma Kazusa and Ogiso Setsuna. Now he wants to divide all the apples between the friends.
+
+Each apple weights 100 grams or 200 grams. Of course Kitahara Haruki doesn't want to offend any of his friend. 
+Therefore the total weight of the apples given to Touma Kazusa must be equal to the total weight of the apples given to Ogiso Setsuna.
+
+But unfortunately Kitahara Haruki doesn't have a knife right now, so he cannot split any apple into some parts. 
+Please, tell him: is it possible to divide all the apples in a fair way between his friends?
+
+------------------------------------------
+
+This problem is really simple, but I still made two mistakes.
+
+First my approach ...
+
+Notice that the only way to make a matching in between the two families is 1 200 = 2 100.
+
+So, we divide 200s into 2 as far as we can. We will be left either with 1 200 or 0 200 ... 
+If there is 1, use 2 100s to balance it out and then check if there are an even number of 100s left.
+If there are 0 200s, just check if the number of 100s is even.
+
+I made a mistake ... I didn't check if the number of 100s is positive .... For example, if there's one 100 and 3 200s .. 1 200 will be left. 
+If we use 2 100s to balance it, we will have -1 100, which is not possible.... So, check if we have non negative no of 100s after it's over.
+
+Also, by mistake I reduced no of 100s by 2 regardless ... This gives WA for  200 200 ... It is balanced out but if I still subtract 2 100s, 
+I will have negative 100s.
+
+Subtract by 2*(no_of_200s)
+
+Those were the two bugs - check if there are non negative 100s at the end and also subtract 2 only if there is an outstanding 200 weight.
+
+-----------------------------------------
+
+int main()
+{
+    int no_of_apples, weight_i;
+    scanf("%d", &no_of_apples);
+
+    int no_of_100s = 0, no_of_200s = 0;
+    for(int i = 1; i <= no_of_apples; i++)
+    {
+        scanf("%d", &weight_i);
+
+        no_of_100s += (weight_i == 100);
+        no_of_200s += (weight_i == 200);
+    }
+
+    no_of_200s = (no_of_200s%2); //Distribute half of them to either group.
+    no_of_100s = no_of_100s - 2*no_of_200s; //Balancing out the 200 - there may be 1 or 0
+
+    printf(no_of_100s%2 == 0 && no_of_100s >= 0 ? "YES\n" : "NO\n"); //check if remaining 100s can be divided in half.
+    return 0;
+}
