@@ -1,3 +1,38 @@
+#include <cstdio>
+#include <vector>
+
+#define min(a, b) (a < b ? a : b)
+
+using namespace std;
+
+vector <int> prime_distance(1e5 + 4);
+
+void precompute_prime_distance()
+{
+    vector <int> is_prime(1e5 + 10, true);
+
+    is_prime[0] = is_prime[1] = false;
+    for(int i = 2; i <= 1e5 + 3; i++)
+    {
+        if(is_prime[i])
+        {
+            for(int multiple = 2*i; multiple <= 1e5 + 3; multiple += i)
+            {
+                is_prime[multiple] = false;
+            }
+        }
+    }
+
+    int last_prime;
+    for(int i = 1e5 + 3; i >= 0; i--)
+    {
+        if(is_prime[i])
+            last_prime = i;
+
+        prime_distance[i] = last_prime - i;
+    }
+}
+
 int main()
 {
     const int INFINITY = 1e9 + 1;
