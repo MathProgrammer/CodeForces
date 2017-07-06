@@ -1,0 +1,32 @@
+Fox Ciel is playing a game with numbers now.
+
+Ciel has n positive integers: x1, x2, ..., xn. She can do the following operation as many times as needed: select two different indexes i and j such that xi > xj hold, 
+and then apply assignment xi = xi - xj. The goal is to make the sum of all numbers as small as possible.
+
+Please help Ciel to find this minimal sum.
+
+-----------------------------------------------
+
+gcd(a, b) = gcd(a, b - a) ...
+
+Ultimately, all numbers are equal to their gcd. The gcd is invariant.
+
+Sum is n*gcd.
+
+------------------------------
+
+int main()
+{
+    int no_of_elements, element_i, array_gcd;
+    scanf("%d", &no_of_elements);
+
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        scanf("%d", &element_i);
+        array_gcd = (i == 1 ? element_i : gcd(array_gcd, element_i));
+    }
+
+    printf("%d\n", array_gcd*no_of_elements);
+    return 0;
+}
+
