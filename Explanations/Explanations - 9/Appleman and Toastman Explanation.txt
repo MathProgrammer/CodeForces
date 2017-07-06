@@ -1,0 +1,79 @@
+
+Appleman and Toastman play a game. Initially Appleman gives one group of n numbers to the Toastman, then they start to complete the following tasks:
+
+Each time Toastman gets a group of numbers, he sums up all the numbers and adds this sum to the score. Then he gives the group to the Appleman.
+Each time Appleman gets a group consisting of a single number, he throws this group out.
+Each time Appleman gets a group consisting of more than one number, he splits the group into two non-empty groups (he can do it in any way) 
+and gives each of them to Toastman.
+
+After guys complete all the tasks they look at the score value. What is the maximum possible value of score they can get?
+
+--------------------------------------------------------
+
+
+Here's the best strategy.
+
+Sort the elements 
+
+a1 < a2 < ... < an.
+
+The idea is to choose as many large sums as many times as possible.
+
+an is the largest element ... So, we try to choose it as many times as possible.
+
+----------------------------------------
+
+a1 + a2 + ... + an. Lose the smallest element
+     a2 + ... + an
+         a3+..+ an
+
+		an.
+
+We can see that an is a part of n different sums so an gets counted n times to the score.
+
+Consider another element not an ... Say, ap, p < n
+
+a1 + a2 + ... ap + ... + an
+     a2 + ... ap + ... + an
+           
+              ap + .... + an
+
+ap is a part of p different groups ... It gets counted one more time as a single ton element ... 
+
+So, it gets counted p + 1 times.
+
+Every element is counted i + 1 times, except the last element which is only counted i times. This is because the sum starting at ai, and the singleton ai are the same
+sum for an.
+
+-------------------------------------------------
+
+int main()
+{
+    int no_of_groups;
+    long long answer = 0;
+    scanf("%d", &no_of_groups);
+
+    vector <int> group(no_of_groups + 1, 0);
+    for(int i = 1; i <= no_of_groups; i++)
+    {
+        scanf("%d", &group[i]);
+    }
+
+
+    sort(all(group));
+    for(unsigned int i = group.size() - 1; i >= 1; i--)
+    {
+        int no_of_times_i_is_counted = (i == group.size() - 1 ? i : i + 1);
+        answer += no_of_times_i_is_counted*1LL*group[i];
+    }
+
+    printf("%I64d\n", answer);
+    return 0;
+}
+
+-------------------------------
+
+Wasn't as easy as it looks ... Then I realised it's A for div 1, and C for div 2 ! That explains a lot ! 
+Anyway, good problem ... I enjoy problems which take advantage of double counting .. .It's hard to iterated each sum ... But easy to count number of sums each element is 
+a part of.
+
