@@ -1,0 +1,68 @@
+A little bear Limak plays a game. He has five cards. There is one number written on each card. Each number is a positive integer.
+
+Limak can discard (throw out) some cards. His goal is to minimize the sum of numbers written on remaining (not discarded) cards.
+
+He is allowed to at most once discard two or three cards with the same number. 
+Of course, he won't discard cards if it's impossible to choose two or three cards with the same number.
+
+Given five numbers written on cards, cay you find the minimum sum of numbers on remaining cards?
+
+------------------------------------------------
+
+Since the constraints are quite small, I thought of maintaining a frequency table up to 100 and then going downwards and taking out the first element possible.
+Then, I realised there might be a conflict ... For example, we may have a hoice of taking out 2 30s or 3 25s ... Going downwards and taking out the first choice
+might not be optimal. You need to keep track of the maximum sum subtracted.
+
+I chose to do it with a map. It is maintained as a balanced tree underneath. 
+
+To find the minimum amount, it will only take five iterations, at most, instead of 100 like the table.
+
+Go through each entry of the map ... If it's frequency is greater than 1, check the amount that can be subtracted - either 2n or 3n, depending on it's frequency.
+
+Compare it with the overall maximum amount that can be subtracted.
+
+An advantage of map is that it would still work efficieintly if the card number went up to 1e18 ... It will only take O(n) worst case processing, where n is the number of 
+cards.
+
+We already have the array sum because it was calculated along with the input. Subtract the maximum subtractable amount from the sum and display it.
+Ensure it is initialised to 0.
+
+--------------------------------------------------
+
+int main()
+{
+    map <int, int> frequency;
+    const int no_of_cards = 5;
+
+    int sum = 0;
+    for(int i = 1; i <= no_of_cards; i++)
+    {
+        int card_i;
+        scanf("%d", &card_i);
+
+        sum += card_i;
+        frequency[card_i]++;
+    }
+
+    int max_subtracted = 0;
+    for(map <int, int> :: iterator it = frequency.begin(); it != frequency.end(); it++)
+    {
+        int number_i = it->first;
+        int frequency_i = it->second;
+        int subtracted_amount = 0;
+
+        if(frequency_i > 1)
+        {
+            subtracted_amount = (frequency_i > 2 ? 3*number_i : 2*number_i);
+        }
+
+        max_subtracted = max(max_subtracted, subtracted_amount);
+    }
+
+    printf("%d\n", sum - max_subtracted);
+    return 0;
+}
+
+---------------------------------
+
+STL is so powerful. Hash table implemented as balanced trees make everything so easy and efficient.
