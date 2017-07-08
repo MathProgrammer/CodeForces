@@ -1,0 +1,24 @@
+
+--------------------------------------
+
+The only trick of this problem is that y is also considered a vowel. I didn't know how many bytes the STL string allocates so I used both STL string and C string.
+
+
+int main()
+{
+    char initial_string[MAX_LENGTH];
+    string answer;
+    scanf("%s", initial_string);
+
+    for(int i = 0; initial_string[i] != '\0'; i++)
+    {
+        if(is_vowel(to_lower(initial_string[i])) == false)
+        {
+            answer += '.';
+            answer += to_lower(initial_string[i]);
+        }
+    }
+
+    cout << answer << "\n";
+    return 0;
+}
