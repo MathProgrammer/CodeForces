@@ -1,0 +1,51 @@
+Haiku is a genre of Japanese traditional poetry.
+
+A haiku poem consists of 17 syllables split into three phrases, containing 5, 7 and 5 syllables correspondingly 
+(the first phrase should contain exactly 5 syllables, the second phrase should contain exactly 7 syllables, and the third phrase should contain exactly 5 syllables). 
+A haiku masterpiece contains a description of a moment in those three phrases. Every word is important in a small poem, which is why haiku are rich with symbols. 
+Each word has a special meaning, a special role. The main principle of haiku is to say much using a few words.
+
+To simplify the matter, in the given problem we will consider that the number of syllable in the phrase is equal to the number of vowel letters there. 
+Only the following letters are regarded as vowels
+
+-----------------------------------
+
+Problem is pretty simple, by itself but learnt a couple of things in implementation. First of all, couldn't use scanf because I want the spaces too.
+
+Was going to use gets, then learnt that gets causes buffer overflow and in turn undefined behaviour because it doesn't know how many bytes to read. 
+If it has buffer 2048, and input is 4096 there will be an overflow and unexpected behaviour. 
+
+It is safer to use fgets ... Fgets also keeps track of newline and stores it into the string. Read from standard input.
+
+-----------------------------------------------
+
+int main()
+{
+    bool is_haiku = true;
+    char line[MAX_LENGTH];
+    const int no_of_lines = 3;
+
+    for(int i = 1; i <= no_of_lines; i++)
+    {
+        int vowel_count = 0;
+
+        fgets(line, MAX_LENGTH, stdin);
+
+        for(int letter = 0; line[letter] != '\n'; letter++)
+            vowel_count += is_vowel(line[letter]);
+
+        if(i == 2)
+        {
+            if(vowel_count != 7)
+                is_haiku = false;
+        }
+        else
+        {
+            if(vowel_count != 5)
+                is_haiku = false;
+        }
+    }
+
+    printf(is_haiku ? "YES\n" : "NO\n");
+    return 0;
+} 
