@@ -1,0 +1,46 @@
+Find the number of numbers that are divisible by k in [a, b] ... a and b can be negative and fit into 64 bit data type.
+
+-----------------------------------------------------------------------
+
+If a and b are on different sides of the number line, then the number of factors is = b/k + a/k + 1... Note that we are adding and not (a-1)/k, but a/k.
+We want to add all factors from 0 to b and from 0 to -a ... We add 1 to ensure 0 is also included in the total.
+
+If they are on the same side of the number line, assume without loss of generality that they are both positive, no of factors = b/k - (a -1)/k ...
+
+However, this gave me an error ... If k = 1 and a = 0, the the answer is b/1 - (0-1)/1 = b + 1 ... It shouldn't be + 1 .. The idea is that we are 
+discounting all multiples of k before a ... But when it is 1, then -1/1 = -1 ... Any other number gives -1/n = 0 ... This creates an error.
+
+To simplify things, if a = 0, answer = b/k + 1 ... all of k's multiples including 0.
+Otherwise, answer = b/k - (a-1)/k.
+
+---------------------------------------------------------------------
+
+int main()
+{
+    long long k, left, right, no_of_multiples = 0;
+    scanf("%I64d %I64d %I64d", &k, &left, &right);
+
+    if(right > 0 && left < 0)
+    {
+        left = abs(left);
+
+        no_of_multiples = (right)/k + (left)/k + 1; //Add 0 as a multiple as well.
+    }
+    else
+    {
+        long long greater_limit = max(abs(right), abs(left));
+        long long lower_limit = min(abs(right), abs(left));
+
+        if(lower_limit == 0)
+        {
+            no_of_multiples = (greater_limit)/k + 1; //Count 0 as well
+        }
+        else
+        {
+            no_of_multiples = (greater_limit)/k - (lower_limit - 1)/k;
+        }
+    }
+
+    printf("%I64d\n", no_of_multiples);
+    return 0;
+}
