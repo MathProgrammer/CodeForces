@@ -1,0 +1,49 @@
+The Little Elephant enjoys recursive functions.
+
+This time he enjoys the sorting function. Let a is a permutation of an integers from 1 to n, inclusive, and ai denotes the i-th element of the permutation. 
+The Little Elephant's recursive function f(x), that sorts the first x permutation's elements, works as follows:
+
+If x?=?1, exit the function.
+Otherwise, call f(x?-?1), and then make swap(ax?-?1,?ax) (swap the x-th and (x?-?1)-th elements of a).
+The Little Elephant's teacher believes that this function does not work correctly. But that-be do not get an F, 
+the Little Elephant wants to show the performance of its function. Help him, 
+find a permutation of numbers from 1 to n, such that after performing the Little Elephant's function (that is call f(n)), the permutation will be sorted in ascending order.
+
+
+-------------------------------------------------------
+
+Important to have some understanding of recursive stackframes for this one. 
+
+At first I thought it first swaps, ax and a(x-1) and then calls f(x - 1).
+
+In that case the answer is a sorted array, rotated one place to the left. 
+
+Like, 2 3 4 1
+
+Because every swap will - 2 3 1 4, 2 1 3 4 and finally 1 2 3 4 ... The order of elements doesn't change ... The smallest element goes to the first position.
+
+But, this is wrong.
+
+What happens is that it first calls f(x-1), f(x-2) ... and so on till it reaches f(1) and then starts swapping.
+
+So, in other words starting from position 2 till n, ai and a(i - 1) are swapped. 
+
+In this case, the answer is a sorted array rotated one place to the RIGHT. 
+
+the order of elements doesn't change this way ... The first element occupies the last position.
+
+4 1 2 3, 1 4 2 3, 1 2 4 3 and finally 1 2 3 4.
+
+-----------------------------------------------------
+
+int main()
+{
+    int no_of_elements;
+    scanf("%d", &no_of_elements);
+
+    printf("%d ", no_of_elements);
+    for(int i = 1; i < no_of_elements; i++)
+        printf("%d ", i);
+
+    return 0;
+}
