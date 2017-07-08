@@ -1,0 +1,42 @@
+
+is a system which allows to create programming tasks in a simple and professional way. 
+When you add a test to the problem, the corresponding form asks you for the test index. 
+As in most cases it is clear which index the next test will have, the system suggests the default value of the index. 
+It is calculated as the smallest positive integer which is not used as an index for some previously added test.
+
+You are to implement this feature. Create a program which determines the default index of the next test, given the indexes of the previously added tests.
+
+--------------------------------------
+
+Used a frequency table here since the least number is required.
+
+Got a mistake because it is possible for the answer to be 3001 ... if all 3000 numbers are used.
+
+Missed a corner case on this one.
+
+------------------------------------------
+
+int main()
+{
+    vector <int> is_used(3000 + 2, false);
+    int no_of_tests, test_i, default_for_next;
+    scanf("%d", &no_of_tests);
+
+    for(int i = 1; i <= no_of_tests; i++)
+    {
+        scanf("%d", &test_i);
+        is_used[test_i] = true;
+    }
+
+    for(int i = 1; i <= 3001; i++)
+    {
+        if(is_used[i] == false)
+        {
+            default_for_next = i;
+            break;
+        }
+    }
+
+    printf("%d\n", default_for_next);
+    return 0;
+}
