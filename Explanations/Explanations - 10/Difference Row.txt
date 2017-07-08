@@ -1,0 +1,43 @@
+You want to arrange n integers a1, a2, ..., an in some order in a row. Let's define the value of an arrangement as the sum of differences between 
+all pairs of adjacent integers.
+
+More formally, let's denote some arrangement as a sequence of integers x1, x2, ..., xn, where sequence x is a permutation of sequence a. 
+The value of such an arrangement is (x1 - x2) + (x2 - x3) + ... + (xn - 1 - xn).
+
+Find the largest possible value of an arrangement. Then, output the lexicographically smallest sequence x that corresponds to an arrangement of the largest possible value.
+
+-----------------------------------------------
+
+The first observation is that the value of an arrangement telescopes to x1 - xn. To maximise this, we place the biggest element at x1 and the smallest at xn.
+
+There are many possible arrangements with these two elements at the ends fixed. But, we have to print the lexicographically smallest. 
+
+That means the smallest remaining element in the second spot, next smallest in third spot, etc.
+
+The array must be sorted in non-decreasing order from 2 to n-1. 
+
+So, sort the entire array and swap the first and last element.
+
+For swapping, I was going to use XOR ... a = a^b, b = a^b, a = a^b.  But, STL has an inbuilt function for swapping.
+
+---------------------------------
+
+int main()
+{
+    int no_of_elements;
+    scanf("%d", &no_of_elements);
+
+    vector <int> sequence(no_of_elements);
+
+    for(int i = 0; i < no_of_elements; i++)
+        scanf("%d", &sequence[i]);
+
+    sort(all(sequence));
+
+    swap(sequence[0], sequence.back());
+
+    for(unsigned int i = 0; i < sequence.size(); i++)
+        printf("%d ", sequence[i]);
+
+    return 0;
+}
