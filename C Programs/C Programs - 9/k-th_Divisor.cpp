@@ -30,8 +30,8 @@ int main()
     {
         if(k <= divisors.size())
             answer = divisors[k - 1];
-        else
-            answer = num/divisors[max_number_of_divisors - k ];
+        else //If k and k' are indices such that f(k)*f(k') = N, k + k' = f - 1, where f is the number of factors, k' =  f - k - 1, in 1-index.
+            answer = num/divisors[max_number_of_divisors - k ]; 
     }
 
     printf("%I64d\n", answer);
