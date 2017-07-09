@@ -1,0 +1,33 @@
+
+--------------------------------------
+
+This is another way of asking the number of steps to find the GCD using the Euclidean algorithm. 
+
+I used static variables here ! Static vriables retain their value through a recursive function call ...
+
+Static variables are useful to measure recursion depth and collect meta-data about the recursion. All recursive calls use the same instance of data.
+
+Using a static variable would be fine if there was only one query. But, here there are many queries, and the static variable doesn't start at 0 for each query. It 
+starts at the value the last query ended. So, better to just write a simply non-tail recursive function.
+
+-----------------------------------------------
+
+int no_of_steps_in_finding_gcd(int a, int b)
+{
+    int m = min(a, b);
+    int n = max(a, b);
+
+    if(m == 0)
+        return 0;
+    else
+        return n/m + no_of_steps_in_finding_gcd(m, n%m);
+}
+
+void solve()
+{
+    int a, b;
+    scanf("%d %d", &a, &b);
+    printf("%d\n", no_of_steps_in_finding_gcd(a, b) );
+}
+
+------------------------------
