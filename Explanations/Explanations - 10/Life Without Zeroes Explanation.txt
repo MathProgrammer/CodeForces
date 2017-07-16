@@ -1,0 +1,27 @@
+
+
+Get the number without zeroes
+
+long long zeroless(long long n)
+{
+    long long zeroless_n = 0;
+
+    while(n > 0)
+    {
+        int digit = n%10;
+        if(digit != 0)
+            zeroless_n = zeroless_n*10 + digit;
+
+        n = n/10;
+    }
+    return reverse(zeroless_n);
+}
+
+int main()
+{
+    int a, b;
+    scanf("%d %d", &a, &b);
+
+    printf(zeroless(a) + zeroless(b) == zeroless(a + b) ? "YES\n" : "NO\n");
+    return 0;
+} 
