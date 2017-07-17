@@ -1,0 +1,26 @@
+
+----------------------------------------
+
+The i-th floor of this pyramid from the top has T_i cubes.
+
+Keep subtracting T_i from cubes till it becomes negative ... The floor that makes the number of cubes negative is one less than the number of floors we can have.
+
+---------------------------------------
+
+int main()
+{
+	int no_of_cubes, height;
+	scanf("%d", &no_of_cubes);
+
+	for(height = 1; ; height++)
+	{
+		no_of_cubes -= (height*(height + 1))/2;
+
+        	if(no_of_cubes < 0)
+            		break;
+	}
+
+	height--;
+	printf("%d\n", height);
+	return 0;
+}
