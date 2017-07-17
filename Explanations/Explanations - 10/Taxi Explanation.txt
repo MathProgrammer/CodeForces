@@ -1,0 +1,54 @@
+Here's the strategy -
+
+All the 4s go alone.
+The 3s and 1s are paired up as far as possible. The remaining 3s go alone. 
+(Note here that after this pairing either the number of 3s or the number of 1s will be 0.)
+
+The 2s are paired up together as well as far as possible. If there is a group of 2 remaining (There can only be 0 or 1 remaining group. If there were more, the match and go
+together), then they are paired up with 2 1s if there are that many 1s.
+
+The remaining 1s go in groups of 4. And all the outstanding 1s take another taxi ride.
+
+-----------------------------------------------------
+
+int main()
+{
+    int no_of_groups;
+    scanf("%d", &no_of_groups);
+
+    int no_of_1s = 0, no_of_2s = 0, no_of_3s = 0, no_of_4s = 0;
+    int group_i;
+    for(int i = 1; i <= no_of_groups; i++)
+    {
+        scanf("%d", &group_i);
+
+        no_of_1s += (group_i == 1);
+        no_of_2s += (group_i == 2);
+        no_of_3s += (group_i == 3);
+        no_of_4s += (group_i == 4);
+    }
+
+    int no_of_rides_with_3_and_1 = min(no_of_3s, no_of_1s);
+
+    int no_of_rides = no_of_4s + no_of_rides_with_3_and_1 + no_of_2s/2;
+
+    no_of_3s -= no_of_rides_with_3_and_1;
+    no_of_1s -= no_of_rides_with_3_and_1;
+    no_of_2s = no_of_2s%2;
+
+    no_of_rides += no_of_3s; //Pair up as many 3s with 1s and then the remaining 3s go alone.
+
+    //Pair of 1s with the remaining 2s
+    if(no_of_2s > 0)
+    {
+        no_of_1s -= 2;
+        no_of_rides++;
+    }
+
+    if(no_of_1s > 0)
+        no_of_rides += no_of_1s/4 + (no_of_1s%4 != 0);
+
+    printf("%d\n", no_of_rides);
+
+    return 0;
+}
