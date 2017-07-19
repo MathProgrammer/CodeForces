@@ -1,0 +1,72 @@
+A Ministry for Defense sent a general to inspect the Super Secret Military Squad under the command of the Colonel SuperDuper. 
+Having learned the news, the colonel ordered to all n squad soldiers to line up on the parade ground.
+
+By the military charter the soldiers should stand in the order of non-increasing of their height. 
+But as there's virtually no time to do that, the soldiers lined up in the arbitrary order. However, the general is rather short-sighted and he thinks that the soldiers 
+lined up correctly if the first soldier in the line has the maximum height and the last soldier has the minimum height. 
+Please note that the way other solders are positioned does not matter, including the case when there are several soldiers whose height is maximum or minimum. 
+Only the heights of the first and the last soldier are important.
+
+For example, the general considers the sequence of heights (4, 3, 4, 2, 1, 1) correct and the sequence (4, 3, 1, 2, 2) wrong.
+
+Within one second the colonel can swap any two neighboring soldiers. Help him count the minimum time needed to form a line-up which the general will consider correct.
+
+-----------------------------------------------------
+
+We need to know the position of the leftmost tallest person and rightmost shortest person (Because there can be multiple maxima and minima).
+
+Normally, the answer is (leftmost - 1) + (n - rightmost)
+
+However, we need to consider the case where leftmost and rightmost need to go past one another to reach the other end.
+
+The case where leftmost > rightmost
+
+Suppose tallest is a, shortest is b.
+
+i i i b i a i i
+
+While getting a to the beginning, we need to change b's position
+
+a i i i b i i i
+
+Now b has to move one place less than he originally had to.
+
+-----------------------------------------
+
+int main()
+{
+    int no_of_soldiers;
+    scanf("%d", &no_of_soldiers);
+
+    const int oo = 100 + 1;
+    int tallest_soldier = 0, shortest_soldier = oo;
+    int leftmost_tallest = -1, rightmost_shortest = -1;
+
+    for(int i = 1; i <= no_of_soldiers; i++)
+    {
+        int height_i;
+        scanf("%d", &height_i);
+
+        if(height_i > tallest_soldier)
+        {
+            tallest_soldier = height_i;
+            leftmost_tallest = i;
+        }
+
+        if(height_i <= shortest_soldier)
+        {
+            shortest_soldier = height_i;
+            rightmost_shortest = i;
+        }
+    }
+
+    int no_of_swaps = 0;
+
+    if(leftmost_tallest < rightmost_shortest)
+        no_of_swaps = (leftmost_tallest - 1) + (no_of_soldiers - rightmost_shortest);
+    else
+        no_of_swaps = (leftmost_tallest - 1) + (no_of_soldiers - rightmost_shortest) - 1;
+
+    printf("%d\n", no_of_swaps);
+    return 0;
+}
