@@ -1,0 +1,49 @@
+Manao works on a sports TV. He's spent much time watching the football games of some country. After a while he began to notice different patterns. 
+For example, each team has two sets of uniforms: home uniform and guest uniform. When a team plays a game at home, the players put on the home uniform. 
+When a team plays as a guest on somebody else's stadium, the players put on the guest uniform. The only exception to that rule is: 
+when the home uniform color of the host team matches the guests' uniform, the host team puts on its guest uniform as well. 
+For each team the color of the home and guest uniform is different.
+
+There are n teams taking part in the national championship. The championship consists of n·(n - 1) games: each team invites each other team to its stadium. 
+At this point Manao wondered: how many times during the championship is a host team going to put on the guest uniform? 
+Note that the order of the games does not affect this number.
+
+You know the colors of the home and guest uniform for each team. For simplicity, the colors are numbered by integers in such a way that no two distinct colors have 
+the same number. Help Manao find the answer to his question.
+
+-------------------------------------
+
+First of all, no team has the same guest and home uniform.
+
+Keep track of the frequency of each guest uniform.
+
+For each home uniform h, no_of_changes increses by frequency_guest_uniform[h].
+
+Used a map to keep track of frequency.
+
+------------------------------
+
+int main()
+{
+    int no_of_teams;
+    scanf("%d", &no_of_teams);
+
+    vector <int> home_uniform(no_of_teams + 1);
+    map <int, int> no_of_guest_uniforms;
+    for(int i = 1; i <= no_of_teams; i++)
+    {
+        int guest_uniform;
+        scanf("%d %d", &home_uniform[i], &guest_uniform);
+
+        no_of_guest_uniforms[guest_uniform]++;
+    }
+
+    int no_of_changes = 0;
+    for(int i = 1; i <= no_of_teams; i++)
+    {
+        no_of_changes += no_of_guest_uniforms[home_uniform[i]];
+    }
+
+    printf("%d\n", no_of_changes);
+    return 0;
+}
