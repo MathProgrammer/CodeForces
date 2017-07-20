@@ -1,0 +1,54 @@
+Valera is a lazy student. He has m clean bowls and k clean plates.
+
+Valera has made an eating plan for the next n days. As Valera is lazy, he will eat exactly one dish per day. At that, in order to eat a dish, 
+he needs exactly one clean plate or bowl. 
+We know that Valera can cook only two types of dishes. He can eat dishes of the first type from bowls and dishes of the second type from either bowls or plates.
+
+When Valera finishes eating, he leaves a dirty plate/bowl behind. His life philosophy doesn't let him eat from dirty kitchenware. 
+So sometimes he needs to wash his plate/bowl before eating. Find the minimum number of times Valera will need to wash a plate/bowl, if he acts optimally.
+
+-------------------------------------------
+
+Clean only if there are no clean containers of that kind.
+
+If the dish is of type 1, check no of bowls.
+If dish is of type 2, first check if there are any plates, THEN check if there are any bowls.
+
+-------------------------------
+
+int main()
+{
+    int no_of_days, no_of_bowls, no_of_plates;
+    scanf("%d %d %d", &no_of_days, &no_of_bowls, &no_of_plates);
+
+    int no_of_cleanings = 0;
+    for(int i = 1; i <= no_of_days; i++)
+    {
+        int dish_type;
+        scanf("%d", &dish_type);
+
+        if(dish_type == 1)
+        {
+            if(no_of_bowls == 0)
+                no_of_cleanings++;
+            else
+                no_of_bowls--;
+        }
+
+        if(dish_type == 2)
+        {
+            if(no_of_plates == 0 && no_of_bowls == 0)
+                no_of_cleanings++;
+            else if(no_of_plates > 0)
+                no_of_plates--;
+            else
+                no_of_bowls--;
+        }
+    }
+
+    printf("%d\n", no_of_cleanings);
+    return 0;
+}
+
+
+
