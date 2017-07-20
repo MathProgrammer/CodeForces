@@ -1,0 +1,41 @@
+Nicholas has an array a that contains n distinct integers from 1 to n. In other words, Nicholas has a permutation of size n.
+
+Nicholas want the minimum element (integer 1) and the maximum element (integer n) to be as far as possible from each other. 
+He wants to perform exactly one swap in order to maximize the distance between the minimum and the maximum elements. 
+The distance between two elements is considered to be equal to the absolute difference between their positions.
+
+---------------------------------------------
+
+We are interested only in the index of 1 and n.
+
+There are two strategies to maximise the distance. Place the leftmost index at the first position and then measure (right - 1)
+
+Place the rightmost at n and then measure (n - left).
+
+We have to take the element closest to the extremum and swap it with it.
+
+-----------------------------------
+
+int main()
+{
+    int n;
+    scanf("%d", &n);
+
+    int index_1, index_n;
+    for(int i = 1; i <= n; i++)
+    {
+        int element;
+        scanf("%d", &element);
+
+        if(element == 1)
+            index_1 = i;
+        else if(element == n)
+            index_n = i;
+    }
+
+    int distance = max( max(index_1, index_n) - 1, n - min(index_1, index_n) );
+
+    printf("%d\n", distance);
+    return 0;
+}
+
