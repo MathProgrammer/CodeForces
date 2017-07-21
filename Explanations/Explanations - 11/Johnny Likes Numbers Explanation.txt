@@ -1,0 +1,20 @@
+Given n and k, find the next multiple of k after n.
+
+--------------------------------------------------
+
+Very simple.   
+
+next multiple = n + (k - n%k)
+
+--------------------------------------------------
+
+int main()
+{
+    int n, k;
+    scanf("%d %d", &n, &k);
+
+    int next_multiple = n + (k - n%k);
+    printf("%d\n", next_multiple);
+
+    return 0;
+}
