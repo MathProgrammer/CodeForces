@@ -1,0 +1,34 @@
+This winter is so cold in Nvodsk! A group of n friends decided to buy k bottles of a soft drink called "Take-It-Light" to warm up a bit. 
+Each bottle has l milliliters of the drink. Also they bought c limes and cut each of them into d slices. After that they found p grams of salt.
+
+To make a toast, each friend needs nl milliliters of the drink, a slice of lime and np grams of salt. 
+The friends want to make as many toasts as they can, provided they all drink the same amount. How many toasts can each friend make?
+
+----------------------------------------
+
+It should be a striaghtforward problem but I was wondering why amount of salt for one round is a multiple of total amount of salt available.
+I saw the example explanation given and realised, np was just another variable name and didn't mean product of n and p.
+Could have been clearer.
+
+Find the amount of drink required for one round and the number of rounds possible with it alone.
+Find the amount of limes and the number of rounds possible with them alone
+Find the amount of salt available and the number of rounds possible with them alone.
+
+Answer is minimum of these three.
+
+------------------------------------------
+
+#define min(a, b) (a < b ? a : b)
+#define min_3(a, b, c) min(a, min(b, c))
+
+int main()
+{
+    int no_of_friends , no_of_bottles, bottle_volume, no_of_limes, no_of_slices, total_salt, one_round_drink, one_round_salt;
+    scanf("%d %d %d %d", &no_of_friends, &no_of_bottles, &bottle_volume, &no_of_limes);
+    scanf("%d %d %d %d", &no_of_slices, &total_salt, &one_round_drink, &one_round_salt);
+
+    int no_of_toasts = min_3( (no_of_bottles*bottle_volume)/one_round_drink, no_of_limes*no_of_slices, total_salt/one_round_salt )/no_of_friends;
+    printf("%d\n", no_of_toasts);
+
+    return 0;
+}
