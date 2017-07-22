@@ -1,0 +1,59 @@
+The Berland State University is hosting a ballroom dance in celebration of its 100500-th anniversary! n boys and m girls are already busy rehearsing 
+waltz, minuet, polonaise and quadrille moves.
+
+We know that several boy&girl pairs are going to be invited to the ball. However, the partners' dancing skill in each pair must differ by at most one.
+
+For each boy, we know his dancing skills. Similarly, for each girl we know her dancing skills. 
+Write a code that can determine the largest possible number of pairs that can be formed from n boys and m girls.
+
+------------------------------------------------------------
+
+Sort all boys and girls.
+
+Go through each of the girls, one by one. Binary search for someone of skill g[i] - 1, and then traverse the list till someone of skill at most g[i] + 1
+and match to the first available person.
+
+lower_bound STL binary search function came in handy here.
+
+---------------------------------------
+
+int main()
+{
+    int no_of_girls;
+    scanf("%d", &no_of_girls);
+
+    vector <int> girl_skills(no_of_girls);
+    for(int i = 0; i < no_of_girls; i++)
+        scanf("%d", &girl_skills[i]);
+
+    int no_of_boys;
+    scanf("%d", &no_of_boys);
+
+    vector <int> boy_skills(no_of_boys);
+    for(int i = 0; i < no_of_boys; i++)
+        scanf("%d", &boy_skills[i]);
+
+    sort(all(girl_skills));
+    sort(all(boy_skills));
+
+    vector <int> is_available(no_of_boys, true);
+
+    int no_of_pairs = 0;
+    for(int i = 0; i < no_of_girls; i++)
+    {
+        int eligible_boy = lower_bound(all(boy_skills), girl_skills[i] - 1) - boy_skills.begin();
+
+        for( ;abs(boy_skills[eligible_boy] - girl_skills[i]) <= 1 && eligible_boy < no_of_boys; eligible_boy++)
+        {
+            if(is_available[eligible_boy])
+            {
+                no_of_pairs++;
+                is_available[eligible_boy] = false;
+                break;
+            }
+        }
+    }
+
+    printf("%d\n", no_of_pairs);
+    return 0;
+}
