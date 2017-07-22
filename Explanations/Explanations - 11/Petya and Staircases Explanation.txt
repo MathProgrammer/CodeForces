@@ -1,0 +1,57 @@
+Little boy Petya loves stairs very much. But he is bored from simple going up and down them — he loves jumping over several stairs at a time. 
+As he stands on some stair, he can either jump to the next one or jump over one or two stairs at a time. But some stairs are too dirty and Petya doesn't want to step on them.
+
+
+Now Petya is on the first stair of the staircase, consisting of n stairs. He also knows the numbers of the dirty stairs of this staircase. 
+Help Petya find out if he can jump through the entire staircase and reach the last stair number n without touching a dirty stair once.
+
+One has to note that anyway Petya should step on the first and last stairs, so if the first or the last stair is dirty, 
+then Petya cannot choose a path with clean steps only.
+
+-----------------------------------------
+
+Petya can jump across consecutive stairs, skip one stair or two stairs.
+
+Jumping across 3 conseutive stairs is not allowed. Just check if there are any 3 consecutive dirty stairs.
+
+I tried it with a boolean vector first but I didn't see that there can be 1e9 steps ... so, just sorted the dirty steps.
+
+Also check if the first or last stair is dirty. Got a runtime error if there are 0 dirty stairs. That was a tricky case.
+
+---------------------------------------------
+
+int main()
+{
+    int no_of_steps, no_of_dirty_steps;
+    scanf("%d %d", &no_of_steps, &no_of_dirty_steps);
+
+    vector <int> dirty_steps(no_of_dirty_steps);
+    for(int i = 0; i < no_of_dirty_steps; i++)
+        scanf("%d", &dirty_steps[i]);
+
+    sort(all(dirty_steps));
+
+    bool is_possible = true;
+    if(no_of_dirty_steps > 0)
+    {
+        if(dirty_steps.front() == 1 || dirty_steps.back() == no_of_steps)
+        {
+            is_possible = false;
+        }
+        else
+        {
+            for(int i = 2; i < no_of_dirty_steps; i++)
+            {
+                if(dirty_steps[i] == dirty_steps[i - 1] + 1 && dirty_steps[i] == dirty_steps[i - 2] + 2) //Three consecutive dirty steps
+                {
+                    is_possible = false;
+                    break;
+                }
+            }
+        }
+    }
+
+
+    printf(is_possible ? "YES\n" : "NO\n");
+    return 0;
+}
