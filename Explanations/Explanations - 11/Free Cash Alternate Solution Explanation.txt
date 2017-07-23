@@ -1,0 +1,38 @@
+Valera runs a 24/7 fast food cafe. He magically learned that next day n people will visit his cafe. For each person we know the arrival time: 
+the i-th person comes exactly at hi hours mi minutes. The cafe spends less than a minute to serve each client, 
+but if a client comes in and sees that there is no free cash, than he doesn't want to wait and leaves the cafe immediately.
+
+Valera is very greedy, so he wants to serve all n customers next day (and get more profit). However, for that he needs to ensure that at each moment of time 
+the number of working cashes is no less than the number of clients in the cafe.
+
+Help Valera count the minimum number of cashes to work at his cafe next day, so that they can serve all visitors.
+
+-------------------------------------------------
+
+This solution takes advanatage of the fact that the times are given in chronological order. This is O(N).
+
+-----------------------
+
+int main()
+{
+    int no_of_customers;
+    scanf("%d ", &no_of_customers);
+
+    int hour_i, minute_i, previous_hour = 0, previous_minute = 0;
+    int no_of_customers_at_this_time = 0, max_customers_arriving_together = 0;
+
+    for(int i = 1; i <= no_of_customers; i++)
+    {
+        scanf("%d %d", &hour_i, &minute_i);
+
+        no_of_customers_at_this_time = (hour_i == previous_hour && minute_i == previous_minute ? no_of_customers_at_this_time + 1 : 1);
+
+        max_customers_arriving_together = max(max_customers_arriving_together, no_of_customers_at_this_time);
+
+        previous_hour = hour_i;
+        previous_minute = minute_i;
+    }
+
+    printf("%d\n", max_customers_arriving_together);
+    return 0;
+}

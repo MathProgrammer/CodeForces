@@ -1,0 +1,46 @@
+Valera runs a 24/7 fast food cafe. He magically learned that next day n people will visit his cafe. For each person we know the arrival time: 
+the i-th person comes exactly at hi hours mi minutes. The cafe spends less than a minute to serve each client, 
+but if a client comes in and sees that there is no free cash, than he doesn't want to wait and leaves the cafe immediately.
+
+Valera is very greedy, so he wants to serve all n customers next day (and get more profit). However, for that he needs to ensure that at each moment of time 
+the number of working cashes is no less than the number of clients in the cafe.
+
+Help Valera count the minimum number of cashes to work at his cafe next day, so that they can serve all visitors.
+
+-----------------------------------------------
+
+The maximum number of customers arriving simulataneously at the same time is the answer. Keep track of the frequency of each arrival time.
+
+I did this by calculating time in terms of number of minutes from 12.
+
+This solution works even if the entries are not in chronological order.
+Since they're in chronological order, another way of solving this is to keep track of the longest consecutive sequence of identical elements.
+
+That is an O(N) solution ... This is an O(N log N) solution since it involves insertion into a balanced tree.
+
+---------------------------------------------------------------------
+
+int main()
+{
+    const int NO_OF_MINUTES_IN_HOUR = 60;
+    int no_of_customers, no_of_minutes, no_of_hours;
+    scanf("%d ", &no_of_customers);
+
+    map <int, int> no_of_customers_arriving_at;
+    for(int i = 1; i <= no_of_customers; i++)
+    {
+        scanf("%d %d", &no_of_hours, &no_of_minutes);
+
+        int arrival_time = no_of_hours*NO_OF_MINUTES_IN_HOUR + no_of_minutes;
+        no_of_customers_arriving_at[arrival_time]++;
+    }
+
+    int max_customers_arriving_together = 0;
+    for(map <int, int> :: iterator it = no_of_customers_arriving_at.begin(); it != no_of_customers_arriving_at.end(); it++)
+    {
+        max_customers_arriving_together = max(max_customers_arriving_together, it->second);
+    }
+
+    printf("%d\n", max_customers_arriving_together);
+    return 0;
+}
