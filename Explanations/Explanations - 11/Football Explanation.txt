@@ -1,0 +1,24 @@
+Petya loves football very much. One day, as he was watching a football match, he was writing the players' current positions on a piece of paper. 
+To simplify the situation he depicted it as a string consisting of zeroes and ones. A zero corresponds to players of one team; a one corresponds to players of another team. 
+If there are at least 7 players of some team standing one after another, then the situation is considered dangerous. 
+For example, the situation 00100110111111101 is dangerous and 11110111011101 is not. You are given the current situation. Determine whether it is dangerous or not.
+
+----------------------------------------------
+
+Keep track of the longest contiguous sequence of identical characters.
+
+int main()
+{
+    char players[MAX_LENGTH];
+    scanf("%s", players);
+
+    int maximum_dangerous_sequence = 1, current_dangerous_sequence = 1;
+    for(int i = 1; players[i] != '\0'; i++)
+    {
+        current_dangerous_sequence = (players[i] == players[i - 1] ? current_dangerous_sequence + 1 : 1);
+        maximum_dangerous_sequence = max(maximum_dangerous_sequence, current_dangerous_sequence);
+    }
+
+    printf(maximum_dangerous_sequence >= 7 ? "YES\n" : "NO\n");
+    return 0;
+}
