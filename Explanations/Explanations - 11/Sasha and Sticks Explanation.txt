@@ -1,0 +1,20 @@
+It's one more school day now. Sasha doesn't like classes and is always bored at them. So, each day he invents some game and plays in it alone or with friends.
+
+Today he invented one simple game to play with Lena, with whom he shares a desk. The rules are simple. Sasha draws n sticks in a row. 
+After that the players take turns crossing out exactly k sticks from left or right in each turn. Sasha moves first, because he is the inventor of the game. 
+If there are less than k sticks on the paper before some turn, the game ends. Sasha wins if he makes strictly more moves than Lena. 
+Sasha wants to know the result of the game before playing, you are to help him.
+
+--------------------------------------------
+
+In each turn k sticks are drawn. A win is possible if the number of turns is odd.
+
+int main()
+{
+    long long no_of_sticks, one_turn_draw;
+    scanf("%I64d %I64d", &no_of_sticks, &one_turn_draw);
+
+    long long no_of_turns = no_of_sticks/one_turn_draw;
+    printf(no_of_turns%2 == 1 ? "Yes\n" : "No\n");
+    return 0;
+}
