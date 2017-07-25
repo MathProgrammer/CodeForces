@@ -1,0 +1,28 @@
+Two players are playing a game. First each of them writes an integer from 1 to 6, and then a dice is thrown. 
+The player whose written number got closer to the number on the dice wins. 
+If both payers have the same difference, it's a draw.
+
+The first player wrote number a, the second player wrote number b. How many ways to throw a dice are there, at which the first player wins, or there is a draw, 
+or the second player wins?
+
+-------------------------------------------
+
+Just be careful to use abs.
+
+int main()
+{
+    int num_1, num_2;
+    scanf("%d %d", &num_1, &num_2);
+
+    int one_wins = 0, draw = 0, two_wins = 0;
+    for(int dice_i = 1; dice_i <= 6; dice_i++)
+    {
+        one_wins += (abs(num_1 - dice_i) < abs(num_2 - dice_i));
+        two_wins += (abs(num_1 - dice_i) > abs(num_2 - dice_i));
+        draw     += (abs(num_1 - dice_i) == abs(num_2 - dice_i));
+    }
+
+    printf("%d %d %d", one_wins, draw, two_wins);
+    return 0;
+}
+
