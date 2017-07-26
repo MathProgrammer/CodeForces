@@ -1,0 +1,33 @@
+Carl is a beginner magician. He has a blue, b violet and c orange magic spheres. In one move he can transform two spheres of the same color into one sphere of any other color.
+ To make a spell that has never been seen before, he needs at least x blue, y violet and z orange spheres. Can he get them (possible, in multiple actions)?
+
+-----------------------------------------------------
+
+Keep track of the number of spheres you need - this is merely the difference between the required amount and the existing amount or 0, if we already have the required
+amount and don't need any spheres
+
+
+
+Keep track of the number of new spheres possible - this is the difference between existing amount and the required amount divided by 2 or 0 is no new spheres are possible
+
+Ultimately, the trick is possible if the number of new spheres possible is greater than or equal to the number of new spheres required.
+
+---------------------------------------------------------
+
+int main()
+{
+    int blue, violet, orange;
+    scanf("%d %d %d", &blue, &violet, &orange);
+
+    int required_blue, required_violet, required_orange;
+    scanf("%d %d %d", &required_blue, &required_violet, &required_orange);
+
+    int no_of_new_spheres_possible = 0, no_of_new_spheres_needed = 0;
+
+    no_of_new_spheres_needed = max(required_blue - blue, 0) + max(required_orange - orange, 0) + max(required_violet - violet, 0);
+
+    no_of_new_spheres_possible = max( (blue - required_blue)/2, 0) + max( (orange - required_orange)/2, 0) + max( (violet - required_violet)/2, 0);
+
+    printf(no_of_new_spheres_possible >= no_of_new_spheres_needed ? "Yes\n" : "No\n");
+    return 0;
+}
