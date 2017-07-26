@@ -1,0 +1,56 @@
+Over time, Alexey's mail box got littered with too many letters. Some of them are read, while others are unread.
+
+Alexey's mail program can either show a list of all letters or show the content of a single letter. 
+As soon as the program shows the content of an unread letter, it becomes read letter 
+(if the program shows the content of a read letter nothing happens). In one click he can do any of the following operations:
+
+Move from the list of letters to the content of any single letter.
+Return to the list of letters from single letter viewing mode.
+In single letter viewing mode, move to the next or to the previous letter in the list. 
+You cannot move from the first letter to the previous one or from the last letter to the next one.
+The program cannot delete the letters from the list or rearrange them.
+
+Alexey wants to read all the unread letters and go watch football. Now he is viewing the list of all letters and for each letter he can see if it is read or unread. 
+What minimum number of operations does Alexey need to perform to read all unread letters?
+
+----------------------------------------------
+
+So, every unread letter needs to be read ... So the number of operations must be at least as many as the number of unread letters.
+
+Another observation is that switching from letter i to i + 1 takes 1 operation ... and switching from i to i + 2 ... needs 2 ... 
+First go to big display mode and then choose 2
+
+Whenever there are consecutive unread letters, switch in between them and use an extra move to go to big display mode when it isn't like that.
+
+We need the following information - no of unread letters and no of unread segments.
+
+We need to perform skips = 1 less than the number of unread segments.
+
+However, the special case is when there are 0 unread segments, ... the answer shouldn't be -1 ... Just add max(no of segments - 1, 0) to no of unread letters.
+
+------------------------------
+
+int main()
+{
+    int no_of_letters;
+    scanf("%d", &no_of_letters);
+
+    int previous_letter_status = 0, no_of_unread_letters = 0, no_of_unread_segments = 0;
+    for(int i = 1; i <= no_of_letters; i++)
+    {
+        int unread;
+        scanf("%d", &unread);
+
+        no_of_unread_letters += (unread == 1);
+
+        if(previous_letter_status == 0 && unread == 1)
+            no_of_unread_segments++;
+
+        previous_letter_status = unread;
+    }
+
+    int no_of_operations = no_of_unread_letters + max(no_of_unread_segments - 1, 0); //Incase there are no unread segments, it should be 0
+    printf("%d\n", no_of_operations);
+
+    return 0;
+}
