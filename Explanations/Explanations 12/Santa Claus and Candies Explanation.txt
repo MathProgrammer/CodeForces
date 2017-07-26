@@ -1,0 +1,34 @@
+Santa Claus has n candies, he dreams to give them as gifts to children.
+
+What is the maximal number of children for whose he can give candies if Santa Claus want each kid should get distinct positive integer number of candies. 
+Santa Class wants to give all n candies he has.
+
+-----------------------------------------------
+
+The number of people who get gifts is equal to the greatest triangular number smaller than n. 
+
+The strategy I used for distribution was for person i = 1 to p - 1, give p - 1 gifts and give all remaining gifts to the last person.
+
+--------------------------------
+
+int main()
+{
+    int no_of_gifts;
+    scanf("%d", &no_of_gifts);
+
+    int no_of_people = 1;
+    while(no_of_people*(no_of_people + 1) <= 2*no_of_gifts)
+        no_of_people++;
+
+    no_of_people--;
+
+    printf("%d\n", no_of_people);
+    for(int i = 1; i < no_of_people; i++)
+    {
+        printf("%d ", i);
+        no_of_gifts -= i;
+    }
+
+    printf("%d\n", no_of_gifts); //Last person gets all remaining gifts
+    return 0;
+}
