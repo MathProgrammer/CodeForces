@@ -1,0 +1,34 @@
+There are three friend living on the straight line Ox in Lineland. The first friend lives at the point x1, the second friend lives at the point x2, 
+and the third friend lives at the point x3. They plan to celebrate the New Year together, so they need to meet at one point. What is the minimum total distance 
+they have to travel in order to meet at some point and celebrate the New Year?
+
+It's guaranteed that the optimal answer is always integer.
+---------------------------------------------------
+
+The constraints were pretty small here so I decided to iterate in between every integer from leftmost to rightmost.
+
+There's a better solution though ... Answer is always rightmost-leftmost.
+
+I put the proof in the other solution
+
+------------------------------------------------------
+
+int main()
+{
+    const int no_of_friends = 3;
+    vector <int> location(no_of_friends);
+    scanf("%d %d %d", &location[0], &location[1], &location[2]);
+
+    sort(all(location));
+
+    int minimum_distance = 300;
+    for(int meet_point = location[0]; meet_point <= location[2]; meet_point++)
+    {
+        int distance = abs(meet_point - location[0]) + abs(meet_point - location[1]) + abs(meet_point - location[2]);
+
+        minimum_distance = min(minimum_distance, distance);
+    }
+
+    printf("%d\n", minimum_distance);
+    return 0;
+}

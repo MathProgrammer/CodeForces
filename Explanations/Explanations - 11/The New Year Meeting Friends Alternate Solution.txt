@@ -1,0 +1,44 @@
+There are three friend living on the straight line Ox in Lineland. The first friend lives at the point x1, the second friend lives at the point x2, 
+and the third friend lives at the point x3. They plan to celebrate the New Year together, so they need to meet at one point. What is the minimum total distance 
+they have to travel in order to meet at some point and celebrate the New Year?
+
+It's guaranteed that the optimal answer is always integer.
+
+---------------------------------------------------------------------
+
+There is an elegant proof similar to proofs of medians of points.
+
+Let us suppose they meet at a point x in between the left most and right most.
+
+Now, regardless of the position of x, left most person must travel x units and right most must travel (d - x) units, where d is the distance from rightmost to leftmost
+
+d = rightmost - leftmost
+
+Wherever x is, the two corner most people must meet. And they will always travel (x + d - x) = d distance.
+
+The third friend must also go the meeting point x.
+
+Distance = d + |x - middle|
+
+The travelling of d distance is fixed, however we can minimise the second summand and make it 0.
+
+The distance travelled is minimum when the two corner most friends meet at the location of the middle friend.
+
+And the distance travelled is d.
+
+------------------------------------------------------
+
+#define min_3(a, b, c) min(a, min(b, c))
+#define max_3(a, b, c) max(a, max(b, c))
+
+int main()
+{
+    int location_1, location_2, location_3;
+    scanf("%d %d %d", &location_1, &location_2, &location_3);
+
+    int leftmost  = min_3(location_1, location_2, location_3);
+    int rightmost = max_3(location_1, location_2, location_3);
+
+    printf("%d\n", rightmost - leftmost);
+    return 0;
+}
