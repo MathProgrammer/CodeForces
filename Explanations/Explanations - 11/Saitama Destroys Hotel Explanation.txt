@@ -1,0 +1,56 @@
+Saitama accidentally destroyed a hotel again. To repay the hotel company, Genos has volunteered to operate an elevator in one of its other hotels. 
+The elevator is special — it starts on the top floor, can only move down, and has infinite capacity. 
+Floors are numbered from 0 to s and elevator initially starts on floor s at time 0.
+
+The elevator takes exactly 1 second to move down exactly 1 floor and negligible time to pick up passengers. 
+Genos is given a list detailing when and on which floor passengers arrive. Please determine how long in seconds it will take Genos to bring all passengers to floor 0.
+
+---------------------------------------------------
+
+Simple implementation. Keep track of the total time you've taken to travel. If the passenger arrival time at any floor is greater than total time, then wait and 
+add wait time to total travel time.
+
+wait = max(passenger arrival - total time, 0)
+
+You don't wait if the passenger is already there.
+
+This is tricky.
+
+I chose to use two different vectors instead of a vector of pairs because I couldn't think of a good name to give to this vector that would explain it's purpose.
+
+The only trick of this problem is that you must calculate the time take to reach floor 0 from the last stop ... don't stop processing at the last stop.
+
+Similar to that problem where a bear watches a football game only if there aren't 15 boring minutes in a row. There I forgot to check that last interval from 90 till last stop
+
+
+----------------------------------------------
+
+int main()
+{
+    int  no_of_stops, top_floor;
+    scanf("%d %d", &no_of_stops, &top_floor);
+
+    vector <int> floor_stop(no_of_stops);
+    vector <int> passenger_arrival_time(no_of_stops);
+    for(int i = 0; i < no_of_stops; i++)
+        scanf("%d %d", &floor_stop[i], &passenger_arrival_time[i]);
+
+    reverse(all(floor_stop));
+    reverse(all(passenger_arrival_time));
+
+    int total_travel_time = 0, current_floor = top_floor;
+    for(int i = 0; i < no_of_stops; i++)
+    {
+        total_travel_time += (current_floor - floor_stop[i]);
+
+        int wait_time = max(passenger_arrival_time[i] - total_travel_time, 0);
+
+        total_travel_time += wait_time;
+
+        current_floor = floor_stop[i];
+    }
+    total_travel_time += current_floor; //Go to floor 0 from the last floor stop
+
+    printf("%d\n", total_travel_time);
+    return 0;
+}
