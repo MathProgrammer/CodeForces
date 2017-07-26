@@ -1,0 +1,93 @@
+The little girl loves the problems on array queries very much.
+
+One day she came across a rather well-known problem: you've got an array of n elements (the elements of the array are indexed starting from 1); 
+also, there are q queries, each one is defined by a pair of integers li, ri (1 ≤ li ≤ ri ≤ n). 
+You need to find for each query the sum of elements of the array with indexes from li to ri, inclusive.
+
+The little girl found the problem rather boring. She decided to reorder the array elements before replying to the queries in a way that makes 
+the sum of query replies maximum possible. Your task is to find the value of this maximum sum.
+
+---------------------------------------------------------------
+
+Keep track of the number of times each cell is called upon in a query. Place the largest number in the cell that is queried upon the most.
+Place the second largest number in the cell that is queried upon the second most ... and so on. 
+
+This part was easy
+
+
+I got a TLE first. The trick was in deciding how to mark the number of times each cell was queried.
+
+for(int i = 1; i <= no_of_queries; i++)
+    {
+        int left_i, right_i;
+        scanf("%d %d", &left_i, &right_i);
+
+        for(int index = left_i; index <= right_i; index++)
+            no_of_times_index_queried[index]++;
+    }
+
+
+I initially did it by brute force ... Went from li to ri for every query and incremented no of times each cell is called upon ...
+
+This is O(n^2) and doesn't pass.
+
+A better solution is to mark only li and ri in a seperate vector ... For every index only store the number of queries starting there and ending there.
+
+Then in one pass, find the number of times each cell is queried in the following way -
+
+no_of_times_queried = 0
+for(i = 0; i <= n; i++)
+	no_of_times_queried += (no_of_queries_starting[i] - no_of_queries_ending[i])
+	no_of_times_queried[i] = no_of_times_queried
+
+This is similar to a problem asking about trains coming and going on platforms ... What is the maximum number of trains that will exist at the same time ?
+There too .. Keep track of the end points of arrival and leaving only and then no of trains at a given point of time changes by the number of trains that have arrived then
+and decreases by the number of trains that have left then.
+
+-------------------------------------------------------------------------
+
+int main()
+{
+    int no_of_elements, no_of_queries;
+    scanf("%d %d", &no_of_elements, &no_of_queries);
+
+    vector <int> element(no_of_elements + 1, 0);
+    for(int i = 1; i <= no_of_elements; i++)
+        scanf("%d", &element[i]);
+
+    vector <int> no_of_queries_starting_here(no_of_elements + 1, 0);
+    vector <int> no_of_queries_ending_here(no_of_elements + 1, 0);
+
+    for(int i = 1; i <= no_of_queries; i++)
+    {
+        int left_i, right_i;
+        scanf("%d %d", &left_i, &right_i);
+
+        no_of_queries_starting_here[left_i]++;
+
+        if(right_i + 1 <= no_of_elements)
+            no_of_queries_ending_here[right_i + 1]++;
+    }
+
+    int no_of_queries_on_this_index = 0;
+    vector <int> no_of_times_index_queried(no_of_elements + 1, 0);
+
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        no_of_queries_on_this_index += (no_of_queries_starting_here[i] - no_of_queries_ending_here[i]);
+
+        no_of_times_index_queried[i] = no_of_queries_on_this_index;
+    }
+
+    sort(all(element));
+    sort(all(no_of_times_index_queried));
+
+    long long maximum_sum = 0;
+    for(int i = 1; i <= no_of_elements; i++)
+        maximum_sum += no_of_times_index_queried[i]*1LL*element[i];
+
+    printf("%I64d\n", maximum_sum);
+    return 0;
+}
+
+
