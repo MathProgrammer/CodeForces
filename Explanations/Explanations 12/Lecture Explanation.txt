@@ -1,0 +1,88 @@
+You have a new professor of graph theory and he speaks very quickly. You come up with the following plan to keep up with his lecture and make notes.
+
+You know two languages, and the professor is giving the lecture in the first one. The words in both languages consist of lowercase English characters, 
+each language consists of several words. For each language, all words are distinct, i.e. they are spelled differently. 
+Moreover, the words of these languages have a one-to-one correspondence, that is, for each word in each language, 
+there exists exactly one word in the other language having has the same meaning.
+
+You can write down every word the professor says in either the first language or the second language. Of course, 
+during the lecture you write down each word in the language in which the word is shorter. 
+In case of equal lengths of the corresponding words you prefer the word of the first language.
+
+You are given the text of the lecture the professor is going to read. Find out how the lecture will be recorded in your notes.
+
+-------------------------------------------
+
+I solved the problem more generally - I solved the problem for when the professor talks in mixed languages and output must be the shortest word of each language.
+
+Use two dictionaries ... One which maps words from first language to second language and other which maps words from second language to first language.
+
+Another boolean vector to keep track of which words are in which language.
+
+For each word, print the smaller length vector.
+
+Both solutions are included ... The one I solved first(the harder problem) and the one in which the lecture is only in the first language.
+
+--------------------------------------------------------
+
+int main()
+{
+    int length_of_sentence, no_of_words;
+    cin >> length_of_sentence >> no_of_words;
+
+    map <string, string> translated;
+
+    for(int i = 1; i <= no_of_words; i++)
+    {
+        string word, translation;
+        cin >> word >> translation;
+
+        translated[word] = translation;
+    }
+
+    for(int i = 1; i <= length_of_sentence; i++)
+    {
+        string current_word;
+        cin >> current_word;
+
+        cout << (current_word.length() <= translated[current_word].length() ? current_word : translated[current_word]) << " ";
+    }
+    return 0;
+}
+
+----------------------------------------------------------------------------------------
+
+int main()
+{
+    int length_of_sentence, no_of_words;
+    cin >> length_of_sentence >> no_of_words;
+
+    map <string, string> dictionary_1_to_2;
+    map <string, string> dictionary_2_to_1;
+    map <string, int> is_in_language_1;
+
+    for(int i = 1; i <= no_of_words; i++)
+    {
+        string word, translation;
+        cin >> word >> translation;
+
+        dictionary_1_to_2[word] = translation;
+        dictionary_2_to_1[translation] = word;
+
+        is_in_language_1[word] = true;
+        is_in_language_1[translation] = false;
+    }
+
+    for(int i = 1; i <= length_of_sentence; i++)
+    {
+        string current_word;
+        cin >> current_word;
+
+        string language_1_word =  is_in_language_1[current_word] ? current_word : dictionary_2_to_1[current_word];
+
+        string language_2_word = (is_in_language_1[current_word] ? dictionary_1_to_2[current_word] : current_word);
+
+        cout << (language_1_word.length() <= language_2_word.length() ? language_1_word : language_2_word) << " ";
+    }
+    return 0;
+}
