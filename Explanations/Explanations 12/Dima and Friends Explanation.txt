@@ -1,0 +1,50 @@
+Dima and his friends have been playing hide and seek at Dima's place all night. As a result, Dima's place got messy. 
+In the morning they decided that they need to clean the place.
+
+To decide who exactly would clean the apartment, the friends want to play a counting-out game. First, all the guys stand in a circle, 
+and then each of them shows some number of fingers on one hand (one to five), and then the boys count in a circle, starting from Dima, the number of people, 
+respective to the total number of fingers shown. The person on who the countdown stops will clean the apartment.
+
+For example, if Dima and one of his friends played hide and seek, and 7 fingers were shown during the counting-out, then Dima would clean the place. 
+If there were 2 or say, 8 fingers shown, then his friend would clean the place.
+
+Dima knows how many fingers each of his friends will show during the counting-out. Now he is interested in the number of ways to show some number of fingers on one hand 
+(one to five), so that he did not have to clean the place. Help Dima.
+
+-----------------------------------------------
+
+Firstly, no of people = no of friends + 1
+
+Dima will have to clean the apartment if the total number of fingers = 1 mod (no of people)
+
+Go from i = 1 to 5 and count how many i's when added to other fingers don't make the total 1 mod (no of people).
+
+-----------------------------------------------
+
+int main()
+{
+    int no_of_friends;
+    scanf("%d", &no_of_friends);
+
+    int other_fingers = 0;
+    for(int i = 1; i <= no_of_friends; i++)
+    {
+        int finger_i;
+        scanf("%d", &finger_i);
+
+        other_fingers += finger_i;
+    }
+
+    const int NO_OF_FINGERS = 5;
+    int no_of_choices = 0, no_of_people = no_of_friends + 1;
+
+    for(int dima_fingers = 1; dima_fingers <= NO_OF_FINGERS; dima_fingers++)
+    {
+        int total_fingers = other_fingers + dima_fingers;
+        no_of_choices += (total_fingers%no_of_people != 1);
+    }
+
+    printf("%d\n", no_of_choices);
+    return 0;
+}
+
