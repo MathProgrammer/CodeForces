@@ -1,0 +1,40 @@
+
+-----------------------------------------------------
+
+Okay, it is established that the lower limit for number of steps = ceil(n/2) ... and upper bound is n.
+
+Let's say the lower limit, l = q.m + r, by the division algorithm, 0 <= r < m ...
+
+So the first mulitple of m greater than l will be 
+
+(q + 1). m 
+
+or q.m if l is a multiple of m.
+
+More succintly, it can be written as multiplier = ceil[l/m] = (l/m + (l%m != 0)) , if l is not a multiple of m, then add 1, else it is simply l/m.
+
+ceil(l/m)*m gives the smallest multiple of m greater than l. 
+
+If l is a multiple of l, it returns l.
+
+Else it returns another number > l and multiple of m.
+
+Just check if the smallest multiple of m greater than l is smaller than the no of steps.
+
+-----------------------------------------------
+
+int main()
+{
+    int no_of_steps, multiple;
+    scanf("%d %d", &no_of_steps, &multiple);
+
+    int lower_limit = no_of_steps/2 + no_of_steps%2;
+
+    int smallest_multiplier = lower_limit/multiple + (lower_limit%multiple != 0);
+
+    int minimum_number_of_steps = smallest_multiplier*multiple;
+
+    printf("%d\n", (minimum_number_of_steps <= no_of_steps ? minimum_number_of_steps : - 1));
+    return 0;
+}
+

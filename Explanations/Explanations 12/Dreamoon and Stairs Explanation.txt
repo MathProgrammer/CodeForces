@@ -1,0 +1,42 @@
+Dreamoon wants to climb up a stair of n steps. He can climb 1 or 2 steps at each move. Dreamoon wants the number of moves to be a multiple of an integer m.
+
+What is the minimal number of moves making him climb to the top of the stairs that satisfies his condition?
+
+---------------------------------------------------------
+
+Establish a lower bound for the number of steps you must take - this is ceil(n/2)
+
+In this case, we take as many steps of 2 as possible and then take one last step. The number of steps cannot be less than this.
+
+The number of steps cannot be greater than the number of steps either. In that case, we take n steps of 1.
+
+The lower bound consists of all steps of 2, upper bound consists of all steps of 1.
+
+I iterated from the lower bound to the upper bound ... and in each step, replace a step of 2 by 2 steps of 1 (Increasing the number of steps by 1).
+
+Choose the first no of steps that is a multiple of m.
+
+This is O(n) ... There is an O(1) solution as well.
+
+-------------------------------------------------
+
+int main()
+{
+    int no_of_steps, multiple;
+    scanf("%d %d", &no_of_steps, &multiple);
+
+    int minimum_no_of_steps = no_of_steps/2 + no_of_steps%2;
+
+    while(minimum_no_of_steps <= no_of_steps)
+    {
+        if(minimum_no_of_steps%multiple == 0)
+        {
+            break;
+        }
+        minimum_no_of_steps++;
+    }
+
+    printf(minimum_no_of_steps > no_of_steps ? "-1\n" : "%d\n", minimum_no_of_steps);
+    return 0;
+}
+
