@@ -1,0 +1,42 @@
+Anastasia loves going for a walk in Central Uzhlyandian Park. But she became uninterested in simple walking, so she began to collect Uzhlyandian pebbles. 
+At first, she decided to collect all the pebbles she could find in the park.
+
+She has only two pockets. She can put at most k pebbles in each pocket at the same time. 
+There are n different pebble types in the park, and there are wi pebbles of the i-th type. 
+Anastasia is very responsible, so she never mixes pebbles of different types in same pocket. 
+However, she can put different kinds of pebbles in different pockets at the same time. 
+Unfortunately, she can't spend all her time collecting pebbles, so she can collect pebbles from the park only once a day.
+
+Help her to find the minimum number of days needed to collect all the pebbles of Uzhlyandian Central Park, 
+taking into consideration that Anastasia can't place pebbles of different types in same pocket.
+
+----------------------------------------------
+
+First imagine that there's only one pocket ... How long will it take to pick up wi pebbles ? 
+
+ceil(wi/k) ...
+
+
+Now we have two pockets ... No of days = ceil(no of pebbles/2)
+
+----------------------------------------------------
+
+int main()
+{
+    int no_of_pebble_types, pebble_limit;
+    scanf("%d %d", &no_of_pebble_types, &pebble_limit);
+
+    int days_to_collect_all_pebbles = 0;
+    for(int i = 1; i <= no_of_pebble_types; i++)
+    {
+        int pebble_i;
+        scanf("%d", &pebble_i);
+
+        days_to_collect_all_pebbles += pebble_i/pebble_limit + (pebble_i%pebble_limit != 0); //Ceil
+    }
+    days_to_collect_all_pebbles = days_to_collect_all_pebbles/2 + days_to_collect_all_pebbles%2;
+
+    printf("%d\n", days_to_collect_all_pebbles);
+    return 0;
+}
+
