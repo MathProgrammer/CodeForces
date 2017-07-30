@@ -1,0 +1,28 @@
+According to rules of the Berland fashion, a jacket should be fastened by all the buttons except only one, but not necessarily it should be the last one. 
+Also if the jacket has only one button, it should be fastened, so the jacket will not swinging open.
+
+You are given a jacket with n buttons. Determine if it is fastened in a right way.
+--------------------------------------------------------
+
+The case where there's one button confused me. I thought one button can't be fashionable no matter what ... But, if there's one button it should be closed.
+
+---------------------------------
+
+int main()
+{
+    int no_of_buttons;
+    scanf("%d", &no_of_buttons);
+
+    int no_of_open_buttons = 0;
+    for(int i = 1; i <= no_of_buttons; i++)
+    {
+        int button_i;
+        scanf("%d", &button_i);
+
+        no_of_open_buttons += (button_i == 0);
+    }
+
+    bool fashionable = (no_of_buttons > 1 && no_of_open_buttons == 1) || (no_of_buttons == 1 && no_of_open_buttons == 0);
+    printf(fashionable ? "YES\n" : "NO\n");
+    return 0;
+}
