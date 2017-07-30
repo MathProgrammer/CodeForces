@@ -1,0 +1,49 @@
+Limak is a little polar bear. He has n balls, the i-th ball has size ti.
+
+Limak wants to give one ball to each of his three friends. Giving gifts isn't easy — there are two rules Limak must obey to make friends happy:
+
+No two friends can get balls of the same size.
+No two friends can get balls of sizes that differ by more than 2.
+For example, Limak can choose balls with sizes 4, 5 and 3, or balls with sizes 90, 91 and 92. But he can't choose balls with sizes 5, 5 and 6 
+(two friends would get balls of the same size), and he can't choose balls with sizes 30, 31 and 33 (because sizes 30 and 33 differ by more than 2).
+
+Your task is to check whether Limak can choose three balls that satisfy conditions above.
+
+----------------------------------------------------
+
+Maintain a set of all ball numbers ... Pick up every ball and check if ball + 1, ball - 1 are also present in the set.
+
+Each count operation and insert operation occurs in log N time ... Overall complexity is O(N log N).
+
+N elements.
+
+------------------------------
+
+int main()
+{
+    int no_of_balls;
+    scanf("%d", &no_of_balls);
+
+    set <int> ball;
+    for(int i = 1; i <= no_of_balls; i++)
+    {
+        int ball_i;
+        scanf("%d", &ball_i);
+        ball.insert(ball_i);
+    }
+
+    bool gift_givable = false;
+    for(set <int> :: iterator i = ball.begin(); i != ball.end(); i++)
+    {
+        int ball_i = *i;
+
+        if(ball.count(ball_i + 1) == 1 && ball.count(ball_i - 1) == 1)
+        {
+            gift_givable = true;
+            break;
+        }
+    }
+
+    printf(gift_givable ? "YES\n" : "NO\n");
+    return 0;
+}
