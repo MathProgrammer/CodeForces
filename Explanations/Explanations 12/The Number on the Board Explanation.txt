@@ -1,0 +1,46 @@
+Some natural number was written on the board. Its sum of digits was not less than k. 
+But you were distracted a bit, and someone changed this number to n, replacing some digits with others. It's known that the length of the number didn't change.
+
+You have to find the minimum number of digits in which these two numbers can differ.
+
+----------------------------------------------------------
+
+Here's what I first did. Keep track of the sum initially .. Then go through the digits of the number on board and make each digit 9 if it isn't already 9 as long as the 
+sum is less than k.
+
+This was wrong ... Consider the case 11 500.
+
+According to this algorithm, answer will be 2, since 5 becomes 9 and digit sum becomes 9. However, we can make one of the 0s 9 and achieve it in one move.
+
+So, then I sorted all the numbers and then made each digit 9, starting from 0.
+
+-------------------------------------------------------
+
+int main()
+{
+    int digit_sum;
+    char number_on_board[MAX_LENGTH];
+    scanf("%d %s", &digit_sum, number_on_board);
+
+    vector <int> board_number;
+    int board_digit_sum = 0;
+    for(int i = 0; number_on_board[i] != '\0'; i++)
+    {
+        board_digit_sum += number_on_board[i] - '0';
+        board_number.push_back(number_on_board[i] - '0');
+    }
+
+    sort(all(board_number));
+    int min_no_of_digit_changes = 0;
+    for(unsigned int i = 0; i < board_number.size() && board_digit_sum < digit_sum; i++)
+    {
+        if(board_number[i] != 9)
+        {
+            board_digit_sum += 9 - board_number[i];
+            min_no_of_digit_changes++;
+        }
+    }
+
+    printf("%d\n", min_no_of_digit_changes);
+    return 0;
+}
