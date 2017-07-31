@@ -1,0 +1,87 @@
+It's the end of July – the time when a festive evening is held at Jelly Castle! 
+Guests from all over the kingdom gather here to discuss new trends in the world of confectionery. 
+Yet some of the things discussed here are not supposed to be disclosed to the general public: 
+the information can cause discord in the kingdom of Sweetland in case it turns out to reach the wrong hands. So it's a necessity to not let any uninvited guests in.
+
+There are 26 entrances in Jelly Castle, enumerated with uppercase English letters from A to Z. 
+Because of security measures, each guest is known to be assigned an entrance he should enter the castle through. 
+The door of each entrance is opened right before the first guest's arrival and closed right after the arrival of the last guest 
+that should enter the castle through this entrance. No two guests can enter the castle simultaneously.
+
+For an entrance to be protected from possible intrusion, a candy guard should be assigned to it. 
+There are k such guards in the castle, so if there are more than k opened doors, one of them is going to be left unguarded! 
+Notice that a guard can't leave his post until the door he is assigned to is closed.
+
+Slastyona had a suspicion that there could be uninvited guests at the evening. 
+She knows the order in which the invited guests entered the castle, and wants you to help her check whether there was a moment when more than k doors were opened.
+
+-----------------------------------------
+
+I learnt how to write a clean implementation for this problem. Initially, I used two vectors to keep track of the first and last appearance of each guest.
+
+And the number of doors open increases by 1 if a guest enters at position i and decreases by 1 at position i-1.
+
+(You must decrease the number of open doors 1 position after the last entry of a guest because the case where there's a single guest of a type -
+
+ABCDEF ... Here, the number of doors open will always be 0. The code was pretty ugly.)
+
+vector <int> first_appearance(26, -1);
+    vector <int> first_entry_at(no_of_guests, false);
+    for(int i = 0; guests[i] != '\0'; i++)
+        if(first_appearance[guests[i] - 'A'] == -1)
+            first_appearance[guests[i]- 'A'] = i, first_entry_at[i] = true;
+
+    vector <int> last_appearance(26, -1);
+    vector <int> last_entry_at(no_of_guests, false);
+    for(int i = no_of_guests - 1; i >= 0; i--)
+        if(last_appearance[guests[i] - 'A'] == -1)
+            last_appearance[guests[i]- 'A'] = i, last_entry_at[i] = true;
+
+    int maximum_doors_opened = 1, doors_open = 1;
+    for(int i = 1; i < no_of_guests; i++)
+    {
+        doors_open += first_entry_at[i];
+        doors_open -= last_entry_at[i - 1];
+
+        maximum_doors_opened = max(maximum_doors_opened, doors_open);
+    }
+
+    printf(maximum_doors_opened > no_of_guards ? "YES\n" : "NO\n");
+
+---------------------------------------------------------------------
+
+I saw a better way to keep track of the last occurence of each character. Rather than start from the end, and pick up a character only if it is unmapped,
+start from the beginning and always mark each character to it's position. This way you don't have to check if a character is unmarked.
+Each character is always set to it's last position.
+
+and to keep track of number of guests in, use a set. Much cleaner. A set will always ensure distinctness (balanced tree). 
+If i is the last position of a character, then delete that element from the set AFTER comparing the size of the set with the required amount.
+Otherwise one character guests will throw bugs.
+
+This problem was interesting because it's logic was simply but implementation seemed difficult. I learnt a lot. Using a map and a set and the right way to 
+keep track of the last occurence of each character. (Go in the opposite direction).
+
+------------------------------------------------------
+
+vector <int> first_appearance(26, -1);
+    vector <int> first_entry_at(no_of_guests, false);
+    for(int i = 0; guests[i] != '\0'; i++)
+        if(first_appearance[guests[i] - 'A'] == -1)
+            first_appearance[guests[i]- 'A'] = i, first_entry_at[i] = true;
+
+    vector <int> last_appearance(26, -1);
+    vector <int> last_entry_at(no_of_guests, false);
+    for(int i = no_of_guests - 1; i >= 0; i--)
+        if(last_appearance[guests[i] - 'A'] == -1)
+            last_appearance[guests[i]- 'A'] = i, last_entry_at[i] = true;
+
+    int maximum_doors_opened = 1, doors_open = 1;
+    for(int i = 1; i < no_of_guests; i++)
+    {
+        doors_open += first_entry_at[i];
+        doors_open -= last_entry_at[i - 1];
+
+        maximum_doors_opened = max(maximum_doors_opened, doors_open);
+    }
+
+    printf(maximum_doors_opened > no_of_guards ? "YES\n" : "NO\n");
