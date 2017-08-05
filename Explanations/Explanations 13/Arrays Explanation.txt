@@ -1,0 +1,33 @@
+You are given two arrays A and B consisting of integers, sorted in non-decreasing order. Check whether it is possible to choose k numbers 
+in array A and choose m numbers in array B so that any number chosen in the first array is strictly less than any number chosen in the second array.
+
+--------------------------------------------
+
+Compare the k-th element from the front in A to the m-th element from the back in B.
+
+int main()
+{
+    int size_a, size_b;
+    scanf("%d %d", &size_a, &size_b);
+
+    int last_a, first_b, last_a_position, first_b_position;
+    scanf("%d %d", &last_a_position, &first_b_position);
+
+    int element_i;
+    for(int i = 1; i <= size_a; i++)
+    {
+        scanf("%d", &element_i);
+        if(i == last_a_position)
+            last_a = element_i;
+    }
+
+    for(int i = size_b; i >= 1; i--)
+    {
+        scanf("%d", &element_i);
+        if(i == first_b_position)
+            first_b = element_i;
+    }
+
+    printf(last_a < first_b ? "YES\n" : "NO\n");
+    return 0;
+}
