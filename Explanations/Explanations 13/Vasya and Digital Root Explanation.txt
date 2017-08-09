@@ -1,0 +1,29 @@
+Now Vasya wants to quickly find numbers with the given digital root. The problem is, he hasn't learned how to do that and he asked you to help him. 
+You task is, given numbers k and d, 
+find the number consisting of exactly k digits (the leading zeroes are not allowed), with digital root equal to d, or else state that such number does not exist.
+
+---------------------------------------------------
+
+Pad the number with k-1 9s and then put a d ... S(n) = S(n + 9).
+
+I missed the case where d = 0 and k > 1 no solution
+
+-------------------------
+
+int main()
+{
+    int digital_root, no_of_digits;
+    scanf("%d %d", &no_of_digits, &digital_root);
+
+    if(digital_root == 0 && no_of_digits > 1)
+        printf("No solution\n");
+    else
+    {
+        for(int i =no_of_digits; i >= 2; i--)
+            printf("9");
+        printf("%d\n", digital_root);
+    }
+
+
+    return 0;
+}
