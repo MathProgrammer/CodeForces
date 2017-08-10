@@ -1,0 +1,33 @@
+
+-------------------------------------------------
+
+The trick for solving these kinds of questions is to brute force over the sum of digits rather than x.
+The sum of digits can go up to 81 in 1e9 -1.
+
+I got this far. But, I still didn't know how to do the last step.
+
+The idea is to simply keep evaluating the LHS and then checking if it is within the constraint. 
+I used my own power function because I know pow returns double.
+
+---------------------
+
+int main()
+{
+    int a, b, c;
+    scanf("%d %d %d", &a, &b, &c);
+
+    vector <int> solutions;
+
+    for(int digit_sum = 1; digit_sum <= 81; digit_sum++)
+    {
+        long long x = b*int_power(digit_sum, a) + c;
+        if(sum_of_digits(x) == digit_sum && x > 0 && x < 1e9)
+            solutions.push_back(x);
+    }
+
+    printf("%d\n", solutions.size());
+    for(unsigned int i = 0; i < solutions.size(); i++)
+        printf("%d ", solutions[i]);
+
+    return 0;
+}
