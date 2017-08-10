@@ -1,0 +1,33 @@
+With that begins the watch of Jon Snow. He is assigned the task to support the stewards.
+
+This time he has n stewards with him whom he has to provide support. Each steward has his own strength. 
+Jon Snow likes to support a steward only if there exists at least one steward who has strength strictly less than him and at least one steward who has 
+strength strictly greater than him.
+
+Can you find how many stewards will Jon support?
+
+--------------------------------------------
+
+The minimum strength and the maximum cannot be supported. Keep track of their frequency.
+
+int main()
+{
+    const int oo = 1e9 + 1;
+    int no_of_people, min_strength = oo, max_strength = 0;
+    scanf("%d", &no_of_people);
+
+    map <int, int> strength_frequency;
+    for(int i = 1; i <= no_of_people; i++)
+    {
+        int strength_i;
+        scanf("%d", &strength_i);
+
+        strength_frequency[strength_i]++;
+        min_strength = min(strength_i, min_strength);
+        max_strength = max(strength_i, max_strength);
+    }
+
+    int number_of_people_supported = max(0, no_of_people - strength_frequency[max_strength] - strength_frequency[min_strength]);
+    printf("%d\n", number_of_people_supported);
+    return 0;
+}
