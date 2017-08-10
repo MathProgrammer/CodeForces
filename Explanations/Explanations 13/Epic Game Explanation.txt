@@ -1,0 +1,26 @@
+gcd(a, b) <= min(a, b) ... 
+
+This is when both a and b are positive integers. It only changes when one of them is 0. 
+
+Keep decreasing n by the required amount until it reaches 0. Constraints are small. It will pass.
+
+----------------------------------------------
+
+int main()
+{
+    int a, b, n;
+    scanf("%d %d %d", &a, &b, &n);
+
+    int winner;
+    for(int turn_i = 0; n > 0; turn_i++)
+    {
+        int current_player = (turn_i%2 == 0 ? a : b) ;
+        n -= gcd(current_player, n);
+
+        if(n == 0)
+            winner = turn_i%2;
+    }
+
+    printf("%d\n", winner);
+    return 0;
+}
