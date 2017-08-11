@@ -1,0 +1,31 @@
+
+--------------------------------------
+
+Every page contributes 1 digit to the total.
+Every page greater than 10 contributes 2 to the total
+Every page greater than 10^2 contributes 3 to the total.
+
+Every page greater than 10^r contributes r+1 to the total
+
+So, for every power of 10 smaller then n, add n - (10^i - 1) to the total. (Because 10^i is the point from which an additional digit is contributed).
+
+This is O(log n) complexity
+------------------------------------
+
+int main()
+{
+    int no_of_pages;
+    scanf("%d", &no_of_pages);
+
+    long long no_of_digits_used = 0;
+    long long power_of_10 = 1;
+
+    while(power_of_10 <= no_of_pages)
+    {
+        no_of_digits_used += no_of_pages - (power_of_10 - 1);
+        power_of_10 *= 10;
+    }
+
+    printf("%I64d\n", no_of_digits_used);
+    return 0;
+}
