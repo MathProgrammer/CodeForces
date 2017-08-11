@@ -1,0 +1,33 @@
+Little Vasya loves orange juice very much. That's why any food and drink in his kitchen necessarily contains orange juice. 
+There are n drinks in his fridge, the volume fraction of orange juice in the i-th drink equals pi percent.
+
+One day Vasya decided to make himself an orange cocktail. He took equal proportions of each of the n drinks and mixed them. 
+Then he wondered, how much orange juice the cocktail has.
+
+Find the volume fraction of orange juice in the final drink.
+----------------------------------------------
+
+The numerator is the sum of all percentages. The denominator is n.
+
+Be careful about floating point precision errors. I typecasted everything to double before dividing.
+
+int main()
+{
+    int no_of_drinks;
+    scanf("%d", &no_of_drinks);
+
+    double numerator = 0.0;
+    for(int i = 1; i <= no_of_drinks; i++)
+    {
+        int percent_i;
+        scanf("%d", &percent_i);
+
+        numerator += percent_i;
+    }
+
+    double denominator = no_of_drinks*1.0;
+    double fraction = numerator/denominator;
+
+    printf("%lf\n", fraction);
+    return 0;
+}
