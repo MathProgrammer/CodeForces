@@ -1,0 +1,50 @@
+
+The Little Elephant has an integer a, written in the binary notation. He wants to write this number on a piece of paper.
+
+To make sure that the number a fits on the piece of paper, the Little Elephant ought to delete exactly one any digit from number a in the binary record. 
+At that a new number appears. 
+It consists of the remaining binary digits, written in the corresponding order (possible, with leading zeroes).
+
+The Little Elephant wants the number he is going to write on the paper to be as large as possible. 
+Help him find the maximum number that he can obtain after deleting exactly one binary digit and print it in the binary notation.
+
+--------------------------------------------------
+
+To keep the number as large as possible, we need to disturb as less of the set bits as possible. 
+Notice that any deletion always shifts the position of the bits.
+
+To do this we delete the most significant bit that is set to 0. This doesn't affect any of the bits to right of this 0 and keeps the most number of bits intact.
+If there is no 0, then delete any of the digits. (The answer will be the same.)
+
+-----------------------------------
+
+
+int main()
+{
+    char number[MAX_SIZE];
+    scanf("%s", number);
+
+    char new_number[MAX_SIZE];
+    int first_zero = -1, new_number_i = 0;
+
+    for(int i = 0; number[i] != '\0'; i++)
+    {
+        if(number[i] == '0' && first_zero == -1) 
+        {
+            first_zero = i;
+        }
+        else
+        {
+            new_number[new_number_i++] = number[i];
+        }
+    }
+
+    int last_digit_position = new_number_i;
+    if(first_zero == -1)
+        last_digit_position--;
+
+    new_number[last_digit_position] = '\0';
+
+    printf("%s\n", new_number);
+    return 0;
+}
