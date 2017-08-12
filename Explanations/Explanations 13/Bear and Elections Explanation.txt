@@ -1,0 +1,50 @@
+
+-------------------------------------
+
+This was very interesting. First time I got to use the data structure priority queues practically ! I've learnt something new today. 
+
+I tried coming up with an O(1) formula, but that doesn't work when there are multiple maxima. Rather than maintain a sorted array ... It's a lot more convenient 
+to have a priority queue. We can get the largest element in O(1) time. 
+
+Keep comparing limak with the maximum. If he isn't already the maximum, then increase his votes by 1, decrease maxima and put the maxima back in the priority queueu.
+
+---------------------------------
+
+#include <cstdio>
+#include <queue>
+
+using namespace std;
+
+int main()
+{
+    int no_of_candidates;
+    scanf("%d", &no_of_candidates);
+
+    int limak_votes;
+    priority_queue <int> votes;
+
+    scanf("%d", &limak_votes);
+    for(int i = 2; i <= no_of_candidates; i++)
+    {
+        int vote_i;
+        scanf("%d", &vote_i);
+
+        votes.push(vote_i);
+    }
+
+    int limak_bribes = 0;
+    while(limak_votes + limak_bribes <= votes.top())
+    {
+        int current_max = votes.top();
+        votes.pop();
+
+        current_max--;
+        limak_bribes++;
+        votes.push(current_max);
+    }
+
+
+    printf("%d\n", limak_bribes);
+    return 0;
+}
+
