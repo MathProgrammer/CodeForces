@@ -1,0 +1,48 @@
+Kostya likes Codeforces contests very much. However, he is very disappointed that his solutions are frequently hacked. That's why he decided to obfuscate 
+(intentionally make less readable) his code before upcoming contest.
+
+To obfuscate the code, Kostya first looks at the first variable name used in his program and replaces all its occurrences with a single symbol a, 
+then he looks at the second variable name that has not been replaced yet, and replaces all its occurrences with b, and so on. Kostya is well-mannered, 
+so he doesn't use any one-letter names before obfuscation. Moreover, there are at most 26 unique identifiers in his programs.
+
+You are given a list of identifiers of some program with removed spaces and line breaks. Check if this program can be a result of Kostya's obfuscation.
+
+------------------------------------------
+
+My logic was simple. keep track of all alphabets used ... If a new alphabet is encountered at any point in the string, 
+all alphabets smaller than it must already have been used.
+
+To keep track of all distinct alphabets, use a set data structure. 
+
+First, check if the element is already inserted in the set (log n). If it is not, then check if the size of the set < ch - 'a' ... This means that all alphabets smaller
+than ch are not used which makes it an invalid string. If it is valid, insert the character into the string.
+
+-------------------------------
+
+int main()
+{
+    char code[MAX_LENGTH];
+    scanf("%s", code);
+
+    set <char> alphabets_used;
+    int code_obfuscation = true;
+
+    for(int i = 0; code[i] != '\0'; i++)
+    {
+        //Before inserting an alphabet, all alphabets smaller than it must already have been used
+        if(alphabets_used.count(code[i]) == 0)
+        {
+            if(alphabets_used.size() < code[i] - 'a')
+            {
+                code_obfuscation = false;
+                break;
+            }
+        }
+        alphabets_used.insert(code[i]);
+    }
+
+
+    printf(code_obfuscation ? "YES\n" : "NO\n");
+    return 0;
+}
+
