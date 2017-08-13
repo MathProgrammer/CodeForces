@@ -1,0 +1,46 @@
+Bran and his older sister Arya are from the same house. Bran like candies so much, so Arya is going to give him some Candies.
+
+At first, Arya and Bran have 0 Candies. There are n days, at the i-th day, Arya finds ai candies in a box, that is given by the Many-Faced God. 
+Every day she can give Bran at most 8 of her candies. If she don't give him the candies at the same day, they are saved for her and she can give them to him later.
+
+Your task is to find the minimum number of days Arya needs to give Bran k candies before the end of the n-th day. 
+Formally, you need to output the minimum day index to the end of which k candies will be given out (the days are indexed from 1 to n).
+
+Print -1 if she can't give him k candies during n given days.
+--------------------------------------------
+
+Keep track of the total candies Arya has. 
+Every day give the min(8, total). 
+
+Check if greater than k candies have been given any day.
+
+-------------------------------
+
+int main()
+{
+    int no_of_days, target_candies;
+    scanf("%d %d", &no_of_days, &target_candies);
+
+    const int one_day_limit = 8;
+    int total_candies = 0, given_candies = 0, required_days = -1;
+    for(int day_i = 1; day_i <= no_of_days; day_i++)
+    {
+        int box_i, given_on_day_i;
+        scanf("%d", &box_i);
+
+        total_candies += box_i;
+        given_on_day_i = min(one_day_limit, total_candies);
+
+        total_candies -= given_on_day_i;
+        given_candies += given_on_day_i;
+
+        if(given_candies >= target_candies)
+        {
+            required_days = day_i;
+            break;
+        }
+    }
+
+    printf("%d\n", required_days);
+    return 0;
+}
