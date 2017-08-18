@@ -1,0 +1,44 @@
+Leha somehow found an array consisting of n integers. Looking at it, he came up with a task. Two players play the game on the array. Players move one by one. 
+The first player can choose for his move a subsegment of non-zero length with an odd sum of numbers and remove it from the array, 
+after that the remaining parts are glued together into one array and the game continues. 
+The second player can choose a subsegment of non-zero length with an even sum and remove it. Loses the one who can not make a move. Who will win if both play optimally?
+
+------------------------------------------------------------
+
+Case 1 - The array has only even numbers. The first player does not have a move since there is no subarray consisting of an odd sum.
+
+Case 2 - The array has at least one odd number.
+
+	Case 2a - The array has an odd number of odd numbers. This forces the sum of the array to be odd. The first player takes all the array elements and wins.
+	
+	Case 2b - The array has an even number of odd numbers. Let the array have 2p  odd numbers. The first player chooses a segment which has all numbers
+			but one of these odd numbers. So, the first player chooses a segment that contains 2p - 1 odd numbers.
+
+			Now, the second player cannot take this element, because any segment containing the left out odd number will have an odd sum,
+			forcing the sum to be odd. 
+
+			Either the second player has no moves or he makes a move which gives the first player an array consisting of only one odd number, 
+			and this reduces to Case 2a. The first player wins by taking the entire array.
+
+The second player only wins if there are 0 odd numbers.
+
+----------------------------------------------------
+
+int main()
+{
+    int no_of_elements;
+    scanf("%d", &no_of_elements);
+
+    int only_even_numbers = true;
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        int element_i;
+        scanf("%d", &element_i);
+
+        if(element_i%2 == 1)
+            only_even_numbers = false;
+    }
+
+    printf(only_even_numbers ? "Second\n" : "First\n");
+    return 0;
+}
