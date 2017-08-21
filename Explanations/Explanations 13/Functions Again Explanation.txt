@@ -1,0 +1,83 @@
+
+There is a list of n integers, 
+
+A function f(left, right) = sum(i = left to right - 1) |A[i] - A[i + 1]|. (-1)^{i + 1}
+
+Find the maximum value of this function.
+
+----------------------------------------------------------------
+
+Let's make some observations - 
+
+Firstly, notice that f(i, r) = f(i, i + 1) - f(i + 1, r).
+
+This itself is enough to suggest optimal substructure.
+
+Now, every function must END at a certain index in the array.
+
+Let Answer(i, j) represent the maximum value of f ending at i, j has two states 
+Representing whether the last difference i.e. - |A[i - 1] - A[i]| should be subtracted or added to f(i - 1, j).
+
+Notice that EVERY function ending at i must neccessarily include |A[i] - A[i - 1]|.
+
+There are two possibilities, either it is added or it is subtracted.
+
+1. The difference is added, then Answer(i, LAST_DIFFERENCE_ADDED) = max{0, Answer(i - 1, LAST_DIFFERENCE_REMOVED)} +  |A[i - 1] - A[i]|
+
+	If the current difference ending at i is added, then the previous difference ending at i - 1 must be subtracted. 
+	Of course, subtracting the previous difference may have made the value of the function negative. 
+	IN that case, we don't build upon Answer(i - 1, LAST_DIFFERENCE_REMOVED), but start a new function from i-1 = |A[i - 1] - A[i]|
+
+2. The difference is subtracted, then Answer(i, LAST_DIFFERENCE_REMOVED) = Answer(i - 1, LAST_DIFFERENCE_ADDED) - |A[i - 1] - A[i]|
+
+	If the current difference ending at i is subtracted, the the previous difference ending at i - 1 must have been added.
+	So, we just subtract it from Answer(i - 1, LAST_DIFFFERENCE_ADDED).
+
+	Note - Here we do not check if the value of Answer at position i-1 is positive because it is not possible to start the function from i-1 and
+	subtract the first term. By the definition of the function f, the first term MUST be added. So, here, we must build on what was done previously. 
+
+Base case - Answer(2, LAST_DIFFERENCE_ADDED) = |A[2] - A[1]|
+            Answer(2, LAST_DIFFERENCE_REMOVED) = 0 .... [We can't start a function from 1 and subtract the first term]
+
+SO, Answer(3, LAST_DIFFERENCE_REMOVED) = Answer(2, LAST_DIFFERENCE_ADDED) - |A[3] - A[2]| - 
+    Answer(3, LAST_DIFFERENCE_ADDED) = max{Answer(2, LAST_DIFFERENCE_REMOVED), 0} + |A[3] - A[2]|
+
+
+This is a 2-dimensional function, but notice for each state, we only need the previous state. So, it can be done in O(1) memory and O(n) time.
+
+Answer = max{Answer(i, j)}
+
+---------------------------------------------------------------------------
+
+int main()
+{
+    int no_of_elements;
+    scanf("%d", &no_of_elements);
+
+    vector <int> element(no_of_elements + 1);
+    for(int i = 1; i <= no_of_elements; i++)
+        scanf("%d", &element[i]);
+
+    long long maximum_value, maximum_with_last_difference_added, maximum_with_last_difference_removed;
+
+    maximum_with_last_difference_added = abs(element[2] - element[1]);
+    maximum_with_last_difference_removed = 0;
+    maximum_value = maximum_with_last_difference_added;
+
+    for(int i = 3; i <= no_of_elements; i++)
+    {
+        long long maximum_with_this_difference_added, maximum_with_this_difference_removed, maximum_value_ending_here;
+
+        maximum_with_this_difference_added = max(0LL, maximum_with_last_difference_removed) + abs(element[i] - element[i - 1]);
+        maximum_with_this_difference_removed = maximum_with_last_difference_added - abs(element[i] - element[i - 1]);
+
+        maximum_value_ending_here = max(maximum_with_this_difference_added, maximum_with_this_difference_removed);
+        maximum_value = max(maximum_value, maximum_value_ending_here);
+
+        maximum_with_last_difference_added = maximum_with_this_difference_added;
+        maximum_with_last_difference_removed = maximum_with_this_difference_removed;
+    }
+
+    printf("%I64d\n", maximum_value);
+    return 0;
+}
