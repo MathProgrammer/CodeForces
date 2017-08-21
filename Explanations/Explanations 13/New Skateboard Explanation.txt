@@ -1,0 +1,36 @@
+
+---------------------------------------------------
+
+A number is a multiple of 4 if it's last 2 digits are a multiple of 4. 
+
+So go through every (s[i], s[i + 1]) ... IF they form a number divisible by 4, then every string ending there will be a multiple of 4.
+
+(All strings from 0 to i = i + 1 multiples of 4).
+
+Additionally a new string will be formed if s[i + 1] is also a multiple of 4, (on it's own).
+
+Be sure to check if the first character is a multiple of 4 before you begin.
+
+------------------------------------
+
+int main()
+{
+    char calculator[MAX_LENGTH];
+    scanf("%s", calculator);
+
+    long long no_of_multiples_of_4 = ( (calculator[0] - '0')%4 == 0);
+
+    for(int i = 0; calculator[i + 1] != '\0'; i++)
+    {
+        int current_suffix = (calculator[i] - '0')*10 + (calculator[i + 1] - '0');
+        int no_of_strings_ending_with_this_suffix = i + 1;
+
+        if(current_suffix%4 == 0)
+            no_of_multiples_of_4 += no_of_strings_ending_with_this_suffix;
+
+        no_of_multiples_of_4 += ( (calculator[i + 1] - '0')%4 == 0);
+    }
+
+    printf("%I64d\n", no_of_multiples_of_4);
+    return 0;
+}
