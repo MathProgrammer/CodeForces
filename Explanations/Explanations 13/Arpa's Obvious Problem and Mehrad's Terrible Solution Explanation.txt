@@ -1,0 +1,67 @@
+
+There is an array ... Count the number of pairs for which A[i]XOR A[j] = x.
+
+There are upto 10^5 elements in the array.
+
+---------------------------------------------------------------------
+
+So iterating through every pair in the array takes O(n^2) time and it won't pass the time limit.
+
+I was thinking of how to do it and then it suddenly hit me !
+
+XOR(A[i], A[j]) = X
+XOR(A[i], A[i], A[j]) = XOR(A[i], X)
+XOR(0, A[j]) = XOR(A[i], X)
+A[j] = XOR(A[i], X)
+
+So, this is an easier operation. 
+
+Instead of iterating through every pair of the array and then checking if it gives X on XOR.
+
+Build a frequency table of all elements. This takes O(n log n) time.
+
+Then go through each frequency bucket. Check what the frequency of XOR(A[i], X) is.
+Every element of A[i] will match with every element of A[j]. Multiply them to get the pairs.
+
+There are n elements and each such operation will take O(log n) time. 
+
+One tricky thing to watch out for is when A[i]'s complement is itself ... in that case, each A[i] will be paired off with every other element in it's frequency bucket.
+Pair frequency in this case, will be frequency[A[i]^X] - 1. (It doesn't get paired with itself).
+
+Divide the number of pairs by 2 at the end since we have counted each pair twice. 
+
+O(n log n).
+
+--------------------------------------------
+
+int main()
+{
+    int no_of_elements, target;
+    scanf("%d %d", &no_of_elements, &target);
+
+    map <int, int> frequency;
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        int element_i;
+        scanf("%d", &element_i);
+
+        frequency[element_i]++;
+    }
+
+    long long no_of_good_pairs = 0;
+    for(map <int, int>:: iterator i = frequency.begin(); i != frequency.end(); i++)
+    {
+        int element_i = i->first;
+        int frequency_i = i->second;
+
+        int pair_element = target^element_i;
+        int pair_frequency = (element_i == pair_element ? frequency_i - 1 : frequency[pair_element]);
+
+        no_of_good_pairs += pair_frequency*1LL*frequency_i;
+    }
+
+    no_of_good_pairs = no_of_good_pairs/2;
+
+    printf("%I64d\n", no_of_good_pairs);
+    return 0;
+}
