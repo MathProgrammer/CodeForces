@@ -1,0 +1,66 @@
+Find all pairs of elemnets (A[i], A[j]) that sum up to x in a given array.
+
+----------------------------------
+
+The naive solution is to iterate through every pair of elements in the array. This is O(n^2).
+
+There's a better solution. 
+
+Keep track of the frequency of each element. 
+
+Then pick up every frequency bucket and then see if (2^x - A[i]) exists and what it's frequency is.
+
+Note - FOr practical reasons, checking map[2^x - A[i]] == 0, inserts another node into the frequency table.
+
+So, before inserting check if 2^x - A[i] is positive, and then if it is present in the original array.
+
+If it is present in the original array, then multiply the frequency of the element with the frequency of the pair element.
+
+(If an element is it's own pair, then pair frequency = frequency_i - 1)
+
+O(n log n) to take the input, and O(n log n) to find the answer.
+
+-----------------------------------------------
+
+int main()
+{
+    int no_of_elements;
+    scanf("%d", &no_of_elements);
+
+    set <int> original_array;
+    map <int, int> frequency;
+    for(int i = 0; i < no_of_elements; i++)
+    {
+        int element_i;
+        scanf("%d", &element_i);
+
+        frequency[element_i]++;
+        original_array.insert(element_i);
+    }
+
+    long long no_of_pairs = 0;
+    for(map <int, int> :: iterator i = frequency.begin(); i != frequency.end(); i++)
+    {
+        int element_i = i->first;
+        int frequency_i = i->second;
+
+        for(int power = 0; power <= 31; power++)
+        {
+            int power_of_2 = (1 << power);
+
+            int pair_element = power_of_2 - element_i;
+            int pair_frequency = 0;
+
+            if(pair_element > 0 && original_array.count(pair_element) == 1)
+                pair_frequency = (element_i == pair_element ? frequency_i - 1 : frequency[pair_element]);
+
+            no_of_pairs += frequency_i*1LL*pair_frequency;
+
+        }
+    }
+
+    no_of_pairs = no_of_pairs/2;
+
+    printf("%I64d\n", no_of_pairs);
+    return 0;
+}
