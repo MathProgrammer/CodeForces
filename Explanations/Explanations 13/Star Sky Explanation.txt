@@ -1,0 +1,82 @@
+
+Precompputation must be used to speeden this.
+
+Let f(b, x, y) hold the number of stars of brightness b (initially) in the rectangle from (1, 1) ending at (x, y).
+
+Clearly, f(b, x, y) = f(b, x - 1, y) + f(b, x, y - 1) - f(b, x - 1, y - 1) + (no of stars of brightness b at (x, y))
+
+Answer to each query is (b + t)%(MAximum brightness + 1) * no of stars of brightness b.
+
+The number of stars of brightness b inside the query rectangle is f(b, x2, y2) - f(b, x2, y1 - 1) - f(b, x1 - 1, y2) + f(b, x1 - 1, y1 - 1)
+
+By the principle of exclusion and inclusion.
+
+------------------------------------------------
+
+Complexity of this approach for queries is O(qc) + O(cX^2) for precomputation. O(n) for reading input.
+
+Now, for every query, we only need to go over every brightness, which is small. 
+
+However, if for every query, we go over the entire rectangle, then it is O(qX^2) ... Since q can be 10^5 and X can be 100 ... This may take roughly 10^9 iterations.
+
+Whereas, O(qc) is 10^5 . 10 = 10^6 operations. Precomputation takes (10. 10^4 = 10^5 operations roughly, as does input ... Overall precomputation and input will take
+
+2. 10^5 operations ... This is done in one second and all queries are answered in one second).
+
+If the queries were answered individually by going over the entire rectangle, it would take 10^9 operations which is 1000 seconds.
+
+------------------------------------------------------------------------------
+
+int main()
+{
+    int no_of_stars, no_of_views, maximum_brightness;
+    scanf("%d %d %d", &no_of_stars, &no_of_views, &maximum_brightness);
+
+    int no_of_stars_of_initial_brightness_in[MAX_BRIGHTNESS + 1][MAX_LENGTH + 1][MAX_LENGTH + 1] = {{{0}}};
+
+    for(int star_i = 1; star_i <= no_of_stars; star_i++)
+    {
+        int brightness_i, x_i, y_i;
+        scanf("%d %d %d", &x_i, &y_i, &brightness_i);
+
+        no_of_stars_of_initial_brightness_in[brightness_i][x_i][y_i]++;
+    }
+
+    for(int brightness_i = 0; brightness_i <= maximum_brightness; brightness_i++)
+    {
+        for(int x_i = 1; x_i <= MAX_LENGTH; x_i++)
+        {
+            for(int y_i = 1; y_i <= MAX_LENGTH; y_i++)
+            {
+                no_of_stars_of_initial_brightness_in[brightness_i][x_i][y_i] += no_of_stars_of_initial_brightness_in[brightness_i][x_i][y_i - 1]
+                                                                              + no_of_stars_of_initial_brightness_in[brightness_i][x_i - 1][y_i]
+                                                                              - no_of_stars_of_initial_brightness_in[brightness_i][x_i - 1][y_i - 1];
+            }
+        }
+    }
+
+    while(no_of_views--)
+    {
+        int time, x_1,y_1, x_2, y_2;
+        scanf("%d %d %d %d %d", &time, &x_1, &y_1, &x_2, &y_2);
+
+        int sum_of_brightness = 0;
+
+        for(int brightness_i = 0; brightness_i <= maximum_brightness; brightness_i++)
+        {
+            int no_of_stars_of_this_brightness = no_of_stars_of_initial_brightness_in[brightness_i][x_2][y_2]
+                                               - no_of_stars_of_initial_brightness_in[brightness_i][x_2][y_1 - 1]
+                                               - no_of_stars_of_initial_brightness_in[brightness_i][x_1 - 1][y_2]
+                                               + no_of_stars_of_initial_brightness_in[brightness_i][x_1 - 1][y_1 - 1];
+
+            int final_brightness = (brightness_i + time)%(maximum_brightness + 1);
+
+
+            sum_of_brightness += no_of_stars_of_this_brightness*final_brightness;
+        }
+
+        printf("%d\n", sum_of_brightness);
+    }
+    return 0;
+}
+
