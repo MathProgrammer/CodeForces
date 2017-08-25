@@ -1,0 +1,39 @@
+Berland annual chess tournament is coming!
+
+Organizers have gathered 2·n chess players who should be divided into two teams with n people each. 
+The first team is sponsored by BerOil and the second team is sponsored by BerMobile. Obviously, organizers should guarantee the win for the team of BerOil.
+
+Thus, organizers should divide all 2·n players into two teams with n people each in such a way that the first team always wins.
+
+Every chess player has its rating ri. It is known that chess player with the greater rating always wins the player with the lower rating. 
+If their ratings are equal then any of the players can win.
+
+After teams assignment there will come a drawing to form n pairs of opponents: in each pair there is a player from the first team and a player from the second team. 
+Every chess player should be in exactly one pair. Every pair plays once. The drawing is totally random.
+
+Is it possible to divide all 2·n players into two teams with n people each so that the player from the first team in every pair wins regardless of the results of the drawing?
+
+--------------------------------------------------------
+
+Have two divisions - consisting of the first and second half of players according to ratings.
+
+If the greatest rated player of second division is weaker than the weakest player of first division, then answer is yes.
+
+Else it is no.
+
+-------------------------------------------------------------
+
+int main()
+{
+    int no_of_pairs;
+    scanf("%d", &no_of_pairs);
+
+    vector <int> player_rating(2*no_of_pairs + 1, 0);
+    for(int i = 1; i <= 2*no_of_pairs; i++)
+        scanf("%d", &player_rating[i]);
+
+    sort(all(player_rating));
+
+    printf(player_rating[no_of_pairs] < player_rating[no_of_pairs + 1] ? "YES\n" : "NO\n");
+    return 0;
+}
