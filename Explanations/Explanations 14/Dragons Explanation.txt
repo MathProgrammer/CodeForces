@@ -1,0 +1,46 @@
+Kirito is stuck on a level of the MMORPG he is playing now. To move on in the game, he's got to defeat all n dragons that live on this level. 
+Kirito and the dragons have strength, which is represented by an integer. In the duel between two opponents the duel's outcome is determined by their strength.
+ Initially, Kirito's strength equals s.
+
+If Kirito starts duelling with the i-th  dragon and Kirito's strength is not greater than the dragon's strength xi, then Kirito loses the duel and dies. 
+But if Kirito's strength is greater than the dragon's strength, then he defeats the dragon and gets a bonus strength increase by yi.
+
+Kirito can fight the dragons in any order. Determine whether he can move on to the next level of the game, that is, defeat all dragons without a single loss.
+
+-------------------------------------------------
+
+Fight the weakest dragon available. If you can't beat him, you can't beat anyone else either.
+
+------------------------------------------------------
+
+int main()
+{
+    int strength, no_of_dragons;
+    scanf("%d %d", &strength, &no_of_dragons);
+
+    vector < pair <int, int> > dragon(no_of_dragons);
+    for(int i = 0; i < no_of_dragons; i++)
+        scanf("%d %d", &dragon[i].first, &dragon[i].second);
+
+    sort(all(dragon));
+
+    int can_defeat_all_dragons = true;
+    for(int i = 0; i < no_of_dragons; i++)
+    {
+        int strength_of_dragon = dragon[i].first;
+        int bonus = dragon[i].second;
+
+        if(strength <= strength_of_dragon)
+        {
+            can_defeat_all_dragons = false;
+            break;
+        }
+        else
+        {
+            strength += bonus;
+        }
+    }
+
+    printf(can_defeat_all_dragons ? "YES\n" : "NO\n");
+    return 0;
+}
