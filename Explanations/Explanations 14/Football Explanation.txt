@@ -1,0 +1,39 @@
+One day Vasya decided to have a look at the results of Berland 1910 Football Championship’s finals. Unfortunately he didn't find the overall score of the match; 
+however, he got hold of a profound description of the match's process. On the whole there are n lines in that description each of which described one goal. 
+Every goal was marked with the name of the team that had scored it. Help Vasya, learn the name of the team that won the finals. 
+It is guaranteed that the match did not end in a tie.
+
+---------------------------------------
+
+Maintain a map of the no of goals scored by each team.
+
+int main()
+{
+    int no_of_lines;
+    cin >> no_of_lines;
+
+    map <string, int> no_of_goals;
+
+    while(no_of_lines--)
+    {
+        string team;
+        cin >> team;
+
+        no_of_goals[team]++;
+    }
+
+    string winner;
+    int max_goals = 0;
+    for(map <string, int> :: iterator i = no_of_goals.begin(); i != no_of_goals.end(); i++)
+    {
+        int no_of_goals = i->second;
+        if(no_of_goals > max_goals)
+        {
+            max_goals = no_of_goals;
+            winner = i->first;
+        }
+    }
+
+    cout << winner;
+    return 0;
+}
