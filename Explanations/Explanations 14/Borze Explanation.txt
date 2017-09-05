@@ -1,0 +1,32 @@
+Ternary numeric notation is quite popular in Berland. To telegraph the ternary number the Borze alphabet is used. Digit 0 is transmitted as «.», 1 as «-.» and 2 as «--». 
+You are to decode the Borze code, i.e. to find out the ternary number given its representation in Borze alphabet.
+
+-------------------------------
+
+The coding is like Huffman coding. No code is the prefix of another code.
+
+-----------------------------------
+
+int main()
+{
+    string borze_code, translation;
+    cin >> borze_code;
+
+    for(unsigned int i = 0; i < borze_code.size(); i++)
+    {
+        if(borze_code[i] == '.')
+            translation += '0';
+        else if(borze_code[i] == '-')
+        {
+            if(borze_code[i + 1] == '.')
+                translation += '1';
+            else if(borze_code[i + 1] == '-')
+                translation += '2';
+
+            i++;
+        }
+    }
+
+    cout << translation;
+    return 0;
+}
