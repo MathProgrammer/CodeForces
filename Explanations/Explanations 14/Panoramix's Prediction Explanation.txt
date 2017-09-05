@@ -1,0 +1,28 @@
+One cold April morning Panoramix predicted that soon Kakofonix will break free from his straitjacket, and this will be a black day for the residents of the Gallic countryside.
+
+Panoramix's prophecy tells that if some day Asterix and Obelix beat exactly x Roman soldiers, where x is a prime number, and next day they beat exactly y Roman soldiers,
+ where y is the next prime number after x, 
+then it's time to wait for Armageddon, for nothing can shut Kakofonix up while he sings his infernal song.
+
+-----------------------------------------------------------------
+
+Just check if there's no primes in between and y is also a prime.
+
+int main()
+{
+    int x, y;
+    scanf("%d %d", &x, &y);
+
+    int prime_in_middle = false;
+    for(int i = x + 1; i < y; i++)
+    {
+        if(is_prime(i))
+        {
+            prime_in_middle = true;
+            break;
+        }
+    }
+
+    printf(!prime_in_middle && is_prime(y) ? "YES\n" : "NO\n");
+    return 0;
+}
