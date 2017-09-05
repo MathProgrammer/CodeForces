@@ -1,0 +1,41 @@
+There are n children in Jzzhu's school. Jzzhu is going to give some candies to them. Let's number all the children from 1 to n. 
+The i-th child wants to get at least ai candies.
+
+Jzzhu asks children to line up. Initially, the i-th child stands at the i-th place of the line. Then Jzzhu start distribution of the candies. He follows the algorithm:
+
+Give m candies to the first child of the line.
+If this child still haven't got enough candies, then the child goes to the end of the line, else the child go home.
+Repeat the first two steps while the line is not empty.
+Consider all the children in the order they go home. Jzzhu wants to know, which child will be the last in this order?
+
+---------------------------------------------
+
+The number of times a child stands in line = ceil(a_i/m)
+
+Keep track of which i has the maximum number of i, if there is a tie, award it to the greater i.
+
+-------------------------------
+
+int main()
+{
+    int no_of_children, no_of_candies_given;
+    scanf("%d %d", &no_of_children, &no_of_candies_given);
+
+    int maximum_turns = 0, last_child = 0;
+    for(int i = 1; i <= no_of_children; i++)
+    {
+        int candy_i;
+        scanf("%d", &candy_i);
+
+        int no_of_turns = candy_i/no_of_candies_given + (candy_i%no_of_candies_given != 0);
+
+        if(no_of_turns >=  maximum_turns)
+        {
+            maximum_turns = no_of_turns;
+            last_child = i;
+        }
+    }
+
+    printf("%d\n", last_child);
+    return 0;
+}
