@@ -1,0 +1,30 @@
+Linear Kingdom has exactly one tram line. It has n stops, numbered from 1 to n in the order of tram's movement. 
+At the i-th stop ai passengers exit the tram, while bi passengers enter it. The tram is empty before it arrives at the first stop. 
+Also, when the tram arrives at the last stop, all passengers exit so that it becomes empty.
+
+Your task is to calculate the tram's minimum capacity such that the number of people inside the tram at any time never exceeds this capacity. 
+Note that at each stop all exiting passengers exit before any entering passenger enters the tram.
+
+----------------------------------------
+
+The minimum capacity is the maximum number of people on the train at any given point of time.
+-----------------------------------
+
+int main()
+{
+    int no_of_stops;
+    scanf("%d", &no_of_stops);
+
+    int minimum_capacity = 0, no_of_people_on_train = 0;
+    for(int i = 1; i <= no_of_stops; i++)
+    {
+        int no_of_entries, no_of_exits;
+        scanf("%d %d",&no_of_exits, &no_of_entries);
+
+        no_of_people_on_train += (no_of_entries - no_of_exits);
+        minimum_capacity = max(minimum_capacity, no_of_people_on_train);
+    }
+
+    printf("%d\n", minimum_capacity);
+    return 0;
+}
