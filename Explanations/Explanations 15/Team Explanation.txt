@@ -1,0 +1,76 @@
+Now it's time of Olympiads. Vanya and Egor decided to make his own team to take part in a programming Olympiad. 
+They've been best friends ever since primary school and hopefully, that can somehow help them in teamwork.
+
+For each team Olympiad, Vanya takes his play cards with numbers. He takes only the cards containing numbers 1 and 0. The boys are very superstitious. 
+They think that they can do well at the Olympiad if they begin with laying all the cards in a row so that:
+
+there wouldn't be a pair of any side-adjacent cards with zeroes in a row;
+there wouldn't be a group of three consecutive cards containing numbers one.
+Today Vanya brought n cards with zeroes and m cards with numbers one. 
+The number of cards was so much that the friends do not know how to put all those cards in the described way. 
+Help them find the required arrangement of the cards or else tell the guys that it is impossible to arrange cards in such a way.
+
+--------------------------------------------------------
+
+If the number of 1s are far more than the number of 0s, we can arrange them like this.
+
+11 0 11 0 11 0 .. .0  .. 0 
+
+Basically the 0s act like dividers. If there are z zeroes, then there are z+1 boxes for the 1s. 
+If the number of 1s, o > 2*(z + 1), 
+
+One of the boxes will have more than 2 1s by the Pigeonhole Principle. 
+
+What about the bound on the number of 0s ?
+
+If we look at the string and think of the 1s as seperators, then there can be at most o + 1 boxes. 
+
+z > o + 1, cannot satisfy the equation.
+
+Now, how do we print such a string ? Trick is to be greedy. 
+
+If the number of 1s is greater than the number of 0s, print 110, 
+
+If the number of 1s are equal to the number of 0s, print 10.
+
+If the number of 1s is less than the number of 0s, print 
+
+Do this as long as both o AND z are > 0. Once one of them becomes 0, print the other character to the required frequency.
+
+------------------------------------------
+
+int main()
+{
+    int no_of_1s, no_of_0s;
+    scanf("%d %d", &no_of_0s, &no_of_1s);
+
+    if(no_of_1s > 2*(no_of_0s + 1) || no_of_0s > no_of_1s + 1)
+    {
+        printf("-1\n");
+        return 0;
+    }
+
+    while(no_of_0s > 0 && no_of_1s > 0)
+    {
+        if(no_of_1s > no_of_0s)
+        {
+            printf("110");
+            no_of_1s -= 2, no_of_0s--;
+        }
+        else if(no_of_1s == no_of_0s)
+        {
+            printf("10");
+            no_of_0s--, no_of_1s--;
+        }
+        else if(no_of_1s < no_of_0s)
+        {
+            printf("01");
+            no_of_0s--, no_of_1s--;
+        }
+    }
+
+    for(int i = 1; i <= no_of_0s; i++) printf("0");
+    for(int i = 1; i <= no_of_1s; i++) printf("1");
+
+    return 0;
+}
