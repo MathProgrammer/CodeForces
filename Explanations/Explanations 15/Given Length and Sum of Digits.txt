@@ -1,0 +1,75 @@
+You have a positive integer m and a non-negative integer s. Your task is to find the smallest and the largest of the numbers that have length m and sum of digits s. 
+The required numbers should be non-negative integers written in the decimal base without leading zeroes.
+
+-------------------------------------------
+
+How do we get the maximum number ?
+
+Use as many 9s as possible in the most significant digits and once we have no longer 9s left, we write whichever number we need to make up the sum and pad it with 0s.
+
+How do we get the minimum number ?
+
+Put a 1 in the first digit and put as many 0s after the 1 as possible. In other words, put as many 9s as possible from the back. And then put a 1 in the first digit.
+
+Number not posssible if sum = 0, and digits > 0.
+
+Number possible if sum = 0, d = 1, Answer = 0
+
+--------------------------------------------------
+
+int main()
+{
+    int sum, no_of_digits;
+    scanf("%d %d", &no_of_digits, &sum);
+
+    if(sum == 0 && no_of_digits == 1)
+    {
+        printf("0 0\n"); return 0;
+    }
+    else if(sum == 0 || sum > 9*no_of_digits)
+    {
+        printf("-1 -1\n"); return 0;
+    }
+
+    vector <int> minimum_number(no_of_digits + 1, 0);
+
+    int remaining_sum = sum - 1, i;
+    for(i = no_of_digits; i > 0 && remaining_sum > 0; i--)
+    {
+        if(remaining_sum >= 9)
+        {
+            minimum_number[i] = 9;
+            remaining_sum -= 9;
+        }
+        else
+        {
+            minimum_number[i] = remaining_sum;
+            remaining_sum = 0;
+        }
+    }
+
+    minimum_number[1] = (minimum_number[1] == 0 ? 1 : minimum_number[1] + 1);
+
+    vector <int> maximum_number(no_of_digits + 1, 0);
+    remaining_sum = sum;
+    for(i = 1; i <= no_of_digits && remaining_sum > 0; i++)
+    {
+        if(remaining_sum >= 9)
+        {
+            maximum_number[i] = 9;
+            remaining_sum -= 9;
+        }
+        else
+        {
+            maximum_number[i] = remaining_sum;
+            remaining_sum = 0;
+        }
+    }
+    for(int i = 1; i <= no_of_digits; i++) printf("%d", minimum_number[i]);
+
+    printf(" ");
+
+    for(int i = 1; i <= no_of_digits; i++) printf("%d", maximum_number[i]);
+
+    return 0;
+}
