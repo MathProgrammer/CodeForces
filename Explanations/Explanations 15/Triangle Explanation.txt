@@ -1,0 +1,41 @@
+Johnny has a younger sister Anne, who is very clever and smart. As she came home from the kindergarten, 
+she told his brother about the task that her kindergartener asked her to solve. 
+The task was just to construct a triangle out of four sticks of different colours. 
+Naturally, one of the sticks is extra. It is not allowed to break the sticks or use their partial length. 
+Anne has perfectly solved this task, now she is asking Johnny to do the same.
+
+The boy answered that he would cope with it without any difficulty. However, after a while he found out that different tricky things can occur. 
+It can happen that it is impossible to construct a triangle of a positive area, but it is possible to construct a degenerate triangle. 
+It can be so, that it is impossible to construct a degenerate triangle even. As Johnny is very lazy, he does not want to consider such a big amount of cases, 
+he asks you to help him.
+
+--------------------------------------
+
+Check if it's possible to form a triangle, then check if it's possible to form a segment.
+
+--------------------------------------------
+
+int triangle(int side_a, int side_b, int side_c)
+{
+    return ( (side_a + side_b > side_c) && (side_b + side_c > side_a) && (side_c + side_a > side_b) );
+}
+
+int segment(int side_a, int side_b, int side_c)
+{
+    return ( (side_a + side_b == side_c) || (side_b + side_c == side_a) || (side_c + side_a == side_b) );
+}
+
+int main()
+{
+    int side_a, side_b, side_c, side_d;
+    scanf("%d %d %d %d", &side_a, &side_b, &side_c, &side_d);
+
+    if(triangle(side_a, side_b, side_c) || triangle(side_b, side_c, side_d) || triangle(side_c, side_d, side_a) || triangle(side_b, side_a, side_d) )
+        printf("TRIANGLE\n");
+    else if(segment(side_a, side_b, side_c) || segment(side_b, side_c, side_d) || segment(side_c, side_d, side_a) || segment(side_b, side_a, side_d) )
+        printf("SEGMENT\n");
+    else
+        printf("IMPOSSIBLE\n");
+
+    return 0;
+}
