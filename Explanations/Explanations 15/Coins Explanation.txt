@@ -1,0 +1,43 @@
+In Berland a money reform is being prepared. New coins are being introduced. 
+After long economic calculations was decided that the most expensive coin should possess the denomination of exactly n Berland dollars. 
+Also the following restriction has been introduced for comfort: the denomination of each coin should be divisible by the denomination of any cheaper coin. 
+It is known that among all the possible variants the variant with the largest number of new coins will be chosen. 
+Find this variant. Print in the order of decreasing of the coins' denominations.
+
+-----------------------------------
+
+Have a look at the prime factorisation of n
+
+n = (p.p.p.p ... p). (q.q. .. q). (r.r. ... r)
+
+The number of numbers in the sequence can't be more than the number of prime numbers in n's prime factorisation.
+Because each term must have at least one term less than it's predecessor.
+
+We construct a sequence in which each term will have exactly one less prime number in it's prime factorisation.
+Divide n by each prime and insert the new n into the sequence till n becomes 1.
+
+--------------------------------------------
+
+int main()
+{
+	int n;
+	scanf("%d", &n);
+
+	vector <int> denominations;
+	denominations.push_back(n);
+
+	for(int i = 2; n > 1; i++)
+	{
+		while(n%i == 0)
+		{
+			n = n/i;
+			denominations.push_back(n);
+		}
+	}
+
+	for(int i = 0; i < denominations.size(); i++)
+		printf("%d ", denominations[i]);
+
+	return 0;
+}
+
