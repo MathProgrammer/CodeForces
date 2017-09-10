@@ -1,0 +1,73 @@
+You are given a non-negative integer n, its decimal representation consists of at most 100 digits and doesn't contain leading zeroes.
+
+Your task is to determine if it is possible in this case to remove some of the digits (possibly not remove any digit at all) 
+so that the result contains at least one digit, forms a non-negative integer, doesn't have leading zeroes and is divisible by 8. 
+After the removing, it is forbidden to rearrange the digits.
+
+If a solution exists, you should print it.
+
+----------------------------------------------
+
+The number of digits is only 100. So, I used a very simple algorithm.
+
+Iterate over all 1-digit, 2-digit and 3-digit numbers possible in the array.
+
+And check if any of them are multiples of 8.
+
+No need to check for 4 digits. Because if a number is 4 digit multiple, it will have a 3-digit suffix which will also be a multiple of 8.
+
+------------------------------------------------------
+
+int main()
+{
+    string number;
+    cin >> number;
+
+    int found = false;
+    int answer;
+
+    typedef unsigned int u_int;
+
+    for(u_int i = 0; i < number.size() && !found; i++)
+    {
+        if(number[i] == '8' || number[i] == '0')
+            found = true, answer = number[i] - '0';
+    }
+
+    for(u_int i = 0; i < number.size() && !found; i++)
+    {
+        for(u_int j = i + 1; j < number.size() && !found; j++)
+        {
+            int first_digit = number[i] - '0', second_digit = number[j] - '0';
+            int number_formed = 10*first_digit + second_digit;
+
+            if(number_formed%8 == 0)
+                found = true, answer = number_formed;
+        }
+    }
+
+    for(u_int i = 0; i < number.size() && !found; i++)
+    {
+        for(u_int j = i + 1; j < number.size() && !found; j++)
+        {
+            for(u_int k = j + 1; k < number.size() && !found; k++)
+            {
+                int first_digit = number[i] - '0', second_digit = number[j]- '0', third_digit = number[k] - '0';
+                int number_formed = 100*first_digit + 10*second_digit + third_digit;
+
+                if(number_formed%8 == 0)
+                {
+                    answer = number_formed;
+                    found = true;
+                }
+            }
+        }
+    }
+
+    if(found)
+        printf("YES\n%d\n", answer);
+    else
+        printf("NO\n");
+
+    return 0;
+}
