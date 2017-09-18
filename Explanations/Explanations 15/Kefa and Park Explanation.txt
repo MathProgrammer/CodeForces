@@ -1,0 +1,76 @@
+Kefa decided to celebrate his first big salary by going to the restaurant.
+
+He lives by an unusual park. The park is a rooted tree consisting of n vertices with the root at vertex 1. Vertex 1 also contains Kefa's house. 
+Unfortunaely for our hero, the park also contains cats. Kefa has already found out what are the vertices with cats in them.
+
+The leaf vertices of the park contain restaurants. Kefa wants to choose a restaurant where he will go, but unfortunately he is very afraid of cats, 
+so there is no way he will go to the restaurant if the path from the restaurant to his house contains more than m consecutive vertices with cats.
+
+Your task is to help Kefa count the number of restaurants where he can go.
+
+-------------------------------------------
+
+This was my first ever DFS problem.
+
+In addition to the visited vector, keep a vector that keeps track of the number of consecutive cats ending at the current park.
+
+Go to the next park only if the number of consecutive cats <= m.
+
+It is a tree. So a leaf node will have only one edge (and we would have already visited that edge).
+
+So, the criteria for checking a leaf is (length == 1 && visited[tree[v][0]])
+Increment the number of paths by 1 every time a leaf is encountered. (We are sure that if we have reached a leaf, no of consecutive cats never crossed m)
+
+Don't forget to initalise the number of cats at the root, and mark the root as visited before embarking on Depth First Search.
+
+For every park that is visited, go to all unvisited parks from there.
+
+-----------------------------------------------------------------------------
+
+void dfs(int current_park, int &no_of_paths)
+{
+    if(tree[current_park].size() == 1 && visited[tree[current_park][0]])
+        no_of_paths++;
+
+    for(int i = 0; i < tree[current_park].size(); i++)
+    {
+        int next_park = tree[current_park][i];
+
+        if(!visited[next_park])
+        {
+            visited[next_park] = true;
+
+            no_of_consecutive_cats_till[next_park] = (has_cat[next_park] ? no_of_consecutive_cats_till[current_park] + 1 : 0);
+
+            if(no_of_consecutive_cats_till[next_park] <= max_cats)
+                dfs(next_park, no_of_paths);
+        }
+    }
+}
+
+int main()
+{
+    int no_of_vertices;
+    scanf("%d %d", &no_of_vertices, &max_cats);
+
+    for(int i = 1; i <= no_of_vertices; i++)
+        scanf("%d", &has_cat[i]);
+
+    for(int i = 1; i <= no_of_vertices - 1; i++)
+    {
+        int x, y;
+        scanf("%d %d", &x, &y);
+
+        tree[x].push_back(y);
+        tree[y].push_back(x);
+    }
+
+    no_of_consecutive_cats_till[1] = has_cat[1];
+    visited[1] = true;
+    int no_of_paths = 0;
+
+    dfs(1, no_of_paths);
+
+    printf("%d\n", no_of_paths);
+    return 0;
+}
