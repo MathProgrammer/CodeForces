@@ -1,0 +1,62 @@
+You may have heard of the pie rule before. It states that if two people wish to fairly share a slice of pie, one person should cut the slice in half, 
+and the other person should choose who gets which slice. 
+Alice and Bob have many slices of pie, and rather than cutting the slices in half, each individual slice will be eaten by just one person.
+
+The way Alice and Bob decide who eats each slice is as follows. First, the order in which the pies are to be handed out is decided. There is a special token called the 
+"decider" token, initially held by Bob. Until all the pie is handed out, whoever has the decider token will give the next slice of pie to one of the participants, 
+and the decider token to the other participant. They continue until no slices of pie are left.
+
+All of the slices are of excellent quality, so each participant obviously wants to maximize the total amount of pie they get to eat. 
+Assuming both players make their decisions optimally, how much pie will each participant receive?
+
+---------------------------------------------
+
+Let A(i) denote the maximum amount of pie Alice can get starting from the i-th piece if she has the decided token at piece i.
+Let B(i) denote the same thing for Bob.
+
+So, at each piece there are two choices - either you take the piece and give the other person the decider token - this is = pie[i] + total_sum_from[i + 1] - B(i + 1)
+    or you keep the decider token and keep the piece = A(i + 1).
+
+So, 
+
+A(i) = max{A(i + 1), pie[i] + (sum_from[i + 1] - B(i + 1) )} [Alice gets the remainder of whatever Bob takes when Bob starts with decider token from (i + 1).
+
+B(i) = max{B(i + 1), pie[i] + (sum_from[i + 1] - A(i + 1) )}
+
+Answer = B(1), and Sum From[1] - Bob(1)
+
+-----------------------------------------------
+
+int main()
+{
+    int no_of_pieces;
+    scanf("%d", &no_of_pieces);
+
+    vector <int> pie(no_of_pieces + 1);
+    for(int i = 1; i <= no_of_pieces; i++)
+        scanf("%d", &pie[i]);
+
+    vector <int> sum_from(no_of_pieces + 3, 0);
+    const int NO_OF_PLAYERS = 2, ALICE = 0, BOB = 1;
+    int maximum_from[no_of_pieces + 1][NO_OF_PLAYERS];
+
+    for(int i = no_of_pieces; i >= 1; i--)
+    {
+        sum_from[i] = pie[i] + sum_from[i + 1];
+
+        if(i == no_of_pieces)
+        {
+            maximum_from[i][ALICE] = maximum_from[i][BOB] = pie[i];
+        }
+        else
+        {
+            maximum_from[i][ALICE] = max(maximum_from[i + 1][ALICE], pie[i] + sum_from[i + 1] - maximum_from[i + 1][BOB]);
+            maximum_from[i][BOB] = max(maximum_from[i + 1][BOB], pie[i] + sum_from[i + 1] - maximum_from[i + 1][BOB]);
+        }
+    }
+
+    int maximum_for_alice = sum_from[1] - maximum_from[1][BOB];
+
+    printf("%d %d\n", maximum_for_alice, maximum_from[1][BOB]);
+    return 0;
+}
