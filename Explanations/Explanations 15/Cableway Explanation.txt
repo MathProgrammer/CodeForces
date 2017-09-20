@@ -1,0 +1,63 @@
+A group of university students wants to get to the top of a mountain to have a picnic there. For that they decided to use a cableway.
+
+A cableway is represented by some cablecars, hanged onto some cable stations by a cable. A cable is scrolled cyclically between the first and the last cable stations 
+(the first of them is located at the bottom of the mountain and the last one is located at the top). As the cable moves, the cablecar attached to it move as well.
+
+The number of cablecars is divisible by three and they are painted three colors: red, green and blue, in such manner that after each red cablecar goes a green one, 
+after each green cablecar goes a blue one and after each blue cablecar goes a red one. Each cablecar can transport no more than two people, 
+the cablecars arrive with the periodicity of one minute (i. e. every minute) and it takes exactly 30 minutes for a cablecar to get to the top.
+
+All students are divided into three groups: r of them like to ascend only in the red cablecars, g of them prefer only the green ones and b of them prefer only the blue ones.
+ A student never gets on a cablecar painted a color that he doesn't like,
+
+The first cablecar to arrive (at the moment of time 0) is painted red. Determine the least time it will take all students to ascend to the mountain top.
+
+------------------------------------------------------------
+
+First of all find the last ride. If the last ride happens at time t, then the answer is t + 30.
+
+Calculate the number of rides of each colour. 
+
+The last ride is red if, - it is greater than the number of blue and green rides.
+The last ride is green if - it is >= red and > blue
+The last ride is blue if >= red and >= blue
+
+This is because if there's a tie, the rightmost element wins.
+
+The arrival time is calculated by 3*(no_of_rides of that colour - 1) + offset.
+
+The offset = 0 for red, 1 for green and 2 for blue.
+
+--------------------------------------------------------
+
+int main()
+{
+    int red, blue, green;
+    scanf("%d %d %d", &red, &green, &blue);
+
+    int red_rides = red/2 + red%2;
+    int blue_rides = blue/2 + blue%2;
+    int green_rides = green/2 + green%2;
+
+    const int ONE_RIDE_DURATION = 30;
+    int no_of_minutes, last_ride_arrival;
+
+    if(red_rides > blue_rides && red_rides > green_rides)
+    {
+        last_ride_arrival = 3*(red_rides - 1);
+        no_of_minutes = last_ride_arrival + ONE_RIDE_DURATION;
+    }
+    else if(green_rides >= red_rides && green_rides > blue_rides)
+    {
+        last_ride_arrival = 3*(green_rides - 1) + 1;
+        no_of_minutes = last_ride_arrival + ONE_RIDE_DURATION;
+    }
+    else if(blue_rides >= red_rides && blue_rides >= green_rides)
+    {
+        last_ride_arrival = 3*(blue_rides - 1) + 2;
+        no_of_minutes = last_ride_arrival + ONE_RIDE_DURATION;
+    }
+
+    printf("%d\n", no_of_minutes);
+    return 0;
+}
