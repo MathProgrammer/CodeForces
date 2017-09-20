@@ -1,0 +1,85 @@
+Mahmoud and Ehab are on the third stage of their adventures now. As you know, Dr. Evil likes sets. This time he won't show them any set from his large collection, 
+but will ask them to create a new set to replenish his beautiful collection of sets.
+
+Dr. Evil has his favorite evil integer x. He asks Mahmoud and Ehab to find a set of n distinct non-negative integers such the bitwise-xor sum of the integers 
+in it is exactly x. 
+Dr. Evil doesn't like big numbers, so any number in the set shouldn't be greater than 106.
+
+-----------------------------------------------------
+
+It was an interesting problem. If there wasn't a constraint of distinct numbers, then the answer could be x followed by n-1 0s.
+
+There was some connection to the fact that the nim-sum of three numbers can be 0.
+
+Here are the cases.
+
+Case 1 - n = 1
+
+	Ans = x
+
+Case 2 - n = 2
+
+	Ans = {0, x}, 
+
+If x is 0, then there is no possible answer. 
+
+It turns out, this the only time when there is no answer.
+
+Case 3 - n >= 3
+
+	First print all the numbers up to n - 3.
+
+	Case 3a. XOR(1, 2, ..., n-3) = x
+	
+		In that case, we have to print 3 more numbers which are distinct and who's xor sum is 0. 
+		this can be done quite easily. One possible way is (2^n, 2^{n - 1}, 2^n|2^{n - 1})
+
+		Ensure 2^n is really large and not <= n - 2
+
+	Case 3b. b = XOR(1, 2, ... , n - 3) =/= x
+ 
+		Now, we need three numbers, such that it neutralises b, and gives x and is not in that list.
+
+		(XOR(2^n, b, x), 2^{n - 1}, 2^n|2^{n - 1}) is one such triplet. This leaves the answer = x
+
+---------------------------------------------------------
+
+int main()
+{
+    int no_of_numbers, x;
+    scanf("%d %d", &no_of_numbers, &x);
+
+    if(no_of_numbers == 1)
+    {
+        printf("YES\n%d\n", x);
+    }
+    else if(no_of_numbers == 2)
+    {
+        if(x == 0)
+            printf("NO\n");
+        else
+            printf("YES\n0 %d\n", x);
+    }
+    else
+    {
+        const int POWER_2 = 1 << 19, PREVIOUS_POWER_2 = 1 << 18;
+        int bitwise_xor = 0;
+
+        printf("YES\n");
+        for(int i = 1; i <= no_of_numbers - 3; i++)
+        {
+            bitwise_xor ^= i;
+            printf("%d ", i);
+        }
+
+        if(bitwise_xor == x)
+            printf("%d %d %d\n", POWER_2, PREVIOUS_POWER_2, (POWER_2|PREVIOUS_POWER_2));
+        else
+            printf("%d %d %d\n", PREVIOUS_POWER_2, (POWER_2^bitwise_xor^x), (POWER_2|PREVIOUS_POWER_2));
+    }
+
+    return 0;
+}
+
+
+	
