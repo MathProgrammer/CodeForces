@@ -1,0 +1,37 @@
+
+
+---------------------------------------------
+
+Check if n is a palindrome without trailing 0s.
+
+------------------------------------
+
+int is_palindrome(int n)
+{
+    int reverse_n = 0, original_n = n;
+
+    while(n > 0)
+    {
+        reverse_n = reverse_n*10 + n%10;
+        n = n/10;
+    }
+
+    return (reverse_n == original_n);
+}
+
+int palindrome_without_trailing_zeroes(int n)
+{
+    while(n%10 == 0)
+        n = n/10;
+
+    return is_palindrome(n);
+}
+
+int main()
+{
+    int n;
+    scanf("%d", &n);
+    printf("%s\n", palindrome_without_trailing_zeroes(n) ? "YES" : "NO");
+
+    return 0;
+}
