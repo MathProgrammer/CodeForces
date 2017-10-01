@@ -1,0 +1,31 @@
+As you may know, MemSQL has American offices in both San Francisco and Seattle. Being a manager in the company, you travel a lot between the two cities, always by plane.
+
+You prefer flying from Seattle to San Francisco than in the other direction, because it's warmer in San Francisco. 
+You are so busy that you don't remember the number of flights you have made in either direction. 
+However, for each of the last n days you know whether you were in San Francisco office or in Seattle office. 
+You always fly at nights, so you never were at both offices on the same day. Given this information, 
+determine if you flew more times from Seattle to San Francisco during the last n days, or not.
+
+--------------------------------------------------
+
+Count the number of flights to both cities and compare which one is greater.
+
+--------------------------------------
+
+int main()
+{
+    int no_of_days;
+    const int MAX_DAYS = 102;
+    char flights[MAX_DAYS];
+    scanf("%d %s", &no_of_days, flights);
+
+    int flights_from_seattle = 0, flights_to_seattle = 0;
+    for(int i = 1; i < no_of_days; i++)
+    {
+        flights_to_seattle += (flights[i - 1] == 'F' && flights[i] == 'S');
+        flights_from_seattle += (flights[i - 1] == 'S' && flights[i] == 'F');
+    }
+
+    printf("%s\n", flights_from_seattle > flights_to_seattle ? "YES" : "NO");
+    return 0;
+}
