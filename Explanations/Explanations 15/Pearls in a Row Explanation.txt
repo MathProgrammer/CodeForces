@@ -1,0 +1,60 @@
+There are n pearls in a row. Let's enumerate them with integers from 1 to n from the left to the right. The pearl number i has the type ai.
+
+Let's call a sequence of consecutive pearls a segment. Let's call a segment good if it contains two pearls of the same type.
+
+Split the row of the pearls to the maximal number of good segments. Note that each pearl should appear in exactly one segment of the partition.
+
+-----------------------------------------------------------------
+
+Be greedy about the arrangement. Set the first boundary as soon as you find an element occuring twice.
+
+If at the end, we have k segments and there are some elements at the end that don't belong to any segment, add them to the k-th segment.
+
+The k-th segment anyway has an element that occurs at least twice. Adding more elements to this segment doesn't change this property. Hence, the segment remains good.
+
+---------------------------------------------
+
+int main()
+{
+    int no_of_pearls;
+    scanf("%d", &no_of_pearls);
+
+    set <int> current_segment_pearls;
+    vector <pair <int, int> > segment;
+    int left = 1;
+
+    for(int right = 1; right <= no_of_pearls; right++)
+    {
+        int pearl_type;
+        scanf("%d", &pearl_type);
+
+        if(current_segment_pearls.count(pearl_type) == 1)
+        {
+            segment.push_back(make_pair(left, right));
+            current_segment_pearls.clear();
+
+            left = right + 1;
+        }
+        else
+        {
+            current_segment_pearls.insert(pearl_type);
+        }
+    }
+
+    if(segment.size() == 0)
+        printf("-1\n");
+    else
+    {
+        segment.back().second = max(segment.back().second, no_of_pearls);
+
+        printf("%u\n", segment.size());
+        for(int i = 0; i < segment.size(); i++)
+            printf("%d %d\n", segment[i].first, segment[i].second);
+    }
+
+    return 0;
+}
+
+
+
+
