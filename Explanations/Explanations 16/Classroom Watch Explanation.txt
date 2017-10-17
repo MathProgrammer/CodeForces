@@ -1,0 +1,39 @@
+Eighth-grader Vova is on duty today in the class. After classes, he went into the office to wash the board, and found on it the number n. 
+He asked what is this number and the teacher of mathematics Inna Petrovna answered Vova that n is the answer to the arithmetic task for first-graders. 
+In the textbook, a certain positive integer x was given. The task was to add x to the sum of the digits of the number x written in decimal numeral system.
+
+Since the number n on the board was small, Vova quickly guessed which x could be in the textbook. 
+Now he wants to get a program which will search for arbitrary values of the number n for all suitable values of x or determine that such x does not exist. 
+Write such a program for Vova.
+
+----------------------------------------------
+
+The maximum sum of digits of any number within the range is 81. 
+So, for any n, we only need to check from (n - 81) to see if any number satisfies the condition.
+
+----------------------------------------------------------------
+
+int main()
+{
+    int n;
+    scanf("%d", &n);
+
+    const int MAX_DIGIT_SUM = 81;
+    int x = max(0, n - MAX_DIGIT_SUM);
+
+    vector <int> answer;
+    while(x <= n)
+    {
+        if(x + digit_sum(x) == n)
+            answer.push_back(x);
+
+        x++;
+    }
+
+    printf("%d\n", answer.size());
+    for(int i = 0; i < answer.size(); i++)
+        printf("%d ", answer[i]);
+
+    return 0;
+}
+
