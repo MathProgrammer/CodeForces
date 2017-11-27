@@ -1,0 +1,75 @@
+
+Here's the main idea - 
+
+If we did not have the restriction of buying k from now, we'd buy every item whenever it is cheaper.
+
+So, we buy k items from now greedily and the REMAINING n - k items, we choose from whichever day is cheaper. 
+How do we choose these k items ?
+
+It's not the k items who's cost now is the cheapest.
+
+Let's say we buy every item on second day, Cost =
+
+C = B1 + B2 + B3 + ... + Bn.
+
+Now, we HAVE TO buy some of these on day 1. How do we choose this ?
+
+Let's say we buy item 1 now.
+
+Cost increases by (A1 - B1). [This may be negative]. i.e. C' = C + (A1 - B1)
+
+Now, our task is to choose k items to buy now such that we MINIMISE the rise in C.
+
+So, what we do is we choose k items from now such that (A1 - B1) is minimum. 
+
+In short, 
+
+1. Buy k items who's difference (A1 - B1) is minimum.
+2. From K+1 to N, buy the item whenever it is cheaper - now or one week later. min{Ai, Bi}
+
+Important to note that the difference should NOT be in terms of absolute value. We want to buy the ones with the negative difference now, because it means 
+it will be more expensive next week.
+
+---------------------------------------------------------------------------------------------------------------
+
+#define all(v) (v).begin(), (v).end()
+
+struct prices
+{
+    int now, discount, difference;
+};
+
+bool sort_By_Difference(const prices &A, const prices &B)
+{
+    return (A.difference < B.difference);
+}
+
+int main()
+{
+    int no_of_days, minimum_now_buys;
+    scanf("%d %d", &no_of_days, &minimum_now_buys);
+
+    vector <prices> price(no_of_days);
+    for(int i = 0; i < no_of_days; i++)
+        scanf("%d", &price[i].now);
+
+    for(int i = 0; i < no_of_days; i++)
+        scanf("%d", &price[i].discount);
+
+    for(int i = 0; i < no_of_days; i++)
+        price[i].difference = price[i].now - price[i].discount;
+
+    sort(all(price), sort_By_Difference);
+
+    int money_used = 0;
+    for(int i = 0; i < no_of_days; i++)
+    {
+        if(i < minimum_now_buys)
+            money_used += price[i].now;
+        else
+            money_used += min(price[i].now, price[i].discount);
+    }
+
+    printf("%d\n", money_used);
+    return 0;
+}
