@@ -1,0 +1,137 @@
+A very interesting concept.
+
+
+
+Suppose you have an array of n elements. 
+And Q queries, each characterised by - left and right.
+
+In one query, you must add 1 to every number from left to right.
+
+Print the array after all the queries 
+
+
+The naive way of doing this.
+
+
+for(int i = 1; i <= Q; i++)
+{
+	
+	for(int j = l; j <= R; j++)
+		
+		A[j]++;
+}
+
+
+
+This is O(NQ)
+
+If N and Q are both 10^5, then you will 10^10 operations (or thereabouts) --- that's months of time.
+
+
+
+There's a better way. Have an array C, that keeps track of the number of operations that start at C
+
+
+
+for(int i = 1; i <= Q; i++)
+{
+	
+	C[l]++;
+	C[r + 1]--;
+
+}
+
+
+
+for(int i = 1; i <= N; i++)
+	
+	A[i] = A[i - 1] + C[i]
+	
+
+
+In other words, the number of queries affecting previous term plus 
+the number of queries starting at that position.
+
+
+Of course, if there's a query affecting (i - 1) but not i, then C[i] will accordingly reduce it.
+
+This is O(N + Q). 
+
+Can be done in under a second with the same constraints.
+
+This question is interersting because this logic has to be applied twice. 
+
+1. Apply it on the operations so that you know the number of times each operation is used.
+2. After it is known the number of times each operation is used.
+
+for(i = 1 to no of operations)
+{
+	Updates[operations[i].left] += use[i]*operations[i].value
+	Updates[operations[i].right + 1] -= use[i]*operations[i].value
+}
+
+for(i = 1 to no of elements)
+{
+	amount to be added[i] = amount to be added[i - 1] + Udates[i]
+}
+
+And then 
+for(i = 1 to no of elements)
+	element[i] += amount to be added[i]
+
+----------------------------------------------------------------------------------------------------------
+
+struct operation
+{
+    int left, right, value;
+};
+
+
+int main()
+{
+    int no_of_elements, no_of_operations, no_of_queries;
+    scanf("%d %d %d", &no_of_elements, &no_of_operations, &no_of_queries);
+
+    vector <long long> element(no_of_elements + 1, 0);
+    for(int i = 1; i <= no_of_elements; i++)
+        scanf("%I64d", &element[i]);
+
+    vector <operation> operations(no_of_operations + 1);
+    for(int i = 1; i <= no_of_operations; i++)
+        scanf("%d %d %d", &operations[i].left, &operations[i].right, &operations[i].value);
+
+    vector <int> no_of_operations_starting(no_of_operations + 2, 0);
+    while(no_of_queries--)
+    {
+        int left_operation, right_operation;
+        scanf("%d %d", &left_operation, &right_operation);
+
+        no_of_operations_starting[left_operation]++;
+        no_of_operations_starting[right_operation + 1]--;
+    }
+
+    vector <int> no_of_uses(no_of_operations + 1, 0);
+    for(int i = 1; i <= no_of_operations; i++)
+        no_of_uses[i] = no_of_uses[i - 1] + no_of_operations_starting[i];
+
+    vector <long long> no_of_updates_starting(no_of_elements + 2, 0);
+    for(int i = 1; i <= no_of_operations; i++)
+    {
+        int start_point = operations[i].left, end_point = operations[i].right, d = operations[i].value;
+
+        no_of_updates_starting[start_point] += no_of_uses[i]*1LL*d;
+        no_of_updates_starting[end_point + 1]-= no_of_uses[i]*1LL*d;
+    }
+
+    vector <long long> amount_to_be_added(no_of_elements + 1, 0);
+    for(int i = 1; i <= no_of_elements; i++)
+        amount_to_be_added[i] = amount_to_be_added[i - 1] + no_of_updates_starting[i];
+
+    for(int i = 1; i <= no_of_elements; i++)
+        element[i] += amount_to_be_added[i];
+
+    for(int i = 1; i <= no_of_elements; i++)
+        printf("%I64d ", element[i]);
+
+    return 0;
+}
