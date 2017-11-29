@@ -1,0 +1,50 @@
+Easy question. The tricky part is the files.
+
+--------------------------------
+
+struct card
+{
+    int index, value;
+};
+
+bool sort_by_value(const card &A, const card &B)
+{
+    return (A.value < B.value);
+}
+
+int main()
+{
+    FILE *input = fopen("input.txt", "r");
+    int no_of_cards;
+    fscanf(input, "%d", &no_of_cards);
+
+    vector <card> cards(2*no_of_cards);
+    for(int i = 0; i < 2*no_of_cards; i++)
+    {
+        fscanf(input, "%d", &cards[i].value);
+        cards[i].index = i + 1;
+    }
+
+    sort(all(cards), sort_by_value);
+
+    FILE *output = fopen("output.txt", "w");
+
+    vector <pair <int, int> > solution;
+    for(int i = 0; i < 2*no_of_cards; i += 2)
+    {
+        if(cards[i].value == cards[i + 1].value)
+            solution.push_back(make_pair(cards[i].index, cards[i + 1].index));
+        else
+        {
+            fprintf(output, "-1\n");
+            return 0;
+        }
+    }
+
+    for(int i = 0; i < no_of_cards; i++)
+        fprintf(output, "%d %d\n", solution[i].first, solution[i].second);
+
+    fclose(input);
+    fclose(output);
+    return 0;
+}
