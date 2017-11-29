@@ -1,0 +1,33 @@
+Simple implementation
+The number of teams is the minimum of the three categories.
+
+int main()
+{
+    vector <int> mathematician;
+    vector <int> programmer;
+    vector <int> sportsperson;
+
+    int no_of_players;
+    scanf("%d", &no_of_players);
+
+    for(int i = 1; i <= no_of_players; i++)
+    {
+        int activity;
+        scanf("%d", &activity);
+
+        switch(activity)
+        {
+            case 1: mathematician.push_back(i); break;
+            case 2: programmer.push_back(i); break;
+            case 3: sportsperson.push_back(i); break;
+        }
+    }
+
+    int no_of_teams = min_3(mathematician.size(), programmer.size(), sportsperson.size());
+    printf("%d\n", no_of_teams);
+
+    for(int i = 1; i <= no_of_teams; i++)
+        printf("%d %d %d\n", mathematician[i - 1], programmer[i - 1], sportsperson[i - 1]);
+
+    return 0;
+}
