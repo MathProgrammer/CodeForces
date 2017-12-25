@@ -1,0 +1,39 @@
+
+Let's say we have crossed x levels, how many clicks to we make on level x+1 with k options ?
+
+We have already crossed x levels, so we make 1 click, which will be wrong in the worst case.
+
+Now, after that to reach level x + 1, we will need to make x clicks. 
+
+So, for each of the remaining k - 1 options, we will need x clicks to get there and one more click for the option itself.
+
+So, number of clicks at level x + 1 = 1 + (x + 1)(k - 1)
+
+First option requires one click and all remaining options require x + 1 clicks.
+
+
+So, if we are now at level i,
+
+Clicks += 1 + i(k - 1)
+
+---------------------------------------------------------------------------------
+
+int main()
+{
+    int no_of_questions;
+    scanf("%d", &no_of_questions);
+
+    long long no_of_clicks = 0;
+
+    for(int i = 1; i <= no_of_questions; i++)
+    {
+        int no_of_options;
+        scanf("%d", &no_of_options);
+
+        no_of_clicks += 1 + i*1LL*(no_of_options - 1);
+    }
+
+    printf("%I64d\n", no_of_clicks);
+    return 0;
+}
+
