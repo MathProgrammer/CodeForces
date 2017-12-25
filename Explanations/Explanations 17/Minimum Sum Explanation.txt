@@ -1,0 +1,78 @@
+
+This problem can be solved by looking at the sum in a different way.
+
+Find the contribution of each of the 10 digits.
+
+For example, 345 = 3 x 100 + 4 x 10 + 5
+
+We know the contribution of each of the digits.
+
+Keep track of the contribution of each digit in all the numbers together.
+
+Also, keep track each digit whether it is a first digit or not.
+
+Now, the biggest coefficient gets assigned the smallest legal value it can take.
+
+And so on.
+
+------------------------------------------------------------------------
+
+struct code
+{
+    int is_first_digit, coefficient;
+
+    code(){
+        is_first_digit = false, coefficient = 0;
+    }
+};
+
+int compare(const code &A, const code &B)
+{
+    return (A.coefficient < B.coefficient);
+}
+
+int main()
+{
+    const int NO_OF_DIGITS = 10;
+    vector <code> letter(NO_OF_DIGITS);
+
+    int no_of_numbers;
+    scanf("%d", &no_of_numbers);
+
+    while(no_of_numbers--)
+    {
+        string number;
+        cin >> number;
+
+        letter[number[0] - 'a'].is_first_digit = true;
+
+        int power_of_10 = 1;
+
+        for(int i = number.size() - 1; i >= 0; i--)
+        {
+            letter[number[i] - 'a'].coefficient += power_of_10;
+            power_of_10 *= 10;
+        }
+    }
+
+    sort(all(letter), compare);
+
+    vector <int> assigned(NO_OF_DIGITS, false);
+
+    int sum = 0;
+
+    for(int i = NO_OF_DIGITS - 1; i >= 0; i--)
+    {
+        int digit = (letter[i].is_first_digit ? 1 : 0);
+
+        while(assigned[digit])
+            digit++;
+
+        assigned[digit] = true;
+
+        sum += letter[i].coefficient*digit;
+    }
+
+    printf("%d\n", sum);
+    return 0;
+}
