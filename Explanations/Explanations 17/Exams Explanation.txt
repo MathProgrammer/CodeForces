@@ -1,0 +1,23 @@
+Be greedy. Score 2 marks on all the exams.
+
+And then there will be k - 2n marks left to score.
+
+If (k - 2n) >= n, then every exam gets more than 2 marks.
+
+Else, give 1 mark to (k - 2n) exams and n - (k - 2n) will remain with only 2 marks.
+
+----------------------------------------------------
+
+int main()
+{
+    int no_of_exams, minimum_marks;
+    scanf("%d %d", &no_of_exams, &minimum_marks);
+
+    int marks_scored = 2*no_of_exams;
+    int remaining_marks = minimum_marks - marks_scored;
+
+    int exams_with_2_marks = (remaining_marks >= no_of_exams ? 0 : no_of_exams - remaining_marks);
+
+    printf("%d\n", exams_with_2_marks);
+    return 0;
+}
