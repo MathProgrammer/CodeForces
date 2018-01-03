@@ -1,0 +1,67 @@
+
+
+Keep track of the number of palindromes ending exactly at i, and all the palindromes that start from i onwards.
+
+Ans = sum(PE(i)*(PS(i + 1) + PS(i + 2) + ... + PS(n))
+
+Where PE(i) is the number of palindromes ending exactly at i,
+PS(i) is the number of palindromes starting exactly at i
+
+Now, the suffix sums of PS can be precomputed so that it can be done in O(n) time.
+
+Find all palindromic substrings in O(n^2) time
+
+If A[i] = A[j], AND (i + 1 == j OR P[i + 1][j - 1] = true)
+
+Then P[i][j] = true
+
+Use this and compute all palindromes and keep track of PE and PS.
+
+----------------------------------------------------
+
+int main()
+{
+    string A;
+    cin >> A;
+
+    int length = A.size();
+
+    int is_palindrome[length + 1][length + 1] = {{false}};
+
+    vector <int> palindrome_starts(length + 1, 0);
+    vector <int> palindrome_ends(length + 1, 0);
+
+    for(int i = 0; i < length; i++)
+    {
+        is_palindrome[i][i] = true;
+        palindrome_starts[i] = palindrome_ends[i] = 1;
+    }
+
+    for(int substring_length = 2; substring_length < length; substring_length++)
+    {
+
+        for(int start = 0, end = start + substring_length - 1; end < length; start++, end++)
+        {
+
+            if(A[start] == A[end] && (substring_length == 2 || is_palindrome[start + 1][end - 1]))
+            {
+                is_palindrome[start][end] = true;
+                palindrome_starts[start]++;
+                palindrome_ends[end]++;
+            }
+        }
+    }
+
+    vector <int> palindromes_from(length + 1, 0);
+    for(int i = length - 1; i >= 0; i--)
+        palindromes_from[i] = palindromes_from[i + 1] + palindrome_starts[i];
+
+    long long palindromic_pairs = 0;
+
+    for(int i = 0; i < length; i++)
+        palindromic_pairs += palindrome_ends[i]*1LL*palindromes_from[i + 1];
+
+    printf("%I64d\n", palindromic_pairs);
+
+    return 0;
+}
