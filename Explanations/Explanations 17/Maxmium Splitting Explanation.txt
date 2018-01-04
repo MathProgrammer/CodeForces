@@ -1,0 +1,58 @@
+
+The smallest composite number is 4. 
+
+If a number is a multiple of 4, then we can write it as a series of 4. 
+We can't do better since if we used another composite number, we'd have to reduce the number of summands
+
+What if n = 1 (mod 4) What is the smallest number = 1 (mod 4) that is composite ? 9
+
+1 and 5 cannot be written as sum of composites.
+
+So, we write it as 9 + (n - 9), (n - 9) can be written as a series of 4s.
+
+Similarly, 6 + (n - 6) 
+
+And 15 + (n - 15) 
+
+For n = 2 and 3 (mod 4). and 15 can be written as the sum of 2 composites.
+
+Note - 6 + 6 = 4 + 4 + 4
+      9 + 9 = 6 + 6 + 6 = 4 + 4 + 4 + 6
+
+It is never optimal to use more than one 6 or one 9 in the summation.
+
+Any composite number greater than 9 can be written as sums of 4s, 6s, and 9s.
+
+Let's say we use k in a summation of n, where k > 9, k itself can be replaced by 4s, 6s and 9s to increase the number of summands.
+
+So, the summation of any n, will have only 4s and at most one 6 and at most one 9.
+
+------------------------------------------------------
+
+int main()
+{
+    int no_of_queries;
+    scanf("%d", &no_of_queries);
+
+    while(no_of_queries--)
+    {
+        int n;
+        scanf("%d", &n);
+
+        int no_of_parts = -1;
+
+        if( !(n <= 3 || n == 5 || n == 7 || n == 11) )
+        {
+            switch(n%4)
+            {
+                case 0: no_of_parts = n/4; break;
+                case 1: no_of_parts = (n - 9)/4 + 1; break;
+                case 2: no_of_parts = (n - 6)/4 + 1; break;
+                case 3: no_of_parts = (n - 15)/4 + 2; break;
+            }
+        }
+
+        printf("%d\n", no_of_parts);
+    }
+    return 0;
+}
