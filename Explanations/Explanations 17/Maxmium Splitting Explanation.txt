@@ -8,24 +8,33 @@ What if n = 1 (mod 4) What is the smallest number = 1 (mod 4) that is composite 
 
 1 and 5 cannot be written as sum of composites.
 
+n = 1 (mod 4)
 So, we write it as 9 + (n - 9), (n - 9) can be written as a series of 4s.
 
+n = 2 (mod 4)
 Similarly, 6 + (n - 6) 
 
-And 15 + (n - 15) 
+n = 3 (mod 4)
+And 15 + (n - 15) = (9 + 6) + (n - 15)
 
-For n = 2 and 3 (mod 4). and 15 can be written as the sum of 2 composites.
+Now, this completes our proof that every composite number can be written as 
 
-Note - 6 + 6 = 4 + 4 + 4
-      9 + 9 = 6 + 6 + 6 = 4 + 4 + 4 + 6
+n = 4a + 6b + 9c.
+
+Fact 1 - Every composite integer can be written as n = 4a + 6b + 9c
+
+Now, we want to maximise the number of summands. Let's say for sum n, we use a composite number m, other than 4, 6 and 9.
+
+Using the same process for m, we can replace m with 4s, 6s and 9s and do better.
+
+Fact 2 - This proves that the maximum summands of n will have ONLY 4s, 6s and 9s.
+
+Fact 3 - When n has the maximum number of summands, there will be at most one 6 and one 9.
+
+6 + 6 = 4 + 4 + 4
+9 + 9 = 6 + 6 + 6 = 4 + 4 + 4 + 6
 
 It is never optimal to use more than one 6 or one 9 in the summation.
-
-Any composite number greater than 9 can be written as sums of 4s, 6s, and 9s.
-
-Let's say we use k in a summation of n, where k > 9, k itself can be replaced by 4s, 6s and 9s to increase the number of summands.
-
-So, the summation of any n, will have only 4s and at most one 6 and at most one 9.
 
 ------------------------------------------------------
 
