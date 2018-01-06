@@ -1,0 +1,38 @@
+There are only two cases that matter. k = 1, k > 1.
+
+Case 1 :
+
+If k = 1, then any number we choose in the set will be the XOR.
+We want to maximise the XOR, so we choose the maximum number we can. We choose n.
+
+Case 2:
+
+Now, notice that if we take XOR(a, b, c .... , n)         
+The answer can never have more bits than the largest number in the set since XOR never creates new bits.
+
+So, any XOR we take will not have more bits than n, as n is the largest number we have.
+
+Let n = 10000111001... 0
+
+The first bit is forced to be 1.
+Now, since the maximum number of bits is fixed, the maximum answer we can get is
+
+111111 ... 1 (As many 1s as the number of bits in n)
+
+The question is can we always get this number ? Answer is yes.
+
+We need a number x, such that n^x = 1111 ... 1
+
+For this, we only need a number x with a 1 in whichever position n has a 0, and a 0 in whichever position n has a 1.
+
+So, if n = 10000111001... 0, 
+x = 01111000110.... 1
+
+Now, notice that the first bit of n has to be 1. So, the first bit of x has to be 0.
+
+If the first bit of x is 0, then it means x < n.
+
+If x < n, then we can always choose x and n as the question allows us to choose any number less than n.
+
+k = 1, answer = n
+k > 1, answer = 1111...1 = 1 0...0000000 - 1 = 2^(no of bits in n) - 1
