@@ -1,0 +1,22 @@
+
+If x < y, then x (mod y) = x itself.
+
+Now, in this problem m (mod 2^n) m and n can be upto 10^8, 2^n overflows integer data type at value 32.
+
+All we need to notice that if 2^n > 10^8, then the answer will always be m as m is never greater than 10^8.
+
+This happens quite quickly. (At n = 28 itself).
+
+----------------------------------------------------
+
+#include <cstdio>
+
+int main()
+{
+    int n, m;
+    scanf("%d %d", &n, &m);
+
+    int answer = (n > 31 ? m : m%(1 << n));
+    printf("%d ", answer);
+    return 0;
+}
