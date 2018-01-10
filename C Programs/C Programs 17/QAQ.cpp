@@ -26,8 +26,6 @@ int main()
         if(input[i] == 'A')
             no_of_QAQ += no_of_Q_till[i]*no_of_Q_after[i];
 
-    //for(int i = 0; i < length; i++) printf("%d %d\n", no_of_Q_till[i], no_of_Q_after[i]);
-
     printf("%d\n", no_of_QAQ);
     return 0;
 }
