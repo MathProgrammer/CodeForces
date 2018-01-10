@@ -1,0 +1,109 @@
+
+Let f(x, k) be the number of good sequences of length k where the first number is x.
+
+Now if the first element is x, then the second element can be {x, 2x, 3x, .... (n/x) x } 
+
+f(x, k) = f(x, k - 1) + f(2x, k - 1) + f(3x, k - 1) + f(4x, k - 1) + .... f((n/x).x, k - 1)
+
+And f(x, 1) = 1, for all x, 
+
+However, I didn't know how to do it iteratively so I did it recursively.
+
+Important to note that 
+
+for(int i = 1; x*i <= n; i++) //This loop runs in O(log n) time
+	f(x, k) += f(x*i, k - 1)
+
+So over all complexity is O(nk log n)
+
+Important to note that if you fix an element x, and want to find the PREVIOUS element and go through all divisors of x,
+
+it would be O(nk sqrt(n)), which isn't enough to pass the time limit. O(log n) is better than O(sqrt n)
+
+Answer = f(1, k) + f(2, k) + ... + f(n, k)
+
+[The first number can be anything from 1 to n]
+
+--------------------------------------------------------------
+
+Recursive implementation - 
+
+const int N = 2001, MOD = 1e9 + 7;
+int no_of_sequences[N][N], max_number;
+
+long long get(int first_number, int length)
+{   
+    if(length == 1)
+        no_of_sequences[first_number][1] = 1;
+
+    if(no_of_sequences[first_number][length] != -1)
+        return no_of_sequences[first_number][length];
+
+    no_of_sequences[first_number][length] = 0;
+    for(int i = 1; first_number*i <= max_number; i++)
+    {   
+        no_of_sequences[first_number][length] += get(first_number*i, length - 1);
+        no_of_sequences[first_number][length] %= MOD;
+    }
+    
+    return no_of_sequences[first_number][length];
+}
+
+int main()
+{
+    memset(no_of_sequences, -1, sizeof(no_of_sequences));
+
+    int length;
+    scanf("%d %d", &max_number, &length);
+
+    long long answer = 0;
+    for(int first_number = 1; first_number <= max_number; first_number++)
+        answer = (answer + get(first_number, length) )%MOD;
+
+    printf("%I64d\n", answer);
+
+    return 0;
+}
+
+------------------------------------------------
+
+Iterative implementation - 
+
+int main()
+{
+    const int MOD = 1e9 + 7;
+
+    int max_number, length;
+    scanf("%d %d", &max_number, &length);
+
+    for(int first_number = 1; first_number <= max_number; first_number++)
+        no_of_sequences[first_number][1] = 1;
+
+    for(int l = 2; l <= length; l++)
+    {
+        for(int first_number = 1; first_number <= max_number; first_number++)
+        {
+            no_of_sequences[first_number][l] = 0;
+
+            for(int i = 1; first_number*i <= max_number; i++)
+            {
+                no_of_sequences[first_number][l] += no_of_sequences[first_number*i][l - 1];
+            }
+
+            no_of_sequences[first_number][l] %= MOD;
+        }
+    }
+
+    long long answer = 0;
+    for(int first_number = 1; first_number <= max_number; first_number++)
+        answer += no_of_sequences[first_number][length];
+
+    answer %= MOD;
+
+    printf("%I64d\n", answer);
+
+    return 0;
+}
+
+----------------------------------------------------
+
