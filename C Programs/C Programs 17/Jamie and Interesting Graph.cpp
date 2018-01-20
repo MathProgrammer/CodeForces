@@ -44,7 +44,7 @@ int main()
     {
         for(int v = u + 2; v <= n && edges < no_of_edges; v++)
         {
-            printf("%d %d %d\n", u, v, 2*mst_cost);
+            printf("%d %d %d\n", u, v, mst_cost);
             edges++;
         }
     }
