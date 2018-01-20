@@ -1,0 +1,85 @@
+
+Here was my idea ... 
+
+The number of edges has to be at least n-1 to ensure it's connected so do this first .
+
+
+1 -> 2 -> 3 -> ... n-1 -> n
+
+Make these n-1 edges first. Make each edge = 1, from (1, 2) to (n - 2, n - 1). 
+
+The sum of all edges till here = n - 2.
+
+The final (n - 1, n) edge has the minimum integer w, such that w + (n - 2) is prime.
+
+I want to ensure that is the MST too. 
+
+So, till here I have ensured the graph is connected, path from 1 to n is prime, MST weight is prime. 
+
+Now, all I have to do is add the remaining edges ensuring there's no multi edges and no shorter path or no lighter MST. 
+
+for(u = 1 to n - 2)
+	for(v = u + 2 to n)
+		add(u, v, MST)
+
+till the number of edges is the required number.
+
+After constructing the MST, every pair of vertices has a weight = MST to ensure there's no shorter path.
+
+v starts from u + 2, because the path from (u, u + 1) has already been constructed while making the MST.
+
+
+---------------------------------------------------
+
+int is_prime(int n)
+{
+    if(n <= 1)
+        return false;
+
+    for(int i = 2; i*i <= n; i++)
+        if(n%i == 0)
+            return false;
+
+    return true;
+}
+
+int find_nearest_prime(int n)
+{
+    int ans = n + 1;
+    while(!is_prime(ans))
+        ans++;
+
+    return ans;
+}
+
+int main()
+{
+    int n, no_of_edges;
+    scanf("%d %d", &n, &no_of_edges);
+
+    int cost_to_n = find_nearest_prime(n - 2) - (n - 2);
+
+    int mst_cost = cost_to_n + (n - 2);
+    int min_path = mst_cost;
+
+    printf("%d %d\n", mst_cost, min_path);
+
+    for(int i = 1; i < n - 1; i++)
+        printf("%d %d %d\n", i, i + 1, 1);
+
+    printf("%d %d %d\n", n - 1, n, cost_to_n);
+
+    int edges = n - 1;
+
+    for(int u = 1; u <= n - 1 && edges < no_of_edges; u++)
+    {
+        for(int v = u + 2; v <= n && edges < no_of_edges; v++)
+        {
+            printf("%d %d %d\n", u, v, mst_cost);
+            edges++;
+        }
+    }
+
+    return 0;
+}
+
