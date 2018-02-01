@@ -1,0 +1,73 @@
+
+Let up(i, j) represent the consecutive dots up ending at (i, j)
+Let left(i, j) represent the consecutive dots left ending at(i, j)
+
+Let f(i, j) represent the number of ways to do this from (1, 1) to (i, j)
+
+f(i, j) = (up(i, j) >= k) + (left(i, j) >= k) + f(i - 1, j) + f(i, j - 1) - f(i - 1, j - 1)
+
+Using the principle of inclusion and exclusion. 
+
+K = 1 is a special case, because it is overcounting. 
+
+For k = 1, the answer is the number of dots in the grid. 
+
+I got WA in the contest because I gave the array insufficient memory and didn't allocate memory for the null character.
+
+------------------------------------------------------------------
+
+int main()
+{
+    int no_of_rows, no_of_columns, k;
+    scanf("%d %d %d", &no_of_rows, &no_of_columns, &k);
+
+    char seat[no_of_rows + 1][no_of_columns + 2];
+    for(int row = 1; row <= no_of_rows; row++)
+        scanf("%s", seat[row] + 1);
+
+    if(k == 1)
+    {
+        int seats = 0;
+
+        for(int row = 1; row <= no_of_rows; row++)
+        {
+            for(int column = 1; column <= no_of_columns; column++)
+            {
+                seats += (seat[row][column] == '.');
+            }
+        }
+        printf("%d\n", seats);
+
+        return 0;
+    }
+
+    int up_empty_seats[no_of_rows + 1][no_of_columns + 1];
+    memset(up_empty_seats, 0, sizeof(up_empty_seats));
+
+    int left_empty_seats[no_of_rows + 1][no_of_columns + 1];
+    memset(left_empty_seats, 0, sizeof(left_empty_seats));
+
+    for(int row = 1; row <= no_of_rows; row++)
+    {
+        for(int column = 1; column <= no_of_columns; column++)
+        {
+            up_empty_seats[row][column] = (seat[row][column] == '.' ? 1 + up_empty_seats[row - 1][column] : 0);
+            left_empty_seats[row][column] = (seat[row][column] == '.' ? 1 + left_empty_seats[row][column - 1] : 0);
+        }
+    }
+
+    int seatings[no_of_rows + 1][no_of_columns + 1];
+    memset(seatings, 0, sizeof(seatings));
+
+    for(int row = 1; row <= no_of_rows; row++)
+    {
+        for(int column = 1; column <= no_of_columns; column++)
+        {
+            seatings[row][column] = (up_empty_seats[row][column] >= k) + (left_empty_seats[row][column] >= k)
+                                    + seatings[row - 1][column] + seatings[row][column - 1] - seatings[row - 1][column - 1];
+        }
+    }
+
+    printf("%d\n", seatings[no_of_rows][no_of_columns]);
+    return 0;
+}
