@@ -14,6 +14,17 @@ For k = 1, the answer is the number of dots in the grid.
 
 I got WA in the contest because I gave the array insufficient memory and didn't allocate memory for the null character.
 
+Actually, after the contest I realised that the rectangle DP is unnecessary. It is enough to count the number of points where the number of consecutive seats
+is >= k, in both the up and left direction.
+
+First, I learnt from the editorial that if strings are involved, as much as possible, try to deal with numbers instead to avoid the nasty mistake due to the null character.
+
+Then, I learnt that instead of handling k = 1 seperately, just divide by 2 in the end.
+
+Then, I learnt that it's better to not use a DP and just count the points. 
+
+Three very important things (Use numbers instead of strings whenever possible, handle k = 1 elegantly and no need of rectangular DP)
+
 ------------------------------------------------------------------
 
 #include <cstdio>
@@ -34,29 +45,22 @@ int main()
     int left_empty_seats[no_of_rows + 1][no_of_columns + 1];
     memset(left_empty_seats, 0, sizeof(left_empty_seats));
 
+    int total_seatings = 0;
+
     for(int row = 1; row <= no_of_rows; row++)
     {
         for(int column = 1; column <= no_of_columns; column++)
         {
             up_empty_seats[row][column] = (seat[row][column] == '.' ? 1 + up_empty_seats[row - 1][column] : 0);
             left_empty_seats[row][column] = (seat[row][column] == '.' ? 1 + left_empty_seats[row][column - 1] : 0);
+
+            total_seatings += (up_empty_seats[row][column] >= k) + (left_empty_seats[row][column] >= k);
         }
     }
 
-    int seatings[no_of_rows + 1][no_of_columns + 1];
-    memset(seatings, 0, sizeof(seatings));
+    if(k == 1)
+        total_seatings = total_seatings >> 1;
 
-    for(int row = 1; row <= no_of_rows; row++)
-    {
-        for(int column = 1; column <= no_of_columns; column++)
-        {
-            seatings[row][column] = (up_empty_seats[row][column] >= k) + (left_empty_seats[row][column] >= k)
-                                    + seatings[row - 1][column] + seatings[row][column - 1] - seatings[row - 1][column - 1];
-        }
-    }
-
-    int total_seating = (k == 1 ? seatings[no_of_rows][no_of_columns]/2 : seatings[no_of_rows][no_of_columns]);
-
-    printf("%d\n", total_seating);
+    printf("%d\n", total_seatings);
     return 0;
 }
