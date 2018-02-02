@@ -10,22 +10,6 @@ int main()
     for(int row = 1; row <= no_of_rows; row++)
         scanf("%s", seat[row] + 1);
 
-    if(k == 1)
-    {
-        int seats = 0;
-
-        for(int row = 1; row <= no_of_rows; row++)
-        {
-            for(int column = 1; column <= no_of_columns; column++)
-            {
-                seats += (seat[row][column] == '.');
-            }
-        }
-        printf("%d\n", seats);
-
-        return 0;
-    }
-
     int up_empty_seats[no_of_rows + 1][no_of_columns + 1];
     memset(up_empty_seats, 0, sizeof(up_empty_seats));
 
@@ -53,6 +37,8 @@ int main()
         }
     }
 
-    printf("%d\n", seatings[no_of_rows][no_of_columns]);
+    int total_seating = (k == 1 ? seatings[no_of_rows][no_of_columns]/2 : seatings[no_of_rows][no_of_columns]);
+
+    printf("%d\n", total_seating);
     return 0;
 }
