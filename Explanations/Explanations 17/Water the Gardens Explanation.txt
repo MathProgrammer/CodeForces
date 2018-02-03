@@ -1,0 +1,44 @@
+
+Now, the time taken to water the patch of grass in between 1 and tap[1]
+
+is tap[1] - 1 = tap[1].
+
+The time taken to water the patch of grass from the last tap to the end is = N - (tap.back() - 1);
+
+The time taken to water the patch of grass in between tap[i] and tap[i + 1] is ceil[distance/2], where distance = tap[i + 1] - (tap[i] - 1)
+
+This is because the number of unwatered patches of grass in between tap[i] and tap[i + 1] reduces by 2 each second. So, the distance shrinks by 2 each second.
+
+If this number is odd, add one more second. 
+
+The time taken = max{First patch, all middle patches, Last patch}
+
+(It's already sorted)
+
+---------------------------------------------------------------------
+
+void solve()
+{
+    int number_of_taps, number_of_beds;
+    scanf("%d %d", &number_of_beds, &number_of_taps);
+
+    vector <int> tap(number_of_taps + 1, 0);
+    for(int i = 1; i <= number_of_taps; i++)
+        scanf("%d", &tap[i]);
+
+    int time = tap[1];
+
+    for(int i = 1; i < number_of_taps; i++)
+    {
+        int distance = tap[i + 1] - tap[i] + 1;
+
+        int time_for_this_patch = distance/2 + distance%2 ;
+
+        time = max(time, time_for_this_patch);
+    }
+
+    time = max(time, number_of_beds - tap.back() + 1);
+
+    printf("%d\n", time);
+}
+
