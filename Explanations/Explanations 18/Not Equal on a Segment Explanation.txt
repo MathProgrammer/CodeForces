@@ -1,0 +1,48 @@
+
+Very powerful idea. 
+
+For every i, let f(i) denote the first index on the left such that A[f(i)] =/= A[i], (un equal element)
+
+f(i) = (A[i - 1] =/= A[i] ? i - 1: f(i - 1))
+
+Now, in a query, either x = r, or not
+
+If x =/= r, then r is the answer
+
+If x = r, then check if f(r) >= l, then f(r) is the answer.
+
+Otherwise, -1 is the answer.
+
+The above can be precomputed in one pass.
+
+---------------------------------------------------------------------------------------------------------------
+
+int main()
+{
+    int number_of_elements, number_of_queries;
+    scanf("%d %d", &number_of_elements, &number_of_queries);
+
+    vector <int> A(number_of_elements + 1, 0);
+    for(int i = 1; i <= number_of_elements; i++)
+        scanf("%d", &A[i]);
+
+    vector <int> first_unequal_position_left(number_of_elements + 1, 0);
+    for(int i = 1; i <= number_of_elements; i++)
+        first_unequal_position_left[i] = (A[i] != A[i - 1] ? i - 1 : first_unequal_position_left[i - 1]);
+
+    while(number_of_queries--)
+    {
+        int left, right, x;
+        scanf("%d %d %d", &left, &right, &x);
+
+        int answer;
+
+        if(A[right] != x)
+            answer = right;
+        else if(A[right] == x)
+            answer = (first_unequal_position_left[right] >= left ? first_unequal_position_left[right] : -1);
+
+        printf("%d\n", answer);
+    }
+    return 0;
+}
