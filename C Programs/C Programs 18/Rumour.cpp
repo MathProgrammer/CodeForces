@@ -1,0 +1,74 @@
+#include <cstdio>
+#include <vector>
+#include <cstring>
+
+#define min(a, b) (a < b ? a : b)
+using namespace std;
+
+const int MAX_N = 1e5 + 5;
+vector <int> graph[MAX_N];
+vector <int> component[MAX_N];
+int visited[MAX_N];
+
+void dfs_and_mark_component(int v, int component_no)
+{
+    visited[v] = true;
+    component[component_no].push_back(v);
+
+    for(int i = 0; i < graph[v].size(); i++)
+    {
+        int child = graph[v][i];
+
+        if(!visited[child])
+            dfs_and_mark_component(child, component_no);
+    }
+}
+
+int main()
+{
+    int no_of_people, no_of_friendships;
+    scanf("%d %d", &no_of_people, &no_of_friendships);
+
+    vector <int> gold(no_of_people + 1, 0);
+    for(int i = 1; i <= no_of_people; i++)
+        scanf("%d", &gold[i]);
+
+    for(int i = 1; i <= no_of_friendships; i++)
+    {
+        int person_1, person_2;
+        scanf("%d %d", &person_1, &person_2);
+
+        graph[person_1].push_back(person_2);
+        graph[person_2].push_back(person_1);
+    }
+
+    memset(visited, false, sizeof(visited));
+
+    int component_no = 1;
+    for(int i = 1; i <= no_of_people; i++)
+    {
+        if(!visited[i])
+        {
+            dfs_and_mark_component(i, component_no++);
+        }
+    }
+
+    long long total_cost = 0;
+
+    for(int component_i = 1; component_i < component_no; component_i++)
+    {
+        long long min_cost_for_this_component = 1e15;
+
+        for(int v = 0; v < component[component_i].size(); v++)
+        {
+            int person = component[component_i][v];
+
+            min_cost_for_this_component = min(min_cost_for_this_component, gold[person]);
+        }
+
+        total_cost += min_cost_for_this_component;
+    }
+
+    printf("%I64d\n", total_cost);
+    return 0;
+}
