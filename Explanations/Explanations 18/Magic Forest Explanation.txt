@@ -1,0 +1,41 @@
+
+A common technique in going over triples is in trying to go over doubles and then force the third variable.
+
+a^b^c = 0
+
+a^a^b^c = a^0
+
+b^0^b^c = b^a^0
+
+c = b^a
+
+So, we fix (a, b) and find c, and then check if a non-degenerate triangle is possible.
+
+To avoid overcounting, make sure c >= b >= a
+
+------------------------------------
+
+int is_nondegenerate_triangle(int a, int b, int c)
+{
+    return (a + b > c);
+}
+
+int main()
+{
+    int n;
+    scanf("%d", &n);
+
+    int no_of_triangles = 0;
+    for(int a = 1; a <= n; a++)
+    {
+        for(int b = a; b <= n; b++)
+        {
+            int c = a^b;
+
+            if(c >= b && c <= n && is_nondegenerate_triangle(a, b, c))
+                no_of_triangles++;
+        }
+    }
+
+    printf("%d\n", no_of_triangles);
+}
