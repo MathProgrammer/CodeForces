@@ -1,0 +1,44 @@
+
+Slightly tricky problem and the case of 0 originals needs to be handled seperately. 
+
+So, if you want to have Y originals, then it means you have to create Y - 1  new originals. 
+
+When you do this, you are forced to make Y - 1 new copies as well. 
+
+There is no other way of generating originals. Then you may make new copies, each new copy gives you two new pieces. 
+
+So, here are the conditions - 
+
+1. At least one new original
+2. Copies >= Original
+3. (Copies - originals) is even.
+
+I got this in the contest, however I missed out on the case where originals = 0 ?
+
+When you don't want any new originals, what do you do ? 
+
+Is the answer always no ? Actually, this is what the above algorithm says, but it's wrong. 
+
+If you make 0 originals, the answer is no, EXCEPT when you want 0 copies as well. 
+
+For example, if you want 1 original and 0 copies, that means you don't have to do anything. 
+
+I missed this trick during the contest. 
+
+0 originals is a special case.
+
+1. Yes, if copies = 0
+2. No, otherwise.
+
+-------------------------------------------------------------------------------------------------------
+
+int main()
+{
+    int originals, copies;
+    scanf("%d %d", &copies, &originals);
+
+    originals--;
+
+    printf( (originals == 0 && copies == 0) || (originals >= 1 && copies >= originals && (copies - originals)%2 == 0) ? "Yes\n" : "No\n");
+    return 0;
+}
