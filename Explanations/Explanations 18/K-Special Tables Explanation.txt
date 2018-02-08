@@ -1,0 +1,61 @@
+ 
+I was going to give up on this problem and then I told myself that if I can't solve it, I should at least come up with a bad heuristic or a brute force.
+
+And, then I got it !
+
+Simple, I will fill the largest elements from the end till I reach A[k],
+
+A[k] < A[k + 1] < A[k + 2] … < A[n]
+
+A[k] is the largest element possible, but there are enough elements left over.
+
+So, now there’s two dimensions and a matrix. What to do now ?
+
+Same thing, fill in the largest elements from the end of the row till you reach the k-th column. Now, I want the next row k to be the maximum possible. For this, I want to ‘save’ my large elements. So, I will fill columns 1 to k-1 from the beginning of the list.
+
+Next column, again I will start from the greatest unused element from N to K, and then smallest unused elements from 1 to K - 1.
+
+In short, use two pointers - one to the front, other to the back. Fill in each row greedily. Fill from the back pointer from A[N] to A[k] and with the front pointer from A[1] to A[k - 1].
+
+I was delighted to find N = 500, the solution will pass, and it did !
+
+--------------------------------
+
+-----------------------------------------------------------------------------------------------------------------------------------
+
+int main()
+{
+    int N, k;
+    scanf("%d %d", &N, &k);
+
+    int special_table[N + 1][N + 1];
+    int front_ptr = 1, back_ptr = N*N;
+
+    for(int row = 1; row <= N; row++)
+    {
+        for(int column = N; column >= k; column--)
+            special_table[row][column] = back_ptr--;
+
+        for(int column = 1; column < k; column++)
+            special_table[row][column] = front_ptr++;
+    }
+
+    int k_column_sum = 0;
+
+
+    for(int row = 1; row <= N; row++)
+        k_column_sum += special_table[row][k];
+
+    printf("%d\n", k_column_sum);
+
+    for(int row = 1; row <= N; row++)
+    {
+        for(int column = 1; column <= N; column++)
+        {
+            printf("%d ", special_table[row][column]);
+        }
+        printf("\n");
+    }
+
+    return 0;
+}
