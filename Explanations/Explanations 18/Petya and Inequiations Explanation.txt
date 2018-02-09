@@ -1,0 +1,60 @@
+
+Try to find the maximum value of the sum of squares - 
+
+Turns out this happens when all the elements except one = 1, and the last element = Y - (n - 1)
+
+Let us say there is another arrangement where we have at most (n - 2) ones. I will show that you can always do better by making it (n - 1) 1's 
+
+Choose the largest and second largest element - Let it be a and b. Without loss of generality, a < b, and a > b > 1
+
+Sum of squares = a^2 + b^2 = X
+
+Now, let us make the two numbers 1, (b + a - 1)
+
+Keeping the sum invariant.
+
+Let us examine the sum of squares now
+
+1^2 + (b + a - 1)^2
+
+= 1 + a^2 + b^2 + 1 - 2a - 2b + 2ab
+
+= (a^2 + b^2) + 2(1 + ab - a - b)
+
+= X + 2( 1  + ab - a - b)
+
+Now, all I have to do is show that (1 + ab - a - b) is positive
+
+When a and b are two positive integers > 1, their product is always greater than their sum.
+
+xy - x - y + 1 = x(y - 1) - y + 1 = (x - 1)(y - 1), both terms are positive, so (x - 1)(y - 1) > 0
+
+This completes the proof ---------
+
+Now, get the maximum possible sum of squares for a given sum = 1^2 + 1^2 + ... + (Y - (N - 1))^2
+
+Test cases I missed - What happens when N > Y.
+
+--------------------------------------------------------------------------------------------------------
+
+int main()
+{
+    int n, sum_limit;
+    long long square_sum_lower_bound;
+    scanf("%d %I64d %d", &n, &square_sum_lower_bound, &sum_limit);
+
+    long long largest_element = sum_limit - (n - 1);
+    long long max_square_sum = (n - 1) + largest_element*largest_element;
+
+    if(max_square_sum < square_sum_lower_bound || n > sum_limit)
+    {
+        printf("-1\n");
+        return 0;
+    }
+
+    for(int i = 1; i <= n; i++)
+        printf("%I64d\n", (i == n ? largest_element : 1));
+
+    return 0;
+}
+
