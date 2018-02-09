@@ -1,0 +1,70 @@
+
+N = 1, is a special case. Let us solve it first. 
+
+If N = 1, then 
+
+if A[i] = 1, then Answer = 2
+
+else, Answer = 1
+
+-------------------------------------------------------
+
+Now, let N > 1
+
+The smallest digit that can occupy the first position  = 1. 
+
+Let us consider the sorted array.
+
+For all other positions k, 
+
+There must be k-1 smaller numbers ... A[1], A[2], ... , A[k - 1].
+
+If A[k] > A[k - 1], then we can replace A[k] with another copy of A[k - 1]
+
+No element smaller than A[k - 1] can occupy the position K.
+
+If A[k] = A[k - 1], then we replace any number from (k + 1 to N) or from (1, k - 2) to maintain the order. It doesn't matter which. 
+
+Since nothing smaller than A[k - 1] can occupy A[k], we are done. 
+
+However, there's a special case here - What if A[n] = 1 ? 
+
+Then, we can't replace any other number, and A[n] =/= A[n - 1] as the array would remain unchanged. 
+
+If the array consists of all 1's then the last 1, will become = 2
+
+----------------------------------------------------------------------
+
+int main()
+{
+    int no_of_elements;
+    scanf("%d", &no_of_elements);
+
+    vector <int> element(no_of_elements);
+    for(int i = 0; i < no_of_elements; i++)
+        scanf("%d", &element[i]);
+
+    sort(all(element));
+
+    if(no_of_elements == 1)
+    {
+        printf("%d", element[0] == 1 ? 2 : 1);
+        return 0;
+    }
+
+    printf("1 ");
+    for(int i = 1; i < no_of_elements - 1; i++)
+        printf("%d ", element[i - 1]);
+
+    if(element[no_of_elements - 1] == 1)
+        printf("2");
+    else
+        printf("%d", element[no_of_elements - 2]);
+
+
+    return 0;
+}
+ 
+
+----------------------------------------------------------------------------
+
