@@ -1,0 +1,71 @@
+
+First, I thought of binary search where try to find the minimum number of moves all elements can be equalised. 
+
+But, then that was not so easy. It's not easy to answer the question, - "Can the matrix be equalised in at most x moves ?"
+
+It's easier to answer the question - "Can the matrix be equalised to element x ?"
+
+Then, I thought of taking the frequency of all elements, and then the answer is yes, if (frequency[x - d] + frequency[x] + frequency[x + d]) = N*M
+
+But then I realised that the you can add D any number of times to a number, not just once. 
+
+Then, I realised the remainder with D is invariant under the operation of adding or subtracting D
+
+x = x + D = x - D (mod D)
+
+If all the numbers are not congruent mod D, then we can never equalise them. 
+
+Now, the question is that you have 10^4 elements ... Which element do they have the least distance. 
+
+Turns out this is the median. 
+
+If we equalise all elements to something other than the median, then there are more elements from one side than the other. 
+
+We can do better by setting it to the median. 
+
+(Let the other element by x, and let us say it takes s steps to go from x to the median.)
+
+Now, if x < m, then there are more elements to the right of x (R) than to the left (L)
+
+If we now set the equal point to the median, we add L(s) steps and reduce R(s) steps. 
+
+So total new steps = s(L - R)
+
+L < R, so this is a negative number. Which means we have reduced the steps. 
+
+-----------------------------------------------------------------------------------------
+
+int main()
+{
+    int no_of_rows, no_of_columns, difference;
+    scanf("%d %d %d", &no_of_rows, &no_of_columns, &difference);
+
+    vector <int> A(no_of_rows*no_of_columns, 0);
+
+    set <int> remainder;
+
+    int possible = true;
+    for(int i = 0; i < no_of_rows*no_of_columns; i++)
+    {
+        scanf("%d", &A[i]);
+
+        remainder.insert(A[i]%difference);
+    }
+
+    if(remainder.size() > 1)
+        possible = false;
+
+    sort(all(A));
+
+    int middle = A.size()/2;
+    int median = A[middle];
+
+    int minimum_no_of_moves = 0;
+    for(int i = 0; i < A.size(); i++)
+        minimum_no_of_moves += abs(A[i] - median)/difference;
+
+    printf("%d\n", possible ? minimum_no_of_moves : -1);
+    return 0;
+}
+
+
