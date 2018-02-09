@@ -19,6 +19,8 @@ Total cost = 2*sum of edges - f(max)
 
 This is an elegant way of putting it. 
 
+A very important corner case, which fortunately is elaborated in the example itself - What if there is only one leaf ? Then, no edge will be visited twice as we don't need to come back to any vertex and visit the other vertices and the answer is merely the sum of all edges. 
+
 --------------------------------------------------------------------------------------------------------
 
 void dfs(int v, int parent_v)
