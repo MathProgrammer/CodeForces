@@ -1,0 +1,36 @@
+
+This one calls for some inspired factorisation. But, that need not be the case if you know the history of Egyptian fractions. 
+
+The Egyptians had found a trick to write any unit fraction
+
+1/a as an infinite chain of unit fractions by using this - 
+
+
+1/a = 1/(a + 1) + 1/a(a + 1)
+
+It's the reverse of telescoping a series, where an infinite series was bought down to one or two fractions. 
+
+If you know the historical trick, the factorisation will not appear too difficult. 
+
+2/n 
+
+= 1/n + 1/n 
+
+= 1/n + ( 1/(n + 1) + 1/n(n + 1) )
+
+-------------------------------------------------------------------------------------------------
+
+int main()
+{
+    int n;
+    scanf("%d", &n);
+
+    int x = n;
+    int y = n + 1;
+    int z = n*(n + 1);
+
+    printf("%d %d %d\n", x, y, z);
+    return 0;
+}
+
+
