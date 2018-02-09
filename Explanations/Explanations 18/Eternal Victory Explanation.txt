@@ -1,0 +1,66 @@
+
+Think of the path travelled in terms of the edges travelled. 
+
+What if we had only one vertex and all of it's children were leafs ? 
+
+Then cost = w1 + w2 + ... + wn .... Now, all except one of these leaves are visited twice. 
+
+So, the best we can do is visit the maximum weight only once. Cost = 2(w1 + w2 + ... + wn) - wmax
+
+Now, we don't necessarily have all children as leaves. 
+
+But, notice that from the root, we must visit every leaf. The cost to one leaf is f(L)
+
+f(L1) + f(L2) + ... + f(Ln)
+
+All except one leaf is visited twice. Let us visit the leaf with the maximum cost once. 
+
+Total cost = 2*sum of edges - f(max)
+
+This is an elegant way of putting it. 
+
+--------------------------------------------------------------------------------------------------------
+
+void dfs(int v, int parent_v)
+{
+        max_distance[v] = 0;
+
+        for(int i = 0; i < tree[v].size(); i++)
+        {
+            int child_v = tree[v][i].first;
+            int child_distance = tree[v][i].second;
+
+            if(child_v == parent_v)
+                continue;
+
+            dfs(child_v, v);
+
+            max_distance[v] = max(max_distance[v], child_distance + max_distance[child_v]);
+        }
+}
+
+int main()
+{
+    int no_of_cities;
+    scanf("%d", &no_of_cities);
+
+    long long sum_of_edges = 0;
+
+    for(int i = 1; i < no_of_cities; i++)
+    {
+        int x, y, weight;
+        scanf("%d %d %d", &x, &y, &weight);
+
+        tree[x].push_back(make_pair(y, weight));
+        tree[y].push_back(make_pair(x, weight));
+
+        sum_of_edges += weight;
+    }
+
+    dfs(1, 0);
+
+    long long total_travel_distance = (sum_of_edges == max_distance[1] ? sum_of_edges : 2*sum_of_edges - max_distance[1]);
+
+    printf("%I64d\n", total_travel_distance);
+    return 0;
+}
