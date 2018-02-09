@@ -1,0 +1,52 @@
+
+What's the smallest answer of length 1 ? - a
+
+Length 2 ? has to be ab.
+
+Length 3 ? Answer should be either aba or abc, depending on whether you want 3 distinct characters.
+
+The answer can be constructed in the following way - 
+
+First, fill it up with alternating a's and b's.
+
+ababababa....aba
+
+Then, from the back start putting the largest letters in the end in alphabetical order.
+
+For example, N = 7, K = 4
+
+ababacd
+
+This is the smallest string, because if we put c or d in any other position where we have a or b, we get a larger string. 
+
+In fact, if we swap any two characters of this string, we will either get a larger string or violate the condition S[i] =/= S[i - 1]
+
+Now, when is it not possible ?
+
+When N < K and when K = 1, and N > 1. I missed the second case.
+
+If N > 1, then we are forced to put the same character in multiple positions and will violate the condition.
+
+-----------------------------------------------------------------------------------------------------------------
+
+int main()
+{
+    int length, distinct_letters;
+    scanf("%d %d", &length, &distinct_letters);
+
+    if(length < distinct_letters || (length > 1 && distinct_letters == 1))
+    {
+        printf("-1\n");
+        return 0;
+    }
+
+    string answer;
+    for(int i = 0; i < length; i++)
+        answer += ('a' + i%2);
+
+    for(int i = length - 1, letter = distinct_letters - 1; letter >= 2; i--, letter--)
+        answer[i] = ('a' + letter);
+
+    cout << answer;
+    return 0;
+}
