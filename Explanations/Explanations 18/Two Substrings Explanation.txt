@@ -1,0 +1,44 @@
+
+Store the positions where AB and BA occur. 
+
+Try to compare the further AB and BA
+
+Check if the last AB and the first BA overlap 
+
+And if the first BA and the last AB overlap. 
+
+If they don't, we are done. 
+
+If the first AB overlaps with the last BA - ABA
+
+And the first BA overlaps with the last AB, then that would mean the first BA comes after the last BA which is not possible. 
+
+The only possibility is if it's like - ABAB
+
+There's only one BA. And it overlaps so it's not possible.
+
+------------------------------------------------------------------
+
+int main()
+{
+    string A;
+    cin >> A;
+
+    vector <int> ab;
+    vector <int> ba;
+
+    for(int i = 0; i < A.size() - 1; i++)
+    {
+        if(A[i] == 'A' && A[i + 1] == 'B')
+            ab.push_back(i);
+
+        if(A[i] == 'B' && A[i + 1] == 'A')
+            ba.push_back(i);
+    }
+
+    if(ab.size() == 0 || ba.size() == 0 || !(ab[0] + 1 < ba.back() || ba[0] + 1 < ab.back()))
+       cout << "NO\n";
+    else
+        cout << "YES\n";
+    return 0;
+}
