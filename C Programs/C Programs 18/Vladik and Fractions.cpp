@@ -9,6 +9,6 @@ int main()
     int y = n + 1;
     int z = n*(n + 1);
 
-    printf("%d %d %d\n", x, y, z);
+    printf(n == 1 ? "-1\n" : "%d %d %d\n", x, y, z);
     return 0;
 }
