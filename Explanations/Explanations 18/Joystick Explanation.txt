@@ -1,0 +1,27 @@
+
+At each point charge the joystick with smaller charge.
+
+Stop when the smaller charge is <= 0 and the larger charge <= 1
+
+For it to continue, one of them must be > 1 and the other >= 1
+
+int main()
+{
+    int charge_a, charge_b;
+    scanf("%d %d", &charge_a, &charge_b);
+
+    int no_of_minutes = 0;
+
+    while(max(charge_a, charge_b) > 1 && min(charge_a, charge_b) > 0)
+    {
+        if(charge_a < charge_b)
+            charge_a++, charge_b -= 2;
+        else
+            charge_a -= 2, charge_b++;
+
+        no_of_minutes++;
+    }
+
+    printf("%d\n", no_of_minutes);
+    return 0;
+}
