@@ -1,0 +1,53 @@
+
+We need to notice a few things. 
+
+Firstly, it's always possible to make the string a palindrome. 
+
+Secondly, it's enough to make one half of the string equal to the other half. 
+
+Thirdly, we have to make every element equal to it's reflection. That is, make A[i] = A[n - i - 1]
+
+Fourthly, the number of vertical moves to make A[i] and A[n - i - 1] equal = min{A[i] - A[n - i - 1], 26 - A[i] + A[n - i - 1]}
+
+So, we go over every pair of elements that is not equal and calculate the vertical moves required to make them equal.
+
+Fifthly, calculate the leftmost and rightmost position of the cursor in the first half that is not equal to it's reflection.
+
+And then horizontal moves is whichever is minimum - (Cursor -> Leftmost->Rightmost or Cursor->Rightmost->Leftmost)
+
+--------------------------------------------------------------------------------------------------------------------------
+
+int main()
+{
+    int n;
+    string A;
+    int cursor;
+    cin >> n >> cursor >> A;
+
+    cursor--;
+    n--;
+
+    cursor = min(cursor, n - cursor);
+
+    int middle = n/2;
+
+    int leftmost = cursor, rightmost = cursor;
+    for(int i = cursor; i <= middle; i++)
+        if(A[i] != A[n - i])
+            rightmost = i;
+
+    for(int i = cursor; i >= 0; i--)
+        if(A[i] != A[n - i])
+            leftmost = i;
+
+    int vertical_moves = 0;
+    for(int i = leftmost; i <= rightmost; i++)
+        vertical_moves += min(abs(A[i] - A[n - i]), 26 - abs(A[i] - A[n - i]));
+
+
+    int horizontal_moves = min((cursor - leftmost) + (rightmost - leftmost), (rightmost - cursor) + (rightmost - leftmost));
+
+    int total_moves = horizontal_moves + vertical_moves;
+    cout << total_moves;
+    return 0;
+}
