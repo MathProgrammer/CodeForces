@@ -1,0 +1,85 @@
+
+Firstly, for all n >= 10, f(n) < n. 
+
+Why is this important ?
+
+So, g(n) = g(f(n)) ... We can calculate this bottom-up.
+
+--------------------------------------------------
+
+I didn't prove it during the contest. The editorial had a nice proof.
+
+Let N = n1 n2 n3 ... nk
+
+So, product is at most = n1 x n2 x ... x nk
+
+Now, N = nk + 10n(k - 1) + ... + 10^(k - 1)n1
+
+Now, each nk is at most 9. 
+
+Product of digits <= 9^(k -1)n1 < 10^(k - 1)n1 < N
+
+-------------------------------------------------------
+
+The key to note is that in the query [L, R, k], k is small < 10. 
+
+So, we precompute g(i, k) for all i <= 10^6 and all k < 10. This allows us to answer the query in O(1) time. 
+
+This idea of precomputing the answers using a 2D array, I had come across in some SPOJ question a long time back. 
+
+----------------------------------------------------------------
+
+const int LIMIT = 1e6 + 5;
+int answer[LIMIT][10];
+
+int non_zero_digit_product(int n)
+{
+    int product = 1;
+
+    while(n)
+    {
+        product *= (n%10 != 0 ? n%10 : 1);
+        n /= 10;
+    }
+
+    return product;
+}
+
+void precompute()
+{
+    vector <int> g(LIMIT, 0);
+    for(int i = 1; i < LIMIT; i++)
+        g[i] = (i < 10 ? i : g[non_zero_digit_product(i)]);
+
+    for(int i = 1; i < LIMIT; i++)
+        answer[i][0] = 0;
+
+    for(int i = 1; i < LIMIT; i++)
+    {
+        for(int digit = 1; digit < 10; digit++)
+        {
+            answer[i][digit] = answer[i - 1][digit];
+        }
+
+        if(g[i] < 10)
+            answer[i][g[i]]++;
+    }
+}
+
+int main()
+{
+    precompute();
+
+    int no_of_queries;
+    scanf("%d", &no_of_queries);
+
+    while(no_of_queries--)
+    {
+        int left, right, k;
+        scanf("%d %d %d", &left, &right, &k);
+
+        printf("%d\n", answer[right][k] - answer[left - 1][k]);
+    }
+
+    return 0;
+}
