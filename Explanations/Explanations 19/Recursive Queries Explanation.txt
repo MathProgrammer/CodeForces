@@ -25,6 +25,24 @@ The key to note is that in the query [L, R, k], k is small < 10.
 
 So, we precompute g(i, k) for all i <= 10^6 and all k < 10. This allows us to answer the query in O(1) time. 
 
+Here is the main idea ... Since f(n) < n ... Whenever we are at i, we have all values of g(x), where x < i. 
+
+We simply find g(f(i))
+
+Now, while storing the answer ..., Here's what we do -
+
+Let answer(i, k) be the number of numbers in the range [1, i] for which g(i) = k. 
+
+If we know this, how can we calculate g(i + 1, k) ? 
+
+There are two possibilities - Either g(i + 1) = k, or g(i + 1) =/= k
+
+If g(i + 1) =/= k, then Answer(i + 1, k) = Answer(i, k)
+
+If g(i + 1) = k, then Answer(i + 1, k)  = Answer(i, k) + 1
+
+Do this for all k from 1 to 9.
+
 This idea of precomputing the answers using a 2D array, I had come across in some SPOJ question a long time back. 
 
 ----------------------------------------------------------------
