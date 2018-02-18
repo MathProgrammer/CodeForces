@@ -1,0 +1,36 @@
+
+Make a map, that maps all possible positions the toy can take to an integer number. 
+
+Notice that the number of spins is periodic about 4. We only need to consider the number of spins mod 4. 
+
+The answer is undefined if we can reach a position either both clockwise and anticlockwise, or never at all.
+
+-----------------------------------------------------------------
+
+int main()
+{
+    map <char, int> positions;
+
+    positions['v'] = 0;
+    positions['<'] = 1;
+    positions['^'] = 2;
+    positions['>'] = 3;
+
+    char start_position, end_position;
+    int no_of_spins;
+
+    scanf("%c %c %d", &start_position, &end_position, &no_of_spins);
+    int first_position = positions[start_position];
+    int final_position = positions[end_position];
+
+    if( (first_position + no_of_spins%4)%4 == final_position && (first_position + (4 - no_of_spins%4))%4 == final_position)
+        printf("undefined\n");
+    else if( (first_position + no_of_spins%4)%4 == final_position)
+        printf("cw\n");
+    else if( (first_position + (4 - no_of_spins%4))%4 == final_position)
+        printf("ccw\n");
+    else
+        printf("undefined\n");
+
+    return 0;
+}
