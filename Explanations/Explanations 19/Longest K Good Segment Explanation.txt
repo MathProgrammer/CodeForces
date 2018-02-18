@@ -1,0 +1,65 @@
+
+Use a sliding window (Two pointers). 
+
+Notice that the window end increases by one each time 
+
+So, if S[l, l + 1, l + 2, ... , r] is a good segment and S[l, l + 1, .... , r, r + 1] is not a good segment, 
+
+Then it means A[r + 1] is the (K + 1)th distinct character.
+
+Push L forward while the number of distince characters is more than k.
+
+When we do it like this, notice each character is visited at most two times (Once by L, once by R)
+
+So, complexity = O(n)
+
+Notice we don't need to check S[l + 1, l + 2] S[l + 1, l + 2, l + 3], etc ... Because we know we have S[l, l + 1, .... , r]
+
+No need of checking smaller segments. 
+
+-------------------------------------------------------------------
+
+int main()
+{
+    int no_of_elements, k;
+    scanf("%d %d", &no_of_elements, &k);
+
+    vector <int> element(no_of_elements + 1);
+    for(int i = 1; i <= no_of_elements; i++)
+        scanf("%d", &element[i]);
+
+    const int MAX = 1e6 + 1;
+    vector <int> frequency(MAX, 0);
+
+    int left = 1, right = 1, best_left, best_right, distinct_elements = 0, maximum_length = 0;
+    while(right <= no_of_elements)
+    {
+        frequency[element[right]]++;
+        distinct_elements += (frequency[element[right]] == 1);
+
+        while(distinct_elements > k)
+        {
+            frequency[element[left]]--;
+            distinct_elements -= (frequency[element[left]] == 0);
+            left++;
+        }
+
+        int current_segment_length = right - (left - 1);
+        if(current_segment_length > maximum_length)
+        {
+            maximum_length = current_segment_length;
+            best_left = left;
+            best_right = right;
+        }
+
+        right++;
+
+    }
+
+    printf("%d %d\n", best_left, best_right);
+    return 0;
+}
+
+
+
+
