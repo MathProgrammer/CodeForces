@@ -1,0 +1,37 @@
+
+This problem is made a lot simpler because nobody likes himself. 
+
+So, if A-> B and B-> A, ... A does not like A .... So, this is not a traingle.
+
+A-> A never occurs either.
+
+
+Now, for every i, find p(i) and p(p(i)) ... If p(p(p(i))) = i, then we have a triangle ! Else we do not.
+
+------------------------------------------------------------------
+
+int main()
+{
+    int no_of_planes;
+    scanf("%d", &no_of_planes);
+
+    vector <int> liked_by(no_of_planes + 1);
+    for(int i = 1; i <= no_of_planes; i++)
+        scanf("%d", &liked_by[i]);
+
+    int love_triangle_exists = false;
+    for(int i = 1; i <= no_of_planes; i++)
+    {
+        int a = i;
+        int b = liked_by[a];
+        int c = liked_by[b];
+
+        if(a == liked_by[c])
+        {
+            love_triangle_exists = true;
+        }
+    }
+
+    printf(love_triangle_exists ? "YES\n" : "NO\n");
+    return 0;
+}

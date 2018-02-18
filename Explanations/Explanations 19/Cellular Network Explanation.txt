@@ -1,0 +1,60 @@
+
+Both the cities and the towers are given in ascending order. 
+
+Take each city and perform binary search to find the nearest tower.
+
+Perform lower bound(city) and it gives the leftmost occurence of city, if city occurs and otherwise returns the first tower to it's left. 
+
+(If city is not present in towers, then upper bound and lower bound both perform exactly the same - point to the first position where the element can be inserted
+without breaking the order. (Suppose you search for 4, and the list has (3, 5) ... Both will point to 5)
+
+So, we need to compare with wherever lower bound points and one position less than that.
+
+(Don't forget to do bound checking to see it doesn't exceed the limit. If lower bound points to after the last element, then don't compare with it.
+
+If lower bound points to 0, then don't compare with -1.)
+
+
+Nearest tower = min(left, right)
+
+The nearest distance = max(nearest tower).
+
+-----------------------------------------------------
+
+int main()
+{
+    int number_of_cities, number_of_towers;
+    scanf("%d %d", &number_of_cities, &number_of_towers);
+
+    vector <int> city(number_of_cities);
+    for(int i = 0; i < number_of_cities; i++)
+        scanf("%d", &city[i]);
+
+    vector <int> tower(number_of_towers);
+    for(int i = 0; i <  number_of_towers; i++)
+        scanf("%d", &tower[i]);
+
+    int min_range = 0;
+
+    for(int i = 0; i < number_of_cities; i++)
+    {
+        int position = lower_bound(all(tower), city[i]) - tower.begin();
+
+        int closest_tower = 2e9;
+
+        if(position != number_of_towers) closest_tower = min(closest_tower, abs(tower[position] - city[i]));
+
+        if(position != 0) closest_tower = min(closest_tower, abs(tower[position - 1] - city[i]));
+
+        min_range = max(min_range, closest_tower);
+    }
+
+    printf("%d\n", min_range);
+    return 0;
+}
+
+
+
+
+
+
