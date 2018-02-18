@@ -1,0 +1,71 @@
+
+Raziman told me about this brilliant solution. It was so creative, I had to code it myself !
+I loved it so much. 
+
+Here's the idea ... 
+
+Write down all numbers from 1 to N in binary. 
+
+For each bit, associate prime P[i] if the bit is set, and prime Q[i] if bit is unset. 
+
+For example, we will associate 2 with all numbers which have the first bit set and 3 with all numbers which have the first bit unset.
+
+Every pair of numbers which have a common bit, have a common factor. 
+
+Have we covered all pairs ? No. 
+
+What pairs are remaining, ... The pairs in which no two numbers have a common bit set. 
+
+So, for all (I, (n - 1)^I), we will associate another prime. 
+
+After this, we have ensured that all pairs of numbers have a common prime factor (at least).
+
+No prime divides all numbers. So, we are done ! This approach is beautiful and creative !
+
+--------------------------------------------------------------
+
+int main()
+{
+    const int LIMIT = 300;
+    vector <int> primes;
+    precompute(primes, LIMIT);
+
+    int n;
+    scanf("%d", &n);
+
+    if(n == 2)
+    {
+        printf("-1\n");
+        return 0;
+    }
+
+    int N = nearest_power_of_2_greater_than(n);
+    vector <long long> A(N + 5, 1);
+
+    int first_free_prime = 0;
+
+    for(int bit = 0; (1 << bit) < N; bit++)
+    {
+        int set_bit_prime = primes[first_free_prime++];
+        int unset_bit_prime = primes[first_free_prime++];
+
+        for(int i = 1; i <= N; i++)
+        {
+            if(is_bit_set(i, bit))
+                A[i] *= set_bit_prime;
+            else
+                A[i] *= unset_bit_prime;
+        }
+    }
+
+    for(int i = 1; 2*i <= N; i++, first_free_prime++)
+    {
+        A[i]   *= primes[first_free_prime];
+        A[(N - 1)^i] *= primes[first_free_prime];
+    }
+
+    for(int i = 1; i <= n; i++)
+        printf("%I64d\n", A[i]);
+
+    return 0;
+}
