@@ -1,0 +1,82 @@
+
+The key to note here is that k is very small. 
+
+First we must choose k spots out of n. 
+
+Now, we can fill these k spots in derangement(k) number of ways. 
+
+How to find a recurrence for d(n) ?
+
+Consider we have n numbers .... 
+
+Now, let us place n at position i. (There are (n - 1) choices for this.)
+
+There are two possibilities for i - Either it is at position n, or it is at some other position.
+
+Now if i is placed at position n, then the remaining (n - 2) numbers must be deranged ... given by d(n - 2).
+
+What if i is placed at some position other than n ? 
+
+Then notice now that we have a situation where every element has exactly one spot it cannot fill. 
+
+(1 cannot be in 1, 
+2 cannot be in 2, 
+3 cannot be in 3, 
+.
+.
+i - 1 cannot be in i - 1
+i cannot be in N
+i + 1 cannot be in i + 1
+. 
+.
+N - 1 cannot be in N - 1)
+
+We have i-1 elements and i - 1 positions to fill them, and each element cannot occupy one spot. 
+
+Total answer = (n - 1)(d(n - 1) + d(n - 2))
+
+(n - 1) choices to place n, and then accordingly d(n - 1) or d(n - 2)
+
+For convenience, when 0 elements are out of place, I want to add 1 to the answer for this question so define d(0) = 1
+
+------------------------------------------------------------------
+
+long long choose(int n, int r)
+{
+    if(r == 0 || r == n)
+        return 1;
+    if(r == 1 || r == n - 1)
+        return n;
+
+    return choose(n - 1, r) + choose(n - 1, r - 1);
+}
+
+long long derangements(int n)
+{
+    if(n == 0)
+        return 1;
+    if(n == 1)
+        return 0;
+    if(n == 2)
+        return 1;
+
+    return (n - 1)*(derangements(n - 1) + derangements(n - 2));
+}
+
+int main()
+{
+    int n, k;
+    scanf("%d %d", &n, &k);
+
+    long long answer = 0;
+    for(int i = 0; i <= k; i++)
+    {
+        answer += choose(n, i)*derangements(i);
+    }
+
+    printf("%I64d\n", answer);
+    return 0;
+}
+
+
+
