@@ -1,0 +1,29 @@
+#include <cstdio>
+
+#define max(a, b) (a > b ?  a : b)
+
+int main()
+{
+    long long money, plastic_bottle_price, glass_bottle_price, return_amount;
+    scanf("%I64d %I64d %I64d %I64d", &money, &plastic_bottle_price, &glass_bottle_price, &return_amount);
+
+    long long effective_glass_bottle_price = glass_bottle_price - return_amount;
+    long long no_of_bottles = 0;
+
+    if(plastic_bottle_price <= effective_glass_bottle_price || glass_bottle_price > money)
+    {
+        no_of_bottles = money/plastic_bottle_price;
+    }
+    else if(effective_glass_bottle_price < plastic_bottle_price && glass_bottle_price <= money)
+    {
+        no_of_bottles = (money - return_amount)/effective_glass_bottle_price;
+
+        long long remaining_money = money - no_of_bottles*effective_glass_bottle_price;
+        long long remaining_bottles = remaining_money/plastic_bottle_price;
+
+        no_of_bottles += remaining_bottles;
+    }
+
+    printf("%I64d\n", no_of_bottles);
+    return 0;
+}

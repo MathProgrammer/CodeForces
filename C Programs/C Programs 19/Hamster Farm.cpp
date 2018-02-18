@@ -1,0 +1,27 @@
+#include <cstdio>
+
+int main()
+{
+    long long no_of_hamsters;
+    int no_of_boxes;
+    scanf("%I64d %d", &no_of_hamsters, &no_of_boxes);
+
+    long long leftover_hamsters = 1e18, boxes_bought;
+    int box_type;
+
+    for(int i = 1; i <= no_of_boxes; i++)
+    {
+        long long box_i;
+        scanf("%I64d", &box_i);
+
+        if(no_of_hamsters%box_i < leftover_hamsters)
+        {
+            leftover_hamsters = no_of_hamsters%box_i;
+            boxes_bought = no_of_hamsters/box_i;
+            box_type = i;
+        }
+    }
+
+    printf("%d %I64d\n", box_type, boxes_bought);
+    return 0;
+}
