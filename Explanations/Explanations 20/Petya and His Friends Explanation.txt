@@ -1,0 +1,43 @@
+Here was my solution, 
+
+First assign every element other than A[2], a factor of 2. 
+
+Now, assign every element other than A[3] a factor of 3.
+
+Now, assign every element other than A[1], a factor of 5. 
+
+Since, gcd(A[1], A[2], A[3]) = 1, the gcd of the entire array = 1
+
+First three elements = (2 x 3, 3 x 5, 2 x 5, 2 x 3 x 5, 2 x 3 x 5 ... )
+
+Now, the first three elements are (6, 15, 10)
+
+Now, after that append 0's to every number from A[4] onwards just to make sure the numbers are different. 
+
+Solution = (6, 15, 10, 60, 600, 6000, 60000, etc)
+
+Important to know the corner case. No solution for N = 2
+
+---------------------------------------------------------------
+
+int main()
+{
+    int n;
+    scanf("%d", &n);
+
+    if(n == 2)
+    {
+        printf("-1\n");
+        return 0;
+    }
+
+    printf("6\n10\n15\n");
+    for(int i = 4; i <= n; i++)
+    {
+        printf("6"); for(int zero = 1; zero <= i - 4 + 1; zero++) printf("0");
+        printf("\n");
+    }
+    return 0;
+}
+
+
