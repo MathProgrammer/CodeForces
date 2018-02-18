@@ -1,0 +1,30 @@
+
+For the robot to finish at the starting position, the left and right  ... and the up and down .. directions must neutralise each other. 
+
+So, the max = 2*min{L, R} + 2*min{U, D}
+
+This allows for neutralisation in both horizontal and vertical directions.
+
+--------------------------------------------------------------
+
+int main()
+{
+    int no_of_instructions;
+    string instructions;
+    cin >> no_of_instructions >> instructions;
+
+    int lefts = 0, rights = 0, ups = 0, downs = 0;
+
+    for(int i = 0; i < no_of_instructions; i++)
+    {
+        lefts  += (instructions[i] == 'L');
+        rights += (instructions[i] == 'R');
+        downs  += (instructions[i] == 'D');
+        ups    += (instructions[i] == 'U');
+    }
+
+    int max_correct_instructions = 2*min(lefts, rights) + 2*min(ups, downs);
+    cout << max_correct_instructions;
+
+    return 0;
+}
