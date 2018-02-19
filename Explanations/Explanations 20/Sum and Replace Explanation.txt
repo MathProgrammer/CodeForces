@@ -1,0 +1,131 @@
+
+Now, it happens that d(n) is a function that converges rapidly. Every number will ultimately be reduced to 2. 
+In the given range every number goes to 2 in at most 6 times. After that d(2) = 2 and d(1) = 1
+
+How do we use this fact ? We can't use lazy propagation for a function like number of divisors. 
+
+Here's what we do ... Use a segment tree for sum and another one for max. 
+
+While performing an update check if the max of any node is <= 2. If it is, then we can ignore it as it won't change with the update.
+
+We can afford to go to every leaf node and avoid nodes who's max <= 2. 
+In the worst case, we will do 6 O(n) scans ! Which is perfectly fine ! It's very reasonable. 
+
+This is an important trick to note in functions which converge rapidly. We can afford to change each element one-by-one and ignore nodes which have already hit the converged
+point. 
+We won't be doing too many updates ... That's the main thing to learn here.
+
+Again the idea of a segment tree is to break the query interval into intervals that either lie completely with an interval or ones that lie completely outside the interval.
+
+---------------------------------------------------------
+
+void precompute_divisors()
+{
+    vector <int> largest_prime_factor(MAX_N, 0);
+    no_of_divisors[1] = 1;
+
+    for(int i = 2; i < MAX_N; i++)
+    {
+        if(largest_prime_factor[i] == 0)
+        {
+            for(int multiple = i; multiple < MAX_N; multiple += i)
+            {
+                largest_prime_factor[multiple] = i;
+            }
+        }
+
+        int exponent = 0, reduced_i = i;
+
+        while(reduced_i%largest_prime_factor[i] == 0)
+        {
+            reduced_i /= largest_prime_factor[i];
+            exponent++;
+        }
+
+        no_of_divisors[i] = (exponent + 1)*no_of_divisors[reduced_i];
+    }
+}
+
+void build(int n, int left, int right)
+{
+    if(left == right)
+    {
+        max_tree[n] = sum_tree[n] = A[left];
+        return;
+    }
+
+    int mid = (left + right) >> 1;
+    build(LEFT(n), left, mid);
+    build(RIGHT(n), mid + 1, right);
+
+    sum_tree[n] = sum_tree[LEFT(n)] + sum_tree[RIGHT(n)];
+    max_tree[n] = max(max_tree[LEFT(n)], max_tree[RIGHT(n)]);
+}
+
+long long get_sum(int n, int left, int right, int query_left, int query_right)
+{
+    if(query_right < left || right < query_left)
+        return 0;
+
+    if(query_left <= left && right <= query_right)
+        return sum_tree[n];
+
+    int mid = (left + right) >> 1;
+    long long left_sum = get_sum(LEFT(n), left, mid, query_left, query_right);
+    long long right_sum = get_sum(RIGHT(n), mid + 1, right, query_left, query_right);
+
+    return (left_sum + right_sum);
+}
+
+void update(int n, int left, int right, int query_left, int query_right)
+{
+    if(query_right < left || right < query_left || max_tree[n] <= 2)
+        return;
+
+    if(left == right)
+    {
+        A[left] = no_of_divisors[A[left]];
+        max_tree[n] = sum_tree[n] = A[left];
+        return;
+    }
+
+    int mid = (left + right) >> 1;
+
+    update(LEFT(n), left, mid, query_left, query_right);
+    update(RIGHT(n), mid + 1, right, query_left, query_right);
+
+    max_tree[n] = max(max_tree[LEFT(n)], max_tree[RIGHT(n)]);
+    sum_tree[n] = sum_tree[LEFT(n)] + sum_tree[RIGHT(n)];
+}
+
+int main()
+{
+    precompute_divisors();
+
+    int no_of_elements, no_of_queries;
+    scanf("%d %d", &no_of_elements, &no_of_queries);
+
+    for(int i = 1; i <= no_of_elements; i++) scanf("%d", &A[i]);
+
+    build(1, 1, no_of_elements);
+
+    while(no_of_queries--)
+    {
+        const int SUM = 2, REPLACE = 1;
+        int query_type, left, right;
+        scanf("%d %d %d", &query_type, &left, &right);
+
+        if(query_type == SUM)
+        {
+            long long sum = get_sum(1, 1, no_of_elements, left, right);
+            printf("%I64d\n", sum);
+        }
+        else if(query_type == REPLACE)
+        {
+            update(1, 1, no_of_elements, left, right);
+        }
+    }
+
+    return 0;
+}
+
