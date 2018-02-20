@@ -1,6 +1,10 @@
 
 Let f(i, G) be the number of ways to fill up positions from i to N such that  A > B
 
+The idea is that if you fill position i for equality, then at some point in between (i + 1, N) ... A > B
+
+If you fill i such that A[i] > B[i], what comes after doesn't really matter.
+
 f(i, A) be all the number of ways to fill up positions from i to N.
 
 if A[i] = 0 and B[i] = 0, 
