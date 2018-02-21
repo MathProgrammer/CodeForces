@@ -5,6 +5,52 @@ The idea is that if you fill position i for equality, then at some point in betw
 
 If you fill i such that A[i] > B[i], what comes after doesn't really matter.
 
+-----------------------------------------------------------------------------------------
+
+When do you say that A > B ? (For example, why do we say that 112345 is greater that 112333 ?
+
+This is how we compare. First, we check if the lengths are equal. If they aren't the longer number is greater. 
+
+If they are equal, then there must be some position i, for which A[i] =/= B[i], and all j < i A[j] = B[j]
+
+That is, there is some FIRST position where the strings aren't equal. The strings share a prefix before that. 
+
+(In this case, it is 1123 - this is the common prefix. Note that if we were comparing 2562 and 7891, then the length of the common 
+prefix is 0 Becasue the first unequal position is the first !)
+
+Now, we want to place a character at the i-th position of A, or B, or both, or neither (If they are both non-zero). 
+
+How do we do this ?
+
+Suppose A[i] = 0, and we fill a character at A[i] so that A[i] = B[i]
+
+For instance, 
+A =  0 1 2
+B =  5 1 0
+
+Suppose we fill A[1] = 5, then it means strings A and B are equal till position 1, and the number of ways of making A > B
+
+is equal to the number of ways of making A > B, by filling characters from (i + 1). There has to be SOME position after i + 1, after which A > B. So, we simply add f(i + 1, G) as that is exactly the information it contains.
+
+So, f(i, G) = f(i + 1, G)
+
+If we set A[i] = 6, then A is already greater than B .... And the 0s after position i can be filled by any of the m digits, and
+A will still be greater than B.
+
+f(i, G) = (M - B[i])*f(i + 1, ANY_WAY)
+
+Because there are (M - B[i]) ways of filling position i so that A[i] > B[i]
+
+And only one way of filling A[i] so that A[i] = B[i]
+
+Ultimately, f(i, G) = f(i + 1, G) + (M - B[i])*f(i + 1, ANY_WAY)
+
+I have just shown the case of A[i] = 0 and B[i] =/= 0.
+
+A similar analysis can be done to all possibilities. Just think how can we fill A[i] and B[i] ... How can we fill them for A = B, (In that case, count f(i + 1, G) and How can we fill them for A > B
+
+------------------------------------------------------------------------------------------
+
 f(i, A) be all the number of ways to fill up positions from i to N.
 
 if A[i] = 0 and B[i] = 0, 
