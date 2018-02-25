@@ -1,0 +1,44 @@
+
+We need to find the greatest number upto y, such that it is not divisible by any number from [2, p]. 
+
+Here's a very important fact - Upto 10^9, the distance between consecutive primes is never more than 300 or so. 
+Notice that any prime number P, is automatically co prime to every number [2, p]
+
+This is a very important fact. This allows us to start from y, and keep decrementing 1 till we find a number who's smallest factor is > p. 
+(We will never do more than 300 factorisation checks)
+
+As for the factorisation itself ... we go from [2, min{p, root(i)}]. Either way, it's quite reasonable. Never more than 10^5. 
+
+-------------------------------------------------------------------------------------------------------------------------------------------------
+
+int main()
+{
+    int p, y;
+    scanf("%d %d", &p, &y);
+
+    int answer = y;
+
+    while(answer > p)
+    {
+        int coprime_till_p = true;
+
+        for(int i = 2; i <= p && i*i <= y; i++)
+        {
+            if(answer%i == 0)
+            {
+                coprime_till_p = false;
+                break;
+            }
+        }
+
+        if(coprime_till_p) break;
+
+        answer--;
+    }
+
+
+    printf("%d\n", answer == p ? -1 : answer);
+    return 0;
+}
+
+
