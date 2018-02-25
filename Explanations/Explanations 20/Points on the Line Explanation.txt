@@ -1,0 +1,40 @@
+
+First sort the sequence.
+
+For each i, calculate how many elements would need to be removed if A[i] was the first element. 
+
+We remove (i - 1) elements from the back ... Let j be the first element position that A[j] - A[i] > d
+
+In that case, we need to remove all elements from j to n. This is given by n - (j - 1) = n - j + 1
+
+Note that in case j = n + 1, this formula still works and we will remove 0 elements.
+
+----------------------------------------------------------------------------------------------------------
+
+int main()
+{
+    int n, d;
+    scanf("%d %d", &n, &d);
+
+    vector <int> A(n + 1, 0);
+    for(int i = 1; i <= n; i++) scanf("%d", &A[i]);
+
+    sort(all(A));
+
+    int removed_elements = n;
+
+    for(int i = 1; i <= n; i++)
+    {
+        int removed_elements_to_start_at_i = i - 1, j = i;
+
+        while(j <= n && A[j] - A[i] <= d)
+            j++;
+
+        removed_elements_to_start_at_i += (n - j + 1);
+
+        removed_elements = min(removed_elements, removed_elements_to_start_at_i);
+    }
+
+    printf("%d\n", removed_elements);
+    return 0;
+}

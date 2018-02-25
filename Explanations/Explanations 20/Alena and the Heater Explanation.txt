@@ -1,0 +1,45 @@
+
+Now, it's given that this is always possible. 
+
+Just choose L and R greedily. 
+
+If B[i] == B[i - 1], don't do anything. 
+
+Otherwise if B[i] = 1 and B[i - 1] = 0, since it's guaranteed that it's always possible, it's guranateed last 4 values of B are all 0s. Don't waste time checking.
+
+Now, among all such possibilities make the smallest L possible. L = 1 + max(A[i], A[i - 1], A[i - 2], A[i - 3], A[i - 4]) for this i, 
+
+Do the same thing for all parts where B[i] = 0 and B[i - 1] = 1, and choose the maximum R possible, R = min(A[i], ... A[i - 4]) - 1 for this i.
+
+-----------------------------------------------------------------------------------
+
+int main()
+{
+    int length;
+    cin >> length;
+
+    vector <int> A(length + 1);
+    for(int i = 0; i < length; i++) cin >> A[i];
+
+    string B;
+    cin >> B;
+
+    int left = -1e9, right = 1e9;
+
+    for(int i = 4; i < length; i++)
+    {
+        if(B[i] == B[i - 1])
+            continue;
+
+        if(B[i] == '1')
+            left = max(left, max_5(A[i], A[i - 1], A[i - 2], A[i - 3], A[i - 4]) + 1);
+
+        if(B[i] == '0')
+            right = min(right, min_5(A[i], A[i - 1], A[i - 2], A[i - 3], A[i - 4]) - 1);
+    }
+
+    cout << left << " " << right;
+    return 0;
+}
+
+
