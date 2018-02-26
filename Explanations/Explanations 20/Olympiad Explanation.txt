@@ -1,0 +1,23 @@
+The number of awards is equal to the number of positive numbers greater than 0. 
+
+Now, it can be done in O(n), but I used a set and did it in O(n log n)
+
+---------------------------------------------------------------------------------------
+
+int main()
+{
+    int n;
+    scanf("%d", &n);
+
+    set <int> awards;
+    for(int i = 1; i <= n; i++)
+    {
+        int score;
+        scanf("%d", &score);
+
+        if(score > 0) awards.insert(score);
+    }
+
+    printf("%u\n", awards.size());
+    return 0;
+}
