@@ -1,0 +1,74 @@
+
+If n is a prime number, then k = 1
+
+Else, we need to check if n can be written as the sum of two prime numbers. 
+The sum of two odd numbers is never a prime number. So, one of the summands must be even, which means = 2.
+
+2 + (n - 2)
+
+We need to check if (n - 2) is prime. 
+
+Otherwise, we will always have answer with 3. 
+Why ?
+Take any odd prime p < n. Notice that (n - p) is an even number. 
+By Goldbach's conjecture, any even number in the specified range can be written as the sum of two prime numbers. 
+
+Now, how do we find these three primes ?
+We need to use the fact that the prime gap is never too large till 10^9. It is at most 300. 
+
+So, given N, ... We search for a prime number from [N, N - 300] .... We are guranteed to get a prime number. 
+
+Now, we take the difference, N - p, which is an even number less than 300. 
+We can check with brute force how to sum up to 300 with two prime numbers.
+
+-----------------------------------------------------------------------------------------------------------------------
+
+void break_into_sum_of_primes(int N, int &prime_1, int &prime_2)
+{
+    vector <int> is_prime(N + 1, true);
+    sieve(is_prime);
+
+    for(int i = 2; i <= N; i++)
+    {
+        if(is_prime[i] && is_prime[N - i])
+        {
+            prime_1 = i;
+            prime_2 = N - i;
+            return;
+        }
+    }
+}
+
+int main()
+{
+    int n;
+    scanf("%d", &n);
+
+    if(is_prime(n))
+    {
+        printf("1\n%d\n", n);
+        return 0;
+    }
+
+    if(is_prime(n - 2))
+    {
+        printf("2\n%d %d", 2, n - 2);
+        return 0;
+    }
+
+    int prime_1, prime_2, prime_3;
+
+    for(int i = n - 4; ; i--)
+    {
+        if(is_prime(i))
+        {
+            prime_3 = i;
+            break;
+        }
+    }
+
+    break_into_sum_of_primes(n - prime_3, prime_1, prime_2);
+    printf("3\n%d %d %d\n", prime_1, prime_2, prime_3);
+
+   return 0;
+}
