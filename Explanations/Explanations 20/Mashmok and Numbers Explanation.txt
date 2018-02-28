@@ -1,0 +1,40 @@
+
+Notice that the smallest score possible is n/2 ... By making all consecutive numbers coprime.
+
+The last (n - 2) numbers are such that gcd(A[i], A[i + 1])  = 1.
+
+So, the minimum contribution = (n - 2)/2
+
+So, make the gcd of the first two numbers T = S - (n - 2)/2. 
+
+I used T, 2T
+
+Now, Score = 0, is possible only for n = 1
+n = 1 cannot reach any other score.
+
+-------------------------------------------------------------------
+
+int main()
+{
+    int n, score;
+    scanf("%d %d", &n, &score);
+
+    int minimum_score = n/2;
+
+    if(n == 1 && score == 0) {printf("1\n"); return ;}
+    
+    if(n == 1 || score < minimum_score)
+    {
+        printf("-1\n");
+        return 0;
+    }
+
+    int score_except_last_two = (n - 2)/2;
+    int second_term = score - score_except_last_two;
+
+    printf("%d %d ", second_term, 2*second_term);
+
+    for(int i = 3; i <= n; i++) printf("%d ", 2*second_term + i);
+
+    return 0;
+}
