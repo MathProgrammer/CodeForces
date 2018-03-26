@@ -1,0 +1,38 @@
+
+Be greedy. Try to get each character, as early as possible. 
+
+Let, last = 'a' - 1
+
+at first. 
+
+Now, scan through the string. 
+
+If S[i] <= last + 1, 
+
+Then S[i] = last + 1, last = S[i]
+
+
+At the end, check if last = 'z'.
+
+----------------------------------------------------------------------
+
+int main()
+{
+    string S;
+    cin >> S;
+
+    int last_found = 'a' - 1;
+
+    for(int i = 0; i < S.size() && last_found < 'z'; i++)
+    {
+        if(S[i] <= last_found + 1)
+        {
+            S[i] = last_found + 1;
+            last_found = S[i];
+        }
+    }
+
+    cout << (last_found == 'z' ? S : "-1");
+    return 0;
+}
+
