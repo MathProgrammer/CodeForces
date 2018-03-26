@@ -1,0 +1,32 @@
+
+Now, I would have done this by maintaining a sum of all positive numbers, P, sum of all negative numbers N
+
+And then P - N.
+
+But the editorial solution was even more elegant. 
+
+Sum over abs(A[i])
+
+It's a beautiful one-step observation that eschews some work. I loved it. I loved the element of surprise and how the two steps are combined. 
+
+-----------------------------------------------------------------------------------
+
+#define abs(x) (x > 0 ? x : -x)
+
+int main()
+{
+    int no_of_elements;
+    scanf("%d", &no_of_elements);
+
+    int answer = 0;
+    while(no_of_elements--)
+    {
+        int element;
+        scanf("%d", &element);
+
+        answer += abs(element);
+    }
+
+    printf("%d\n", answer);
+    return 0;
+}
