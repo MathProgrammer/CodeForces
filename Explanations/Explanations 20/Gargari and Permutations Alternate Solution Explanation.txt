@@ -1,0 +1,65 @@
+
+Let f(i) be the maximum subsequence that can be constructed from the first i elements of the first vector. 
+
+Now, f(i) = 1, at least. Because a subsequence of 1 is always possible. 
+
+For, all j < i
+
+Let Current = A[i], Previous = A[j], 
+
+If Previous comes before Current in all permutations, then f(i) = f(j) + 1
+
+Choose the best possible j
+
+Answer = max{f(i)}
+
+This is not as inspired as thinking in terms of a graph, but it gets the job done nonetheless. 
+
+----------------------------------------------------------------------------------------------------------------------
+
+int main()
+{
+    int no_of_permutations, length;
+    scanf("%d %d", &length, &no_of_permutations);
+
+    for(int k = 1; k <= no_of_permutations; k++)
+    {
+        for(int i = 1; i <= length; i++)
+        {
+            scanf("%d", &P[k][i]);
+            int element = P[k][i];
+            position[k][element] = i;
+        }
+    }
+
+    int answer = 1;
+
+    for(int i = 1; i <= length; i++)
+    {
+        maximum_length_till[i] = 1;
+
+        for(int j = 1; j < i; j++)
+        {
+            int current = P[1][i], previous = P[1][j];
+            int previous_always_before_current = true;
+
+            for(int k = 1; k <= no_of_permutations; k++)
+            {
+                if(position[k][previous] > position[k][current])
+                {
+                    previous_always_before_current = false;
+                }
+            }
+
+            if(previous_always_before_current)
+            {
+                maximum_length_till[i] = max(maximum_length_till[i], 1 + maximum_length_till[j]);
+            }
+        }
+
+        answer = max(answer, maximum_length_till[i]);
+    }
+
+    printf("%d\n", answer);
+    return 0;
+}
