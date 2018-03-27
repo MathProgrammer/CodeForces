@@ -1,0 +1,47 @@
+
+Let's say you want string 
+
+S[1],S[2], ... , S[m]
+
+Then first, swap string 1, with string X with prefix length = m, X is whichever string the character S[m] is from. 
+
+Then do the same for S[m - 1], and so on. 
+
+You can get any combination that is possible. 
+
+The answer = product of distinct characters at each position. 
+
+Now, I missed it. However, I have seen similar constructive type problems. The idea occurs in some Digit DPs too. Fix every character from right to left. 
+I don't know why I didn't realise this. Maybe I wasn't interpreting this as a constructive problem and asking myself how to construct a string. 
+
+---------------------------------------------------------------------------------------
+
+int main()
+{
+    int no_of_names, length;
+    cin >> no_of_names >> length;
+
+    set <int> distinct_characters[length];
+
+    while(no_of_names--)
+    {
+        string name;
+        cin >> name;
+
+        for(int i = 0; i < length; i++)
+            distinct_characters[i].insert(name[i]);
+    }
+
+    const int MOD = 1e9 + 7;
+    long long total_strings = 1;
+
+    for(int i = 0; i < length; i++)
+    {
+        total_strings = (total_strings*distinct_characters[i].size())%MOD;
+    }
+
+    cout << total_strings;
+    return 0;
+}
+
+
