@@ -1,0 +1,67 @@
+
+Notice that if there are upto 4 points, an answer is always possible. 
+
+Let us take the first 3 points. By the Pigeonhole principle, at least 2 of these points have to lie on the same line. (3 points, 2 lines)
+
+Let us say P1, P2 are on the same line. (We need to check all 3 cases.)
+
+Then go through all the remaining points, If point i, is not on the same line as P1, P2, then put Pi in a Vector L2. 
+
+At the end check if all points on L2 lie on the same line. 
+
+For checking if a list of points lie on the same line, all we have to do is 
+
+check_on_line(P[0], P[1], P[i]), for all i in the list. 
+
+----------------------------------------------------------------------------------------------
+
+struct Point{
+
+long long x, y;
+
+};
+
+int is_on_line(Point a, Point b, Point c)
+{
+    //Checking slope product to avoid division
+    return ( (c.y - b.y)*(b.x - a.x) == (b.y - a.y)*(c.x - b.x) );
+}
+
+int check_line(vector <Point> &line)
+{
+    for(int i = 2; i < line.size(); i++)
+        if(!is_on_line(line[0], line[1], line[i]))
+            return false;
+
+    return true;
+}
+
+int check_one_line_passing_through(int a, int b, vector <Point> &P)
+{
+    vector <Point> line_2;
+
+    for(int i = 1; i < P.size(); i++)
+    {
+        if(!is_on_line(P[a], P[b], P[i]))
+           line_2.push_back(P[i]);
+    }
+
+    int two_lines_possible = check_line(line_2);
+    return two_lines_possible;
+}
+
+int main()
+{
+    int no_of_points;
+    scanf("%d", &no_of_points);
+
+    vector <Point> P(no_of_points + 1);
+    for(int i = 1; i <= no_of_points; i++)
+        scanf("%I64d %I64d", &P[i].x, &P[i].y);
+
+    int two_lines_possible = (no_of_points <= 4 || check_one_line_passing_through(1, 2, P)
+                              || check_one_line_passing_through(2, 3, P) || check_one_line_passing_through(3, 1, P));
+
+    printf(two_lines_possible ? "YES\n" : "NO\n");
+    return 0;
+}
