@@ -1,0 +1,76 @@
+
+Let us sort the sides. 
+
+S[1] < S[2] < ... < S[n]
+
+Let us try to make S[i] the largest side of the triangle and match S[i] with S[i - 1], S[i - 2]
+
+If we get a triangle, we are done. 
+
+Else, S[i] >= S[i - 1] + S[i - 2]
+
+Replacing S[i - 1] or S[i - 2] by any other side will only give a smaller sum. 
+
+So, this means there is no triangle with S[i] as the largest side. 
+
+We need to do one O(n) scan after O(n log n) sorting to check if we can construct a triangle with each S[i] as the largest side. 
+
+---------------------------------------------
+
+Note - There is an important optimisation here. 
+
+Let us try to construct the smallest sequence of numbers which don't allow a triangle formation. 
+
+First two numbers = 1, 1
+
+The third number must satisfy S[i] >= S[i - 1] + S[i - 2]
+
+We want the smallest possible S[i], So S[i] = S[i - 1] + S[i - 2]
+
+This gives us the Fibonacci numbers. They grow quite rapidly and there are only 45 of them till 10^9. 
+
+This means that if there are more than 45 numbers, there must be some i in the series such that 
+
+S[i] < Fibo[i] and for all j < i, S[j] >= Fibo[j]
+
+Fibo[i] = Fibo[i - 1] + Fibo[i - 2] <= S[i - 1] + S[i - 2]
+
+S[i] < Fibo[i] <= S[i - 1] + S[i - 2]
+
+S[i] < S[i - 1] + S[i - 2]
+
+------------------------------------------------------------------------
+
+If there are more than 45 numbers, the answer will always be yes ! Else, O(n log n + n). Actually O(n^3) naive solution is also possible among 45 numbers.
+
+int main()
+{
+    int no_of_sides;
+    cin >> no_of_sides;
+
+    const int FIBO_LIMIT_MAX_SIDES = 45;
+    if(no_of_sides > FIBO_LIMIT_MAX_SIDES)
+    {
+        cout << "YES\n";
+        return 0;
+    }
+
+    vector <int> side(no_of_sides);
+    for(int i = 0; i < no_of_sides; i++) cin >> side[i];
+
+    sort(all(side));
+
+    int triangle_possible = false;
+    for(int i = no_of_sides - 1; i >= 2; i--)
+    {
+        if(side[i] < side[i - 1] + side[i - 2])
+        {
+            triangle_possible = true;
+            break;
+        }
+    }
+
+    cout << (triangle_possible ? "YES\n" : "NO\n");
+    return 0;
+}
+
