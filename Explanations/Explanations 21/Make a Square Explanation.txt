@@ -1,0 +1,50 @@
+
+Use bitmasks. 
+
+The number will not have more than 10 digits. Have a bitmask of the same length as N. 
+
+For every mask, choose only those digits of N in which position the bit is set in mask.
+
+Check if each mask is a square. And then check how many digits are deleted. Choose the square with the minimum deleted digits (or maximum preserved digits).
+
+I made a mistake here where leading 0s were included. Had to put in another condition to stop leading zeroes from being considered.
+
+
+There's another approach. You can simply generate all squares upto 10^9 (About 3x10^4). And check if each square is a subsequence of n.
+
+This approach generalises more easier. If n <= 10^18, we can't check all squares till 10^9, but we can still check all bitmasks till 2^18. 
+
+----------------------------------------------------------------
+
+int main()
+{
+    int n;
+    scanf("%d", &n);
+
+    int digit_count = no_of_digits(n), maximum_digits = 0;
+    int digit[11];
+
+    for(int i = 0; i < digit_count; i++, n /= 10)
+        digit[i] = n%10;
+
+    for(int mask = (1 << digit_count) - 1; mask > 0; mask--)
+    {
+        int number = 0;
+
+        for(int i = digit_count - 1; i >= 0; i--)
+        {
+            if(is_bit_set(mask, i))
+                number = number*10 + digit[i];
+        }
+
+        //Last condition added to ensure there's no leading 0s.
+        if(is_square(number) && no_of_ones(mask) > maximum_digits && no_of_ones(mask) == no_of_digits(number))
+            maximum_digits = no_of_ones(mask);
+    }
+
+    int deleted_digits = digit_count - maximum_digits;
+    printf(deleted_digits == digit_count ? "-1\n" : "%d\n", deleted_digits);
+
+    return 0;
+}
+
