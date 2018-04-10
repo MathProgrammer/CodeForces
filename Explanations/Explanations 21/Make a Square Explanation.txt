@@ -37,10 +37,10 @@ int main()
                 number = number*10 + digit[i];
         }
 
-        //Last condition added to ensure there's no leading 0s.
-        if(is_square(number) && no_of_ones(mask) > maximum_digits && no_of_ones(mask) == no_of_digits(number))
-            maximum_digits = no_of_ones(mask);
+        if(is_square(number) && no_of_digits(number) > maximum_digits)
+            maximum_digits = no_of_digits(number);
     }
+
 
     int deleted_digits = digit_count - maximum_digits;
     printf(deleted_digits == digit_count ? "-1\n" : "%d\n", deleted_digits);
