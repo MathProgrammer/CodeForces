@@ -1,0 +1,73 @@
+Unlike most problems, this problems specifically asks us to overcount rather than avoid it. Each collision must be counted two times - once for each ghost. 
+
+Now, the equation for the motion of a ghost = P + VT, where V is velocity, T is time and P is position. We have two dimensions and the equations need to be applied seperately on both. 
+
+Now the trick is in noticing that two ghosts will intersect if the time for their x coordinates to be equal is the same as the Y.
+
+X1 + Vx1T = X2 + Vx2T
+X1 - X2 = T(Vx2 - Vx1)
+T = (X1 - X2)/(Vx2 - Vx1)
+
+And Y1 + Vy1T = Y2 + Vy2T
+
+Y1 - Y2 = T(Vy2 - Vy1)
+
+T = (Y1 - Y2)/(Vy2 - Vy1)
+
+(X1 - X2)/(Vx2 - Vx1) = (Y1 - Y2)/(Vy2 - Vy1)
+
+(X1 - X2)/(Vx2 - Vx1) = (aX1 + b - aX2 - b)/(Vy2 - Vy1)
+
+(X1 - X2)/(Vx2 - Vx1) = a(X1 - X2)/(Vy2 - Vy1)
+
+1/(Vx2 - Vx1) = a/(Vy2 - Vy1)
+
+Vy2 - Vy1 = aVx2 - aVx1
+
+-------------------------------
+
+aVx1 - Vy1 = aVx2 - Vy2
+
+This shows that ghosts which have the same aVx - Vy intersect at some point.
+
+However, we need to notice that if two ghosts are parallel (V1 = V2) then they never meet. 
+
+---------------------------------
+
+Take each ghost. That ghost intersects with all ghosts who have aVx - Vy value, but not with those that have the same V. (Parallel)
+
+A very elegant way to keep track of slopes is to maintain a map of pairs. {Vx, Vy}. 
+
+Maintain another map for {aVx - Vy}
+
+------------------------------------------
+
+Multiply the number of collisions by 2 at the end.
+
+------------------------------------------------------
+
+int main()
+{
+    int no_of_points, a, b;
+    scanf("%d %d %d", &no_of_points, &a, &b);
+
+    long long total_collisions = 0;
+    map < pair<int, int>, int > slope_count;
+    map <long long, int> intersections;
+
+    for(int i = 1; i <= no_of_points; i++)
+    {
+        int x, vx, vy;
+        scanf("%d %d %d", &x, &vx, &vy);
+
+        total_collisions += intersections[a*1LL*vx - vy] - slope_count[make_pair(vx, vy)]; //Parallel points don't meet.
+
+        slope_count[make_pair(vx, vy)]++;
+        intersections[a*1LL*vx - vy]++;
+    }
+
+    total_collisions *= 2;
+
+    printf("%I64d\n", total_collisions);
+    return 0;
+}
