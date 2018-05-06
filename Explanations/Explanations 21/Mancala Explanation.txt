@@ -1,0 +1,72 @@
+There are only 14 hold. The problem is small enough to simulate. 
+
+Take each hole. Calculate the answer if this hole was redistributed. And keep track of the best hole. 
+
+How to calculate the answer if a particular hole is distributed ? 
+
+Well, let's say hole[i] has S stones. 
+
+And let S = 14q + r, 
+q is the quotient, r is the remainder, 0 <= r < 14
+
+Now, first of all set hole[i] = 0. 
+
+Then all 14 holes will get an additional q stones. 
+
+Then simulate the process of distributing the left out r stones. 
+(Start from (i + 1) and give one stone to all holes till you run out of stones.)
+
+After this do an O(n) scan to find out the hole with the maximum number of stones. 
+
+This requires 3 O(n) scans.
+
+We do this for all 14 holes. So 42 O(n) scans.
+
+------------------------------------------------------------
+
+long long score_by_distributing(int chosen, vector <long long> stone, int no_of_holes)
+{
+    int quotient = stone[chosen]/no_of_holes, remainder = stone[chosen]%no_of_holes;
+
+    stone[chosen] = 0;
+
+    int current = chosen;
+    do
+    {
+        stone[current] += quotient;
+
+        current = (current + 1)%no_of_holes;
+    }
+    while(current != chosen);
+
+    current = (chosen + 1)%no_of_holes;
+    while(remainder > 0)
+    {
+        stone[current]++;
+        remainder--;
+
+        current = (current + 1)%no_of_holes;
+    }
+
+    long long score = 0;
+    for(int i = 0; i < stone.size(); i++)
+        if(stone[i]%2 == 0)
+            score += stone[i];
+
+    return score;
+}
+
+int main()
+{
+    const int NO_OF_HOLES = 14;
+    vector <long long> stone(NO_OF_HOLES);
+    for(int i = 0; i < NO_OF_HOLES; i++)
+        cin >> stone[i];
+
+    long long maximum_score = 0;
+    for(int i = 0; i < NO_OF_HOLES; i++)
+        maximum_score = max(maximum_score, score_by_distributing(i, stone, NO_OF_HOLES));
+
+    cout << maximum_score;
+    return 0;
+}
