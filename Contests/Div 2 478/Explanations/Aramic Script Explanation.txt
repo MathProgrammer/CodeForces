@@ -1,0 +1,39 @@
+For each string, keep track of which alphabets were used. 
+
+And then make another string X, consisting of exactly one occurence of each of it's alphabets in alphabetical order. 
+
+This ensures strings which have the same root are mapped to the same X. 
+
+Count the number of distinct X.
+
+----------------------------------------------------------
+
+int main()
+{
+    int no_of_words;
+    cin >> no_of_words;
+
+    set <string> distinct_words;
+
+    while(no_of_words--)
+    {
+        string word;
+        cin >> word;
+
+        const int NO_OF_ALPHABETS = 26;
+        vector <int> present(NO_OF_ALPHABETS, false);
+
+        for(int i = 0; i < word.size(); i++)
+            present[word[i] - 'a'] = true;
+
+        string root;
+        for(int i = 0; i < NO_OF_ALPHABETS; i++)
+            if(present[i])
+                root += (char)('a' + i);
+
+        distinct_words.insert(root);
+    }
+
+    cout << distinct_words.size();
+    return 0;
+}

@@ -1,0 +1,32 @@
+Maintain a binary string of length 26. 
+
+Construct a binary string with each given string as follows :
+The i-th bit is set if the i-th alphabet is present in the string and 0 otherwise. Strings which have the same 'root' have the same mask. 
+
+Count the number of distinct masks. 
+
+------------------------------------------------
+
+int main()
+{
+    int no_of_words;
+    cin >> no_of_words;
+
+    set <int> mask;
+
+    while(no_of_words--)
+    {
+        string word;
+        cin >> word;
+
+        int current_mask = 0;
+
+        for(int i = 0; i < word.size(); i++)
+            current_mask |= (1 << (word[i] - 'a'));
+
+        mask.insert(current_mask);
+    }
+
+    cout << mask.size();
+    return 0;
+}
