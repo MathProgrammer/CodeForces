@@ -1,0 +1,56 @@
+http://qr.ae/TUTyWZ
+
+Notice that Exp(3) only decreases from left to right. 
+
+Exp(2) only increases. 
+
+-Exp(3) only increases. 
+
+This means Exp(2) - Exp(3) increases from left to right. 
+
+In going from one element to another, only one of these values changes by 1. 
+
+SO, the quantity Exp(2) - Exp(3) is a monotonic and increases by 1 for each element. 
+
+The beautiful solution is to simply sort the array according to (Exp(2) - Exp(3))
+
+-------------------------------------
+
+struct info
+{
+    int two, three;
+    unsigned long long number;
+};
+
+int compare(const info &A, const info &B)
+{
+    if(A.two - A.three < B.two - B.three)
+        return true;
+    else
+        return false;
+}
+
+int main()
+{
+    int no_of_elements;
+    scanf("%d", &no_of_elements);
+
+    vector <info> A(no_of_elements);
+
+    for(int i = 0; i < no_of_elements; i++)
+    {
+        unsigned long long element;
+        scanf("%I64u", &element);
+
+        A[i].number = element;
+        A[i].two = 0, A[i].three = 0;
+
+        while(element%2 == 0) A[i].two++, element /= 2;
+        while(element%3 == 0) A[i].three++, element /= 3;
+    }
+
+    sort(all(A), compare);
+    for(int i = 0; i < no_of_elements; i++) printf("%I64u ", A[i].number);
+
+    return 0;
+}
