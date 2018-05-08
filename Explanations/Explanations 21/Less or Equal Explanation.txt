@@ -1,0 +1,38 @@
+Let us sort the array. 
+
+The question is asking for any number in the range [A[k], A[k + 1] - 1]
+
+This is not possible when A[k] = A[k + 1]
+
+Otherwise, just output A[k]
+
+The special case is k = 0, when we must output a number smaller than all the elements of the array.
+
+If A[1] = 1, then we cannot output any number as we must output a number that is at least 1. 
+Else, we simply output 1.
+
+-------------------------------------------------
+
+int main()
+{
+    int no_of_elements, position;
+    scanf("%d %d", &no_of_elements, &position);
+
+    vector <int> A(no_of_elements + 1, 0);
+    for(int i = 1; i <= no_of_elements; i++) scanf("%d", &A[i]);
+
+    sort(all(A));
+
+    int answer;
+    if(position == 0)
+    {
+        answer = (A[1] > 1 ? 1 : -1);
+    }
+    else
+    {
+        answer = (position < no_of_elements && A[position] == A[position + 1] ? -1 : A[position]);
+    }
+    printf("%d\n", answer);
+
+    return 0;
+}
