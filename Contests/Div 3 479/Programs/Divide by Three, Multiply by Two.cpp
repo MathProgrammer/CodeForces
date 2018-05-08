@@ -15,7 +15,7 @@ struct info
 
 int compare(const info &A, const info &B)
 {
-    if(A.two < B.two || A.three > B.three)
+    if(A.two - A.three < B.two - B.three)
         return true;
     else
         return false;
