@@ -1,0 +1,61 @@
+http://qr.ae/TUTyWZ
+
+For any x, we cannot have both (2x and x/3) in the array. 
+
+This is because from x, we can go either to 2x or to x/3. 
+
+If we go to 2x, we can never reach x/3 as we can never divide by 2. 
+Similar reasoning for x/3. 
+
+For any element A[i], the chain from A[i] is uniquely determined. 
+
+All we need to do is find the first element. 
+
+This is the element x, for which x/2 and 3x are both absent from the array. 
+
+-----------------------------------
+
+int main()
+{
+    int no_of_elements;
+    scanf("%d", &no_of_elements);
+
+    map <ULL, int> present;
+    vector <ULL> A(no_of_elements + 1);
+
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        scanf("%I64u", &A[i]);
+        present[A[i]] = true;
+    }
+
+    ULL first_element;
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        int comes_from_multiplication = (A[i]%2 == 0 && present[A[i]/2]);
+        int comes_from_division = (A[i] <= 1e18 && present[3*A[i]]);
+
+        if(!comes_from_multiplication && !comes_from_division)
+        {
+            first_element = A[i];
+        }
+    }
+
+    vector <ULL> solution;
+    solution.push_back(first_element);
+    while(solution.size() < no_of_elements)
+    {
+        ULL last_element = solution.back();
+        if(last_element%3 == 0 && present[last_element/3])
+        {
+               solution.push_back(last_element/3);
+        }
+        else
+        {
+            solution.push_back(2*last_element);
+        }
+    }
+
+    for(int i = 0; i < no_of_elements; i++) printf("%I64u ", solution[i]);
+    return 0;
+}
