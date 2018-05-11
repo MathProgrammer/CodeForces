@@ -1,0 +1,131 @@
+Blog Link - http://qr.ae/TUTAnY
+
+If all the elements are pairwise coprime, then it means that no prime number occurs in the prime factorisation of two numbers.
+
+Let us keep an array Used[]
+
+Used[x] = true, if prime factor x occurs in the factorisation of some A[i]. 
+Used[x] = false, otherwise. 
+
+Now, we go through each A[i], 
+
+If all of A[i]'s prime factors are unused, then mark all of them and add A[i] to the solution. 
+
+If we get an A[i], which has at least one used prime factor, 
+
+Then, x = A[i], 
+
+while(all_prime_factors_unused(x))
+	x++
+
+And then insert x to the solution. 
+
+Now, we have lexicographically larger B. 
+
+From here, onwards, we must print the smallest numbers that are not used. 
+
+These numbers must be prime. 
+
+Let us suppose we have a composite numbe C. We can get a smaller number by replacing C with any of it's prime factors. 
+
+So, here's the overall algorithm.
+
+1. Push as many A[i] as possible. 
+2. If an A[i] is not possible, x = A[i] + 1, keep incrementing till x is possible.
+3. After x, print the smallest unused primes. 
+
+-----------------------------------------------------------------------------------------------
+
+void sieve(vector <int> &is_prime, int LIMIT)
+{
+    is_prime[0] = is_prime[1] = false;
+    for(long long i = 2; i*i <= LIMIT; i++)
+    {
+        if(is_prime[i])
+        {
+            for(long long multiple = i*i; multiple <= LIMIT; multiple += i)
+            {
+                is_prime[multiple] = false;
+            }
+        }
+    }
+}
+
+int all_prime_factors_available(int n, vector <int> &used)
+{
+    for(int p = 2; p*p <= n; p++)
+    {
+        while(n%p == 0)
+        {
+            if(used[p] == true) return false;
+
+            n /= p;
+        }
+    }
+
+    if(n > 1 && used[n]) return false;
+
+    return true;
+}
+
+void mark_prime_factors(int n, vector <int> &used)
+{
+    for(int p = 2; p*p <= n; p++)
+    {
+        while(n%p == 0)
+        {
+            used[p] = true;
+
+            n /= p;
+        }
+    }
+
+    if(n > 1)
+        used[n] = true;
+}
+
+int main()
+{
+    const int LIMIT = 2e6;
+    vector <int> is_prime(LIMIT, true);
+    sieve(is_prime, LIMIT);
+
+    int no_of_elements;
+    scanf("%d", &no_of_elements);
+
+    vector <int> original(no_of_elements);
+    for(int i = 0; i < no_of_elements; i++) scanf("%d", &original[i]);
+
+    vector <int> solution;
+
+    vector <int> used(LIMIT, false);
+    for(int i = 0; i < no_of_elements; i++)
+    {
+        if(all_prime_factors_available(original[i], used))
+        {
+            solution.push_back(original[i]);
+
+            mark_prime_factors(original[i], used);
+        }
+        else
+        {
+            int x = original[i] + 1;
+            while(!all_prime_factors_available(x, used))
+                x++;
+
+            mark_prime_factors(x, used);
+
+            solution.push_back(x);
+            break;
+        }
+    }
+
+    for(int i = 2; i < LIMIT && solution.size() < no_of_elements; i++)
+    {   
+        if(!used[i] && is_prime[i])
+            solution.push_back(i);
+    }
+
+    for(int i = 0; i < no_of_elements; i++) printf("%d ", solution[i]);
+    return 0;
+}
