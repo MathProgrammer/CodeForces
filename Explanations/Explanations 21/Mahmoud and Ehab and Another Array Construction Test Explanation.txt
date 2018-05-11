@@ -1,4 +1,6 @@
 
+Blog Link - http://qr.ae/TUTAnY
+
 If all the elements are pairwise coprime, then it means that no prime number occurs in the prime factorisation of two numbers.
 
 Let us keep an array Used[]
