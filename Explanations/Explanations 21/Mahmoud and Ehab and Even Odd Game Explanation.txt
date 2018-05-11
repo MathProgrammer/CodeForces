@@ -1,0 +1,13 @@
+If n is even, then Mahmoud takes n and wins. 
+
+If n is odd, no matter what even number takes, he leaves an odd number for Ehab. Ehab then takes it and wins. 
+
+-----------------------------------------------------
+
+int main()
+{
+    int n;
+    scanf("%d", &n);
+    printf(n%2 == 0 ? "Mahmoud\n" : "Ehab\n");
+    return 0;
+}
