@@ -1,0 +1,63 @@
+Blog Link - http://qr.ae/TUTCDS
+
+Let L = 000110011
+
+R = 0001101111
+
+Notice that there must be some position p, where R[p] = 1, and L[p] = 0
+
+and for all i < p, R[p] = L[p]
+
+The key observation here is that all numbers in between [L, R] will all have the same value for all those bits before p. The XOR of any two numbers will give 0. It doesn’t contribute anything.
+
+Now, the largest possible XOR we can get is a number with p 1’s since all the bits before that will always be 0 in any pair we choose.
+
+Now, I’ll prove it’s always possible to get a number with p 1’s.
+
+Let A match the common prefix of L and R.
+
+A[p] = 0, and let all positions after this = 1
+
+A is smaller than R for sure since R[p] = 1. It is >= L. It can’t be smaller than L because it matches L till position P and from then has all 1’s.
+
+Let B match the common prefix of L and R till p.
+
+B[p] = 1, and then all positions after that have 0.
+
+B is greater than L because B[p] = 1 > L[p]
+
+B is <= R because it matches R till position P and from there has all 0s.
+
+(A xor B) = a string of 1’s.
+
+We don’t even need to find out what the numbers are ! 
+
+----------------------------------------------------------------------------------
+
+int main()
+{
+    long long left, right;
+    scanf("%I64d %I64d", &left, &right);
+
+    if(left == right)
+    {
+        printf("0\n");
+        return 0;
+    }
+
+    int largest_unequal_bit_position;
+
+    for(int i = 0; left > 0 || right > 0; i++)
+    {
+        if(left%2 != right%2)
+            largest_unequal_bit_position = i;
+
+        left >>= 1;
+        right >>= 1;
+    }
+
+    long long answer = all_ones(largest_unequal_bit_position); //This gives a number consisting of n 1's in binary
+    printf("%I64d\n", answer);
+
+    return 0;
+}
