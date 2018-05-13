@@ -1,0 +1,38 @@
+Maintain a prefix sum array of the array. 
+
+Then do binary search to find the first i, such that S[i] >= x and S[i - 1] < x
+
+i is the dorm no
+And x - S[i - 1] is the room no
+
+I used upper bound here quite clearly. upper bound(x) returns the first element which is GREATER than x. So upper bound(x - 1) does the trick quite nicely !
+
+-----------------------------------------------
+
+int main()
+{
+    int no_of_elements, no_of_queries;
+    scanf("%d %d", &no_of_elements, &no_of_queries);
+
+    vector <long long> A(no_of_elements + 1);
+    vector <long long > sum_till(no_of_elements + 1, 0);
+
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        scanf("%I64d", &A[i]);
+        sum_till[i] = sum_till[i - 1] + A[i];
+    }
+
+    while(no_of_queries--)
+    {
+        long long x;
+        scanf("%I64d", &x);
+
+        int dorm_no = upper_bound(all(sum_till), x - 1) - sum_till.begin();
+        long long room_no = x - sum_till[dorm_no - 1];
+
+        printf("%d %I64d\n", dorm_no, room_no);
+    }
+
+    return 0;
+}
