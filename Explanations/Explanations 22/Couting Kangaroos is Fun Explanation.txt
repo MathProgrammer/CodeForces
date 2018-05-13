@@ -1,0 +1,43 @@
+At most N/2 kangaroos can hold a kangaroo. 
+
+So, it is always optimal for the lighter kangaroos to be held by the heavier kangaroos. This is exactly what we do. Divide into two sets of size N/2. 
+
+And then greedily try to match them.
+
+-----------------------------------------------
+
+int main()
+{
+    int no_of_kangaroos;
+    scanf("%d", &no_of_kangaroos);
+
+    vector <int> kangaroo_size(no_of_kangaroos);
+    for(int i = 0; i < no_of_kangaroos; i++)
+        scanf("%d", &kangaroo_size[i]);
+
+    sort(all(kangaroo_size));
+
+    int no_of_pairs = 0;
+    int front_i = 0, back_i = no_of_kangaroos/2;
+    for( ; front_i < no_of_kangaroos/2 && back_i < no_of_kangaroos; front_i++)
+    {
+        while(back_i < no_of_kangaroos)
+        {
+            if(kangaroo_size[front_i]*2 <= kangaroo_size[back_i])
+            {
+                back_i++;
+                no_of_pairs++;
+                break;
+            }
+            else
+            {
+                back_i++;
+            }
+        }
+    }
+
+    int no_of_visible_kangaroos = no_of_pairs + (no_of_kangaroos - 2*no_of_pairs);
+    printf("%d\n", no_of_visible_kangaroos);
+
+    return 0;
+}
