@@ -1,0 +1,105 @@
+There are a lot of different cases to handle in this one !
+
+Firstly, if n = 1, then there are an infinite number of solutions.
+
+-----------------------------------------------
+
+Then, let us say there are n integers already in AP with d > 0, 
+
+Then we can add two cards, one at A[0] - d, and A[0] + d. 
+
+The only exception is when n = 2, in that case, we can add a middle element too ! (This is an exception because doing this changes the d.) We can do this only if the middle elements is an integer.
+
+------------------------------------------------
+
+What to do if AP with d = 0 ? 
+
+Then only one card can be inserted. 
+
+-----------------------------------------------
+
+Now, the tricky case, what to do if it's not an AP, but every pair of consecutive numbers EXCEPT 1 is at a difference of d.
+
+We have to check that if A[i] and A[i + 1] are not at a difference of d, 
+
+Then A[i + 1] - A[i] = 2d
+
+So we can insert a card in between them !
+
+---------------------------------------------
+
+While checking the d of the sequence, check the minimum d, because adding new elements decreases the d but never increases it. 
+
+---------------------------------------------------
+
+int main()
+{
+    int no_of_cards;
+    scanf("%d", &no_of_cards);
+
+    vector <int> card(no_of_cards);
+    for(int i = 0; i < no_of_cards; i++) scanf("%d", &card[i]);
+
+    if(no_of_cards == 1)
+    {
+        printf("-1\n");
+        return 0;
+    }
+
+    vector <int> new_cards;
+
+    if(no_of_cards == 2 && (card[0] != card[1]) && (card[0] + card[1])%2 == 0)
+    {
+        new_cards.push_back( (card[0] + card[1])/2 );
+    }
+
+    sort(all(card));
+
+    int min_difference = card[1] - card[0];
+    for(int i = 2; i < no_of_cards; i++)
+        min_difference = min(min_difference, card[i] - card[i - 1]);
+
+    int ap_possible = true, new_middle_cards = 0;
+    for(int i = 1; i < no_of_cards; i++)
+    {
+        if(card[i] - card[i - 1] != min_difference)
+        {
+            if(card[i] - card[i - 1] == 2*min_difference)
+            {
+                new_middle_cards++;
+            }
+            else
+            {
+                ap_possible = false;
+            }
+        }
+    }
+
+    if(ap_possible)
+    {
+        if(min_difference == 0)
+        {
+            new_cards.push_back(card[0]);
+        }
+        else if(new_middle_cards == 0)
+        {
+            new_cards.push_back(card[0] - min_difference);
+            new_cards.push_back(card[no_of_cards - 1] + min_difference);
+        }
+        else if(new_middle_cards == 1)
+        {
+            for(int i = 1; i < no_of_cards; i++)
+                if(card[i] - card[i - 1] == 2*min_difference)
+                    new_cards.push_back(card[i - 1] + min_difference);
+        }
+    }
+
+    sort(all(new_cards));
+
+    printf("%d\n", new_cards.size());
+    for(int i = 0; i < new_cards.size(); i++)
+        printf("%d ", new_cards[i]);
+
+    return 0;
+}
+

@@ -1,0 +1,101 @@
+Let us make the observation - 
+
+If p piles are possible, then it is possible to make p + 1 piles as well, if p + 1 <= N, 
+
+We do this by simply taking the top of any one pile and making a new pile. 
+
+If p piles are not possible, then even p - 1 piles are not possible. 
+
+-------------------------------------
+
+We are looking for a number P, such that P piles are possible but P - 1 piles are not !
+
+We can do this by binary search !
+
+------------------------------------------
+
+You have a number P, how do you check if P piles are possible ? 
+
+Firstly, we shall choose the P boxes with the highest strength and then make a pile with each box as the first stone. We only keep track of the strength of the box on top of each pile.
+
+Now, we take each of the remaining boxes, starting from the one with the greatest strength and place it over the pile which has the highest strength box on top. 
+
+The new top = min(top - 1, new box)
+
+We can place a new box on a pile as long as the strength of that pile's top > 0. 
+
+If we have been able to place all the boxes, then the answer is Yes to P.
+Else the answer is No.
+
+---------------------------------------------
+
+int main()
+{
+    int no_of_cards;
+    scanf("%d", &no_of_cards);
+
+    vector <int> card(no_of_cards);
+    for(int i = 0; i < no_of_cards; i++) scanf("%d", &card[i]);
+
+    if(no_of_cards == 1)
+    {
+        printf("-1\n");
+        return 0;
+    }
+
+    vector <int> new_cards;
+
+    if(no_of_cards == 2 && (card[0] != card[1]) && (card[0] + card[1])%2 == 0)
+    {
+        new_cards.push_back( (card[0] + card[1])/2 );
+    }
+
+    sort(all(card));
+
+    int min_difference = card[1] - card[0];
+    for(int i = 2; i < no_of_cards; i++)
+        min_difference = min(min_difference, card[i] - card[i - 1]);
+
+    int ap_possible = true, new_middle_cards = 0;
+    for(int i = 1; i < no_of_cards; i++)
+    {
+        if(card[i] - card[i - 1] != min_difference)
+        {
+            if(card[i] - card[i - 1] == 2*min_difference)
+            {
+                new_middle_cards++;
+            }
+            else
+            {
+                ap_possible = false;
+            }
+        }
+    }
+
+    if(ap_possible)
+    {
+        if(min_difference == 0)
+        {
+            new_cards.push_back(card[0]);
+        }
+        else if(new_middle_cards == 0)
+        {
+            new_cards.push_back(card[0] - min_difference);
+            new_cards.push_back(card[no_of_cards - 1] + min_difference);
+        }
+        else if(new_middle_cards == 1)
+        {
+            for(int i = 1; i < no_of_cards; i++)
+                if(card[i] - card[i - 1] == 2*min_difference)
+                    new_cards.push_back(card[i - 1] + min_difference);
+        }
+    }
+
+    sort(all(new_cards));
+
+    printf("%d\n", new_cards.size());
+    for(int i = 0; i < new_cards.size(); i++)
+        printf("%d ", new_cards[i]);
+
+    return 0;
+}
