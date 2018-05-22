@@ -1,0 +1,38 @@
+There are only two possibilities. At the end, either all the squares are on black squares or they're all on white squares. 
+
+Calculate the number of moves if all pieces are on black squares, and if all the pieces are on white squares and the answer is the minimum of these two. 
+
+To calculate the minimum number of moves to put all pieces on squares of the same colour, it is always best to put on square i, the piece closest to it. 
+
+So Ans = |P[i] - 2i|, to put all pieces on even squares. 
+
+Of course, the pieces must be sorted before this. 
+
+The proof is that if P[i] is the closest to 2i, if we replace P[i] by any piece > P[i], then we increase the number of moves. 
+
+-----------------------------------
+
+int main()
+{
+    int n;
+    cin >> n;
+
+    vector <int> A(n/2 + 1);
+    for(int i = 1; 2*i <= n; i++)
+        cin >> A[i];
+
+    sort(all(A));
+
+    int black_moves = 0;
+    for(int i = 1; 2*i <= n; i++)
+        black_moves += abs(A[i] - (2*i - 1));
+
+    int white_moves = 0;
+    for(int i = 1; 2*i <= n; i++)
+        white_moves += abs(A[i] - 2*i);
+
+    int minimum_moves = min(black_moves, white_moves);
+    cout << minimum_moves;
+
+    return 0;
+}
