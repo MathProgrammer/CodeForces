@@ -1,0 +1,47 @@
+For every item x, 
+
+we add max{A_cost[x], B_cost[x]}
+
+If x does not exist in either A or B, then it is 0. 
+
+We can use maps to do this !
+
+While reading A_cost, just read in cost[x].
+
+While reading B_cost, then cost[x] = max{cost[x], cost}
+
+-------------------------------------------------
+
+int main()
+{
+    int a_elements;
+    scanf("%d", &a_elements);
+
+    map <int, int> cost;
+    for(int i = 1; i <= a_elements; i++)
+    {
+        int element_i, cost_i;
+        scanf("%d %d", &element_i, &cost_i);
+        cost[element_i] = cost_i;
+    }
+
+    int b_elements;
+    scanf("%d", &b_elements);
+
+    for(int i = 1; i <= b_elements; i++)
+    {
+        int element_i, cost_i;
+        scanf("%d %d", &element_i, &cost_i);
+
+        cost[element_i] = max(cost[element_i], cost_i);
+    }
+
+    long long total_cost = 0;
+    for(map <int, int> :: iterator it = cost.begin(); it != cost.end(); it++)
+    {
+        total_cost += it->second;
+    }
+
+    printf("%I64d\n", total_cost);
+    return 0;
+}
