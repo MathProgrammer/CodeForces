@@ -25,7 +25,7 @@ Now, let us be greedy and start from i = 60, and check if answer + 2^i is possib
 
 This is always optimal.
 
-Overall Complexity = O(log(max{A}) N^2 K)
+Overall Complexity = O(log(S) N^2 K)
 
 -----------------------------------------------
 
