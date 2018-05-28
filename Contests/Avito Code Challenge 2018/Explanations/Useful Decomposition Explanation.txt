@@ -1,0 +1,79 @@
+We root the tree at a vertex V, and we make a path from V to each of it's leaves. 
+
+We can always decompose a tree, unless V has some descendant that has more than one child. 
+
+So, here's what we do 
+
+1. If the graph has more than one vertex which has 3 or more edges, then it is not possible. 
+
+2. If the graph has exactly one vertex which has 3 or more edges, then we root the tree at that vertex. 
+If the graph has no such vertex, then it means every vertex has at most two edges (one parent and one child). We can arbitrarily root the graph at any of these vertices, then.
+
+Once we have a root, then make a path from the root the leaf vertex by going through each of the root's children.
+
+Note - You don't need to minimise the number of paths. Otherwise, the root is the vertex which has degree > 2, or the vertex with degree = 1, if all vertices have degree <= 2
+
+----------------------------------------
+
+int dfs_leaf_from(int v, int parent)
+{
+    if(graph[v].size() == 1)
+        return v;
+
+    for(int i = 0; i < graph[v].size(); i++)
+    {
+        int child = graph[v][i];
+
+        if(child == parent) continue;
+
+        return dfs_leaf_from(child, v);
+    }
+}
+
+int main()
+{
+    int no_of_vertices;
+    scanf("%d", &no_of_vertices);
+
+    for(int i = 1; i < no_of_vertices; i++)
+    {
+        int u, v;
+        scanf("%d %d", &u, &v);
+
+        graph[u].push_back(v);
+        graph[v].push_back(u);
+    }
+
+    int no_of_roots = 0, root = 1;
+    for(int i = 1; i <= no_of_vertices; i++)
+    {
+        if(graph[i].size() > 2)
+        {
+            no_of_roots++;
+            root = i;
+        }
+    }
+
+    if(no_of_roots > 1)
+    {
+        printf("No\n");
+        return 0;
+    }
+
+    printf("Yes\n");
+
+    int no_of_paths = graph[root].size();
+
+    printf("%d\n", no_of_paths);
+
+    for(int i = 0; i < graph[root].size(); i++)
+    {
+        int child = graph[root][i];
+
+        int leaf = dfs_leaf_from(child, root);
+
+        printf("%d %d\n", root, leaf);
+    }
+
+    return 0;
+}
