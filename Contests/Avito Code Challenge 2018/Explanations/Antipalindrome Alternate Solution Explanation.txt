@@ -1,0 +1,62 @@
+The constraints are small enough to allow for an O(n^3) solution where all substrings are checked but there's an elegant O(n) solution !
+
+Case 1:
+
+	S is not a palindrome, then answer = n.
+
+Case 2:
+
+	S is a palindrome. 
+
+	then we check S[1, ... , n - 1] and S[2, ... n]
+
+	If either of these strings are not a palindrome, then the answer = n - 1
+
+Case 3:
+
+	S, S[1, ... , n - 1] and S[2, ... , n] are all palindromes. 
+
+In that case, 
+
+Notice 
+
+S[1] = S[n], from 1
+ 
+S[2] = S[n], from 3
+
+Also, S[2] = S[n - 1], from 1
+
+And S[1] = S[n - 1], from 2
+
+So, this implies S[1] = S[2] = S[n - 1] = S[n - 2]
+
+Similarly, we see from 1, that S[i] = S[n - i]
+And S[i] = S[n - 1 - i]
+
+So, S[n - i] = S[n - 1 - i]
+
+We continually apply the above inequality to show that all characters are the same. 
+
+If that's the case, then ANY substring will be a palindrome. 
+
+--------------------------------
+
+Therefore, the answer is either n, n - 1 or 0.
+
+-----------------------------------------------
+
+int main()
+{
+    string S;
+    cin >> S;
+    int length = S.size();
+
+    if(!is_palindrome(S, 0, length - 1))
+        cout << length;
+    else if(!is_palindrome(S, 0, length - 2) || !is_palindrome(S, 1, length - 1))
+        cout << length - 1;
+    else
+        cout << "0";
+
+    return 0;
+}
