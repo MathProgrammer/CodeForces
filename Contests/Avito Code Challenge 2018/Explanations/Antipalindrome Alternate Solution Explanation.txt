@@ -1,3 +1,5 @@
+Blog Link - http://qr.ae/TUT345
+
 The constraints are small enough to allow for an O(n^3) solution where all substrings are checked but there's an elegant O(n) solution !
 
 Case 1:
