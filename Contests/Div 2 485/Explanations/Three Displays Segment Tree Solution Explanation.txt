@@ -1,0 +1,62 @@
+This is actually a beautiful technique. There are plenty of problems where segment trees can make O(n^2) to O(n log n).
+
+Here's what we do. 
+
+While processing element i, ensure that we have already processed all elements which have a smaller font size. Now find the minimum cost in the range [1, Position(i) - 1]. 
+
+(To avoid a clash, ensure that you have not processed elements which have equal font size but who's positions lie to the left of Position(i) because we should not be considering their cost.)
+
+So, we sort by font size, 
+If font size is equal, then the rightmost element comes first. 
+
+One by one, we insert the costs into segment tree at Position(i). 
+And then query the minimum in [1, Position(i) - 1].
+As we have ensured rightmost element comes first for equal font sizes, elements with equal font size to the left of an element will not effect it's query as it's not been inserted yet. 
+
+While finding the best right, we do the opposite. We insert elements in the reverse order that we did for the left and then find the minimum in the range [Position(i) + 1, N].
+
+---------------------------------------------
+
+int main()
+{
+    int no_of_displays;
+    scanf("%d", &no_of_displays);
+
+    vector <info> A(no_of_displays + 1);
+
+    for(int i = 1; i <= no_of_displays; i++)
+        A[i].position = i;
+
+    for(int i = 1; i <= no_of_displays; i++)
+        scanf("%d", &A[i].font_size);
+
+    for(int i = 1; i <= no_of_displays; i++)
+        scanf("%d", &A[i].cost);
+
+    sort(A.begin() + 1, A.end(), compare_by_size);
+
+    build_min_tree(1, 1, no_of_displays);
+    vector <long long> best_left(no_of_displays + 1, oo);
+    for(int i = 1; i <= no_of_displays; i++)
+    {
+        update_min(1, 1, no_of_displays, A[i].position, A[i].cost);
+
+        best_left[i] = get_min(1, 1, no_of_displays, 1, A[i].position - 1);
+    }
+
+    build_min_tree(1, 1, no_of_displays);
+    vector <long long> best_right(no_of_displays + 1, oo);
+    for(int i = no_of_displays; i >= 1; i--)
+    {
+        update_min(1, 1, no_of_displays, A[i].position, A[i].cost);
+
+        best_right[i] = get_min(1, 1, no_of_displays, A[i].position + 1, no_of_displays);
+    }
+
+    long long best_cost = oo;
+    for(int i = 1; i <= no_of_displays; i++)
+        best_cost = min(best_cost, best_left[i] + A[i].cost + best_right[i]);
+
+    printf(best_cost >= oo ? "-1\n" : "%I64d\n", best_cost);
+    return 0;
+}
