@@ -13,6 +13,21 @@ Once we have a root, then make a path from the root the leaf vertex by going thr
 
 Note - You don't need to minimise the number of paths. Otherwise, the root is the vertex which has degree > 2, or the vertex with degree = 1, if all vertices have degree <= 2
 
+Let us suppose we were asked to minimise or maximise the number of paths. 
+
+Call a vertex a root if it's degree > 2.
+
+Case 1 : There is atleast one vertex with degree > 2
+
+If there is more than one root, then the solution stays the same as a decomposition is not possible. If there was exactly one root, then we have to make it the root and the solution stays the same. Making any other vertex the root will not satisfy the given conditions.
+
+Case 2 : All vertices have degree <= 2
+
+To minimise the number of paths, we must choose a leaf vertex since it has only one child and it will result in 1 simple path from one leaf to another.
+
+For maximising the number of paths, we will have to pick any non-leaf vertex which has a degree of 2. There will be two paths, one to each leaf.
+
+
 ----------------------------------------
 
 int dfs_leaf_from(int v, int parent)
