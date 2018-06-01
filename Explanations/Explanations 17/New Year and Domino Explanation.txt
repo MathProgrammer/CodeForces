@@ -1,3 +1,4 @@
+Blog Link - http://qr.ae/TUTjxl
 
 Very neat problem ... Let f(i, j) be the number of dominos that can be placed from (1, 1) to (i, j)
 
