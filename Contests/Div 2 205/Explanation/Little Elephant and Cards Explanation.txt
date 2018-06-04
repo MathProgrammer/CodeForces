@@ -1,0 +1,63 @@
+Keep track of the front frequency and back frequency of each colour. 
+
+Now if colour c was made the majority colour, 
+
+Then, front(c) + back(c) >= half
+
+How many flips do we make ? 
+
+We greedily make as many flips from the back part as required
+
+This = max(0, half - front(c))
+
+If front(c) >= half, then we don't make a flip.
+
+The tricky case is when a card has the same colour on both sides. 
+
+If c is on the front and back of a card, then only update the front(c)++, don't do anything with back. This is because we will never flip this card. (Flipping will not give us a different colour, so there is no point in flipping.)
+
+I missed this tricky case of what happens when front and back are the same.
+
+-------------------------------------
+
+int main()
+{
+    int no_of_cards;
+    scanf("%d", &no_of_cards);
+
+    map <int, int> present;
+    map <int, int> front_frequency;
+    map <int, int> back_frequency;
+
+    for(int i = 1; i <= no_of_cards; i++)
+    {
+        int front, back;
+        scanf("%d %d", &front, &back);
+
+        front_frequency[front]++;
+
+        if(front != back) //If front and back have the same colour, count only for front.
+            back_frequency[back]++;
+
+        present[front] = true;
+        present[back] = true;
+    }
+
+    int half = no_of_cards/2 + no_of_cards%2;
+    int minimum_moves = no_of_cards + 1;
+
+    for(map <int, int> :: iterator it = present.begin(); it != present.end(); it++)
+    {
+        int colour = it->first;
+
+        if(front_frequency[colour] + back_frequency[colour] >= half)
+        {
+            int moves_for_this_colour = half - front_frequency[colour];
+
+            minimum_moves = min(minimum_moves, max(0, moves_for_this_colour));
+        }
+    }
+
+    printf("%d\n", minimum_moves > no_of_cards ? -1 : minimum_moves);
+    return 0;
+}
