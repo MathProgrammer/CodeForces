@@ -1,0 +1,113 @@
+
+At first, I thought that if a string is K-dominant, it is also (K + 1)-dominant. 
+
+If it is not K-dominant, it is not (K - 1)-dominant either.
+
+This suggests binary search, How to check if a string is x dominant ?
+
+Do 26 O(n) scans. For each alphabet, check if it occurs at least once in every substring of length x. 
+
+Now, if there's at least one alphabet that satisfies this, the string is x-dominant.
+
+--------------------------------------------------------------
+
+int is_possible(int k, int length)
+{
+    for(int alphabet = 0; alphabet < NO_OF_LETTERS; alphabet++)
+    {
+        int alphabet_occurs_in_every_segment = true;
+
+        for(int left = 1, right = k; right <= length; left++, right++)
+        {
+            int alphabet_frequency_here = frequency[alphabet][right] - frequency[alphabet][left - 1];
+
+            if(alphabet_frequency_here == 0)
+                alphabet_occurs_in_every_segment = false;
+        }
+
+        if(alphabet_occurs_in_every_segment)
+            return true;
+    }
+
+    return false;
+}
+
+---------------------------------------------------------------
+
+Do binary search for this -
+
+int answer, start = 1, end = length;
+
+    while(start <= end)
+    {
+        int mid = (start + end) >> 1;
+
+        if(is_possible(mid, length))
+        {
+            if(!is_possible(mid - 1, length))
+            {
+                answer = mid;
+                break;
+            }
+            else
+            {
+                end = mid - 1;
+            }
+        }
+        else
+        {
+            start = mid;
+        }
+    }
+
+------------------------------------------------------------------------------------
+
+Problem is this might take about 20 x 26 O(n) scans. 
+
+This is too much !
+
+Here's how we reduce it. 
+
+The idea of solving it seperately for each alphabet is correct, 
+
+For a given alphabet i, how do we find the minimum length k, such that the string is k-dominant for character i.
+
+The minimum length is the maximum distance S, between any two consecutive occurences of i.
+
+If k > S, then by definition we will have an i on the segment S. If K < S, then there is at least one segment which does not have i. 
+
+Now, we find the k for all alphabets, and the minimum k is our answer !
+
+-------------------------------------------------------------------------------
+
+int main()
+{
+    string S;
+    cin >> S;
+
+    const int NO_OF_LETTERS = 26;
+    int length = S.size(), answer = S.size();
+
+    for(int alphabet = 0; alphabet < NO_OF_LETTERS; alphabet++)
+    {
+        int last_occurence = -1, largest_gap_for_this_alphabet = 0;
+
+        for(int i = 0; S[i] != '\0'; i++)
+        {
+            if(S[i] == 'a' + alphabet)
+            {
+                largest_gap_for_this_alphabet = max(largest_gap_for_this_alphabet, i - last_occurence);
+                last_occurence = i;
+            }
+        }
+
+        largest_gap_for_this_alphabet = max(largest_gap_for_this_alphabet, length - last_occurence);
+
+        answer = min(answer, largest_gap_for_this_alphabet);
+    }
+
+    cout << answer;
+    return 0;
+}
+
+
