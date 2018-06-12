@@ -1,0 +1,27 @@
+#include <cstdio>
+#include <vector>
+
+using namespace std;
+
+int is_extrema(int mid, int start, int end)
+{
+    return ((start < mid && end < mid) || (mid < start && mid < end));
+}
+
+int main()
+{
+    int no_of_elements;
+    scanf("%d", &no_of_elements);
+
+    vector <int> A(no_of_elements + 1);
+    for(int i = 1; i <= no_of_elements; i++)
+        scanf("%d", &A[i]);
+
+    int local_extrema = 0;
+    for(int i = 2; i < no_of_elements; i++)
+        local_extrema += is_extrema(A[i], A[i - 1], A[i + 1]);
+
+    printf("%d\n", local_extrema);
+
+    return 0;
+}
