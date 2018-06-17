@@ -1,0 +1,72 @@
+Blog Link - http://qr.ae/TUpFlU
+
+You have N triplets (A, B, C). 
+
+Sort the triplets by A. 
+
+Maintain an array S, where the index is B and the value is C. Initially C is empty. 
+
+Process triplets in descending order of A. 
+
+Check if max{S[B[i] + 1, B[i] + 2, ... , N]} > C_i, 
+
+If yes, then we have found a triplet j such that 
+
+A_j > A_i, because it was processed first. 
+B_j > B_i, because we have queried in the range > B_i
+C_j > C_i, as we have just found out !
+
+We compress the coordinates of B and maintain a segment tree over S. Otherwise, it once again degrades to O(n^2). But, with our beautiful segment tree, it's now O(n log n).
+
+------------------------------------------------
+
+int main()
+{
+    int no_of_ladies;
+    scanf("%d", &no_of_ladies);
+
+    vector <info> lady(no_of_ladies + 1);
+    for(int i = 1; i <= no_of_ladies; i++) scanf("%d", &lady[i].beauty);
+    for(int i = 1; i <= no_of_ladies; i++) scanf("%d", &lady[i].richness);
+    for(int i = 1; i <= no_of_ladies; i++) scanf("%d", &lady[i].intellect);
+
+    sort(all(lady), sort_by_beauty);
+
+    vector <int> intelligence(no_of_ladies + 1, 0);
+    for(int i = 1; i <= no_of_ladies; i++) intelligence[i] = lady[i].intellect;
+
+    sort(all(intelligence));
+    map <int, int> iq_rank;
+
+    for(int i = 1; i <= no_of_ladies; i++)
+    {
+        iq_rank[intelligence[i]] = (intelligence[i] == intelligence[i - 1] ? iq_rank[intelligence[i - 1]] : i);
+    }
+
+    memset(max_tree, 0, sizeof(max_tree));
+
+    int suicides = 0;
+
+    for(int i = no_of_ladies; i >= 1; )
+    {
+        int j;
+
+        for(j = i; j >= 1 && lady[j].beauty == lady[i].beauty; j--)
+        {
+            int max_richness_with_other_2_greater = get_max_richness(1, 1, no_of_ladies, iq_rank[lady[j].intellect] + 1, no_of_ladies);
+
+            if(max_richness_with_other_2_greater > lady[j].richness)
+                suicides++;
+        }
+
+        for(j = i; j >= 1 && lady[j].beauty == lady[i].beauty; j--)
+        {
+            insert_richness(1, 1, no_of_ladies, iq_rank[lady[j].intellect], lady[j].richness);
+        }
+
+        i = j;
+    }
+
+    printf("%d", suicides);
+    return 0;
+}
