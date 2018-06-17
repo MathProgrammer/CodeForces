@@ -1,0 +1,19 @@
+Keep track of the frequency of each fruit. 
+
+To minimise prices, the most frequent fruits, get the lowest prices. 
+
+To maximise prices, the most frequent fruits get the highest prices.
+
+------------------------------
+
+sort(all(fruit_frequency));
+    reverse(all(fruit_frequency));
+
+    long long min_price = 0;
+    for(int i = 0; i < fruit_frequency.size(); i++)
+        min_price += price[i]*1LL*fruit_frequency[i];
+
+    reverse(all(price));
+    long long max_price = 0;
+    for(int i = 0; i < fruit_frequency.size(); i++)
+        max_price += price[i]*1LL*fruit_frequency[i];
