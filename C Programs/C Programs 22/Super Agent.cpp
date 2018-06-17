@@ -1,0 +1,14 @@
+#include <cstdio>
+
+int main()
+{
+    const int N = 3;
+    char grid[N + 2][N + 2];
+    for(int i = 1; i <= N; i++)
+        scanf("%s", grid[i] + 1);
+
+    int symmetric = (grid[1][1] == grid[3][3]) && (grid[1][2] == grid[3][2]) && (grid[1][3] == grid[3][1]) && (grid[2][3] == grid[2][1]);
+    printf(symmetric ? "YES\n" : "NO\n");
+
+    return 0;
+}
