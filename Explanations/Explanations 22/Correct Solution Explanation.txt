@@ -1,0 +1,42 @@
+If you are given N, the answer is all the digits of N in ascending order. 
+
+If N[0] = 0, then swap it with the first non zero number. (There's always a non zero digit, if the number of digits > 1 as there is no number consisting of multiple zeroes. However, a single 0 is a special case. Be careful. If it's only 0, then there's no non zero digit to replace it with.)
+
+Compare the answer with B.
+
+--------------------------------------------------------------
+
+string solve(string S)
+{
+    vector <char> digits;
+    for(int i = 0; i < S.size(); i++)
+        digits.push_back(S[i]);
+
+    sort(all(digits));
+
+    if(digits[0] == '0')
+    {
+        int first_nonzero = 1;
+        while(first_nonzero < digits.size() && digits[first_nonzero] == '0')
+            first_nonzero++;
+
+        swap(digits[0], digits[first_nonzero]);
+    }
+
+    string answer;
+    for(int i = 0; i < digits.size(); i++)
+        answer += digits[i];
+
+    return answer;
+}
+
+int main()
+{
+    string A, B;
+    cin >> A >> B;
+
+    string answer = solve(A);
+
+    cout << ((answer == B) ? "OK\n" : "WRONG_ANSWER\n");
+    return 0;
+}
