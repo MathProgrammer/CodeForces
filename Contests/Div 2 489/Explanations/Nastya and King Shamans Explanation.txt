@@ -1,0 +1,55 @@
+Blog Link - http://qr.ae/TUp5G8
+
+The basic idea is that if A[i] = S[i - 1], we are done. Else look for the first index i' > i, such that A[i] >= S[i]. 
+
+All j, in between, A[j] < S[i] So A[j] < S[j - 1].
+
+The sum doubles at every step. 
+
+S[i'] >= A[i'] + S[i] >= S[i] + S[i] >= 2S[i].
+
+So, in the given range you will perform at most 32 steps.
+
+---------------------------------------
+
+int first_index(int n, int left, int right, int query_left, int query_right, LL minimum)
+{
+    if(right < query_left || query_right < left || max_tree[n] < minimum)
+        return NOT_FOUND;
+
+    if(left == right)
+        return left;
+
+    int mid = (left + right) >> 1;
+
+    int left_answer = first_index(LEFT(n), left, mid, query_left, query_right, minimum);
+    if(left_answer != NOT_FOUND) return left_answer;
+
+    int right_answer = first_index(RIGHT(n), mid + 1, right, query_left, query_right, minimum);
+    return right_answer;
+}
+
+You'll perform O(log max A) such iterations. 
+
+----------------------------------------------------------
+
+How do you find the smallest index j in [i + 1, N] with minimum value S ? Maintain a maximum segment tree, reject an interval if it is outside [i + 1, N] or the max < S.
+
+int first_index(int n, int left, int right, int query_left, int query_right, LL minimum)
+{
+    if(right < query_left || query_right < left || max_tree[n] < minimum)
+        return NOT_FOUND;
+
+    if(left == right)
+        return left;
+
+    int mid = (left + right) >> 1;
+
+    int left_answer = first_index(LEFT(n), left, mid, query_left, query_right, minimum);
+    if(left_answer != NOT_FOUND) return left_answer;
+
+    int right_answer = first_index(RIGHT(n), mid + 1, right, query_left, query_right, minimum);
+    return right_answer;
+}
+
+-----------------------------------------------
