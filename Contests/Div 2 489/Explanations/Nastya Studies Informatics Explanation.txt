@@ -1,0 +1,37 @@
+Let A = pg and B = qg
+
+g = gcd(A, B)
+
+This means gcd(p, q) = 1. Otherwise, gcd(A, B) > g. 
+
+Now, AB = gL, where L = lcm(A, B)
+
+AB = g (pq)g
+
+So, this means that x = g, y = (pq) g
+
+Divide LCM by GCD ... This gives us pq.
+
+Find all factors of pq, and then check if gcd(p, q) = 1, and pg and qg lie inside [L, R].
+
+One thing to watch out for is that y may not be divisible by x, in which case we have gotten an invalid pair.
+
+------------------------------------------------
+
+int good_pairs = 0;
+    long long reduced_lcm = lcm/gcd;
+    for(int i = 1; i*i <= reduced_lcm; i++)
+    {
+        if(reduced_lcm%i == 0)
+        {
+            long long p = i, q = reduced_lcm/i;
+
+            if(left <= p*gcd && p*gcd <= right && left <= q*gcd && q*gcd <= right && gcd_(p, q) == 1)
+            {   
+                if(p == q)
+                    good_pairs++;
+                else
+                    good_pairs += 2;
+            }
+        }
+    }
