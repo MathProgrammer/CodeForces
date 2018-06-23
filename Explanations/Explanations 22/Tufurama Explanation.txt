@@ -1,0 +1,49 @@
+Blog Link - http://qr.ae/TUpORd
+
+Maintain an array S of 1s and 0s. 
+
+We want the number of pairs such that i < j, A[i] >= j and A[j] >= i
+
+For each i, sum over S in [i + 1, A[i]]
+
+After step i, delete all occurences of i in the array and set S[p] = 0, if A[p] = i
+
+This ensures that at step i, all elements < i are deleted so only >= i are present.
+
+-----------------------------------------
+
+int main()
+{
+    int no_of_elements;
+    scanf("%d", &no_of_elements);
+
+    vector <int> A(no_of_elements + 1);
+    vector <int> index[no_of_elements + 1];
+
+    memset(sum_tree, 0, sizeof(sum_tree));
+
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        scanf("%d", &A[i]);
+        A[i] = min(A[i], no_of_elements);
+
+        update(1, 1, no_of_elements, i, 1);
+
+        index[A[i]].push_back(i);
+    }
+
+    long long answer = 0;
+
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        answer += get_sum(1, 1, no_of_elements, i + 1, A[i]);
+
+        for(int j = 0; j < index[i].size(); j++)
+        {
+            update(1, 1, no_of_elements, index[i][j], 0);
+        }
+    }
+
+    printf("%I64d\n", answer);
+    return 0;
+}
