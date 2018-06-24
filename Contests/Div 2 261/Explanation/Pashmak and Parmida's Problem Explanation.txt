@@ -1,0 +1,56 @@
+Blog Link - http://qr.ae/TUpUkU
+
+Let L[i] be frequeny of i in prefix.
+R[i] be frequency of i in suffix.
+
+Maintain an array S, where the index is R[i] and value if frequency of R[i].
+
+Process the indices from i = N to 1
+
+For each i, take the sum of [1, L[i] - 1], and then increment S[R[i]] by 1.
+
+This ensures that whatever we have summed has R < L[i] because we have only taken the range L[i] - 1
+
+And j > i, because we are inserting in descending order. If R[j] is already in S, then it means j > i
+
+So both conditions i < j and L[i] > R[j] are satisfied ! Beautiful Problem !
+
+----------------------------------------------------------------------------------
+
+int main()
+{
+    int no_of_elements;
+    scanf("%d", &no_of_elements);
+
+    vector <int> A(no_of_elements + 1);
+    for(int i = 1; i <= no_of_elements; i++) scanf("%d", &A[i]);
+
+    map <int, int> left_frequency;
+    vector <int> left(no_of_elements + 1, 0);
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        left_frequency[A[i]]++;
+
+        left[i] = left_frequency[A[i]];
+    }
+
+    map <int, int> right_frequency;
+    vector <int> right(no_of_elements + 1, 0);
+    for(int i = no_of_elements; i >= 1; i--)
+    {
+        right_frequency[A[i]]++;
+
+        right[i] = right_frequency[A[i]];
+    }
+
+    LL answer = 0;
+    for(int i = no_of_elements; i >= 1; i--)
+    {
+        answer += get_sum(1, 1, no_of_elements, 1, left[i] - 1); //Adding all rights that are smaller than left
+
+        update(1, 1, no_of_elements, right[i], 1);
+    }
+
+    printf("%I64d\n", answer);
+    return 0;
+}
