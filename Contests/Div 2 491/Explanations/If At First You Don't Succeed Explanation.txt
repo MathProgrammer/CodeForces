@@ -1,0 +1,27 @@
+OKay, so the conditions that contradict the data is if 
+
+C > min(A, B). The number of students who go to both A and B cannot be less than the students who go to both. 
+
+I missed this. 
+
+and if failed < 1. 
+
+No need of explicitly checking if A + B - C > 0, because that would cause failed to become < 1 anyway.
+
+(If there are a negative number of students, there are a negative number of failed students too.)
+
+-----------------------------------------------
+
+
+int main()
+{
+    int A, B, C, total_students;
+    cin >> A >> B >> C >> total_students;
+
+    int passed = (A + B - C);
+    int failed = total_students - passed;
+
+    cout << (failed < 1 || C > min(A, B) ? -1 : failed);
+
+    return 0;
+}
