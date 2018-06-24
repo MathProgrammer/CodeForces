@@ -1,0 +1,32 @@
+Little Petya loves presents. His mum bought him two strings of the same size for his birthday. The strings consist of uppercase and lowercase Latin letters. 
+Now Petya wants to compare those two strings lexicographically. The letters' case does not matter, 
+that is an uppercase letter is considered equivalent to the corresponding lowercase letter. Help Petya perform the comparison.
+
+-------------------------------------------------------
+
+Maybe if I had more time, I would make both strings lower character and then use strcmp so that there's no abrupt end ... But I wanted to finish this as soon as possible.
+
+#define tolower(c) (c < 'a' ? (c + 'a' - 'A') : c)
+
+int main()
+{
+    char string_1[MAX_LENGTH], string_2[MAX_LENGTH];
+    scanf("%s %s", string_1, string_2);
+
+    for(int i = 0; string_1[i] != '\0'; i++)
+    {
+        if(tolower(string_1[i]) > tolower(string_2[i]) )
+        {
+            printf("1\n");
+            return 0;
+        }
+        else if(tolower(string_1[i]) < tolower(string_2[i]) )
+        {
+            printf("-1\n");
+            return 0;
+        }
+    }
+
+    printf("0\n");
+    return 0;
+}
