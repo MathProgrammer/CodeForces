@@ -1,0 +1,51 @@
+
+Okay, if the x1 = x2, then it means we have a side parallel to y-axis.
+
+x3 = x1 + d, y3 = y1
+x4 = x2 + 3, y4 = y2
+
+Similar reasoning if y1 = y2, 
+
+now, what happens if we have two diagonally opposite points ?
+
+Then, |x1 - x2| = |y1 - y2|
+
+This quantity is the same in squares. We are taking absolute values because it might be anti-diagonal as well.
+
+int main()
+{
+    int x_1, x_2, y_1, y_2;
+    scanf("%d %d %d %d", &x_1, &y_1, &x_2, &y_2);
+
+    int x_3, y_3, x_4, y_4;
+
+    if(x_1 == x_2)
+    {
+        int distance = abs(y_1 - y_2);
+
+        x_3 = x_1 + distance; y_3 = y_1;
+
+        x_4 = x_2 + distance; y_4 = y_2;
+    }
+    else if(y_1 == y_2)
+    {
+        int distance = abs(x_1 - x_2);
+
+        y_3 = y_1 + distance; x_3 = x_1;
+
+        y_4 = y_2 + distance; x_4 = x_2;
+    }
+    else if(abs(x_1 - x_2) == abs(y_1 - y_2))
+    {
+        x_3 = x_1; y_3 = y_2;
+
+        x_4 = x_2; y_4 = y_1;
+    }
+    else
+    {
+        printf("-1\n");
+        return 0;
+    }
+    printf("%d %d %d %d\n", x_3, y_3, x_4, y_4);
+    return 0;
+}
