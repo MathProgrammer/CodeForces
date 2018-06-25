@@ -1,12 +1,12 @@
 Suppose you have the numbers A(1), A(2), A(3), ..., A(n)
 
-When do you visit them in round 1 ?
+What is the length when you visit them in round 1 ?
 
 A(1) — 0, A(2) — 1, A(3) — 2, A(4) - 3, ..., A(n) — (n - 1)
 
-You visit queue i at time A(i) — (i - 1) in round 1
+You visit queue i when it's size = A(i) — (i - 1) in round 1
 
-After that notice if you visit a queue at time t, you also visit it at t - n, t - 2n, t - 3n, ..., 0.
+After that notice if you visit a queue at size t, you also visit it at sizes t - n, t - 2n, t - 3n, ..., 0.
 
 Now, how many visits do you make at a queue when it is 0 ?
 
