@@ -1,0 +1,40 @@
+Keep track of the frequency of each alphabet. 
+
+If the frequency[a] >= k, then ban the alphabet a. Reduce k by frequency[a].
+
+if there is a situation when frequency[x] < k, then do an O(n) scan on the array and ban specific positions of the string. 
+
+In the end print a character in the string, if both it's position and alphabet aren't bad.
+
+------------------------------
+
+vector <int> frequency(NO_OF_ALPHABETS, 0);
+    for(int i = 0; i < S.size(); i++)
+        frequency[S[i] - 'a']++;
+
+    vector <int> is_allowed(length, true);
+    vector <int> banned(NO_OF_ALPHABETS, false);
+
+    for(int alphabet = 0; alphabet < NO_OF_ALPHABETS && k > 0; alphabet++)
+    {
+        if(frequency[alphabet] <= k)
+        {
+            banned[alphabet] = true;
+            k -= frequency[alphabet];
+        }
+        else if(frequency[alphabet] > k)
+        {
+            for(int i = 0; i < length && k > 0; i++)
+            {
+                if(S[i] == 'a' + alphabet)
+                {
+                    k--;
+                    is_allowed[i] = false;
+                }
+            }
+        }
+    }
+
+    for(int i = 0; i < length; i++)
+        if(is_allowed[i] && !banned[S[i] - 'a'])
+            cout << S[i];

@@ -1,0 +1,24 @@
+Perform the reverses in increasing order of the divisors of n !
+
+This undoes all the reverses done in the encryption preserving order !
+
+-----------------------------------
+
+int main()
+{
+    int length;
+    string S;
+    cin >> length >> S;
+
+    vector <int> divisors;
+    get_divisors(divisors, length);
+    sort(divisors.begin(), divisors.end());
+
+    for(int i = 0; i < divisors.size(); i++)
+    {
+        reverse(S.begin(), S.begin() + divisors[i]);
+    }
+
+    cout << S;
+    return 0;
+}
