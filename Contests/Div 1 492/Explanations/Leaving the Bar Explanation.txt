@@ -1,0 +1,29 @@
+Blog link - https://mathprogrammer.quora.com/4253883-1?share=4cf393bf&srid=F7Hz
+
+Turns out randomly shuffling the vectors and being greedy is a very efficient heuristic !
+
+------------------------------
+
+ do
+    {
+        random_shuffle(all(V));
+ 
+        P = Point(0, 0);
+ 
+        for(int i = 0; i < no_of_points; i++)
+        {
+            if(square_norm(P + V[i]) <= square_norm(P - V[i]))
+            {
+                P = P + V[i];
+                step[V[i].index] = 1;
+            }
+            else
+            {
+                P = P - V[i];
+                step[V[i].index] = -1;
+            }
+        }
+    }
+    while(square_norm(P) > square(oo));
+
+
