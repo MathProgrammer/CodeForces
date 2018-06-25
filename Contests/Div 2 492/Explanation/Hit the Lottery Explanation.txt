@@ -1,0 +1,28 @@
+Each of 1, 5, 10, 20, 100 is a multiple of the last. So it's always optimal to use a larger denomination when we can. 
+
+If we don't use a note of value y and use x where y < x, we will k notes where yk = x
+
+So it's best to be greedy and use as many high value denominations as possible.
+
+---------------------------------
+
+int main()
+{
+    const int NO_OF_NOTES = 5;
+    int denominations[NO_OF_NOTES + 1] = {100, 20, 10, 5, 1};
+
+    int amount;
+    scanf("%d", &amount);
+
+    int no_of_notes = 0;
+    for(int i = 0; i < NO_OF_NOTES; i++)
+    {
+        if(denominations[i] <= amount)
+            no_of_notes += amount/denominations[i];
+
+        amount %= denominations[i];
+    }
+
+    printf("%d\n", no_of_notes);
+    return 0;
+}
