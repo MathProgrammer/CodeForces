@@ -1,0 +1,44 @@
+Blog Link - http://qr.ae/TUpilr
+
+Place integers which have the same number of bits in the same bucket. Sort the bucket by index. 
+
+Only the first two integers of the bucket can have A[i] = S{i - 1]
+
+This is because every other integer from the third onwards will have both the first two integers in it's prefix. And when you add two numbers of b bits, the sum has more than b bits. Therefore the number will necessarily be < S[i - 1], if there are more than 2 or more numbers of the same number of bits in it's prefix.
+
+Maintain a priority queue to sort numbers by index for each bit position and a segment tree to get the sums after every update. 
+
+------------------------------------------
+
+int get_answer()
+{
+    for(int bit = 0; bit < MAX_BITS; bit++) //Iterating over the priority queue for each no of bits
+    {
+        int i = 1;
+        for(multiset <info> :: iterator it = S[bit].begin(); it != S[bit].end() && i <= 2; i++, it++)//The first two elements, by index
+        {
+            int index = it->position;
+
+            if(get_sum(1, 1, no_of_elements, 1, index - 1) == A[index])
+                return index;
+        }
+    }
+
+    return NOT_FOUND;
+}
+
+void solve()
+{
+    int index, new_value;
+    scanf("%d %d", &index, &new_value);
+
+    info element(A[index], index);
+    remove_from_multiset(element, no_of_bits(A[index]));
+
+    S[no_of_bits(new_value)].insert(info(new_value, index));
+
+    update(1, 1, no_of_elements, index, new_value);
+
+    int answer = get_answer();
+    printf("%d\n", answer);
+}
