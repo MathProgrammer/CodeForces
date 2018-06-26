@@ -1,0 +1,54 @@
+Sort the knights, first by their power. 
+
+And then maintain a priority queue of the k highest coins so far. k is at most 10. So, this works.
+
+As each knight can only kill knights that are less powerful than him, we insert coins into the priority queue only AFTER processing all knights of the same power. 
+
+So when we're at knight i, we have processed all knights that have less than power of this knight i. 
+
+All of the coins of the first (i - 1) are in a priority queue. This allows us to get the maximum in O(1) time. 
+
+-----------------------------------------
+
+int main()
+{
+    int no_of_knights, max_coins;
+    scanf("%d %d", &no_of_knights, &max_coins);
+
+    vector <knight> knights(no_of_knights + 1);
+    for(int i = 1; i <= no_of_knights; i++) knights[i].position = i;
+    for(int i = 1; i <= no_of_knights; i++) scanf("%d", &knights[i].power);
+    for(int i = 1; i <= no_of_knights; i++) scanf("%d", &knights[i].coin);
+
+    sort(all(knights), sort_by_power);
+
+    vector <long long> answer(no_of_knights + 1, 0);
+    multiset <int> best_coin;
+
+    for(int i = 1; i <= no_of_knights; i++)
+    {
+        if(knights[i].power == knights[i - 1].power)
+        {
+            answer[knights[i].position] = answer[knights[i - 1].position] - knights[i - 1].coin + knights[i].coin;
+        }
+        else
+        {
+            int c = 1;
+            answer[knights[i].position] = knights[i].coin;
+
+            for(multiset <int> :: reverse_iterator it = best_coin.rbegin(); it != best_coin.rend() && c <= max_coins; it++, c++)
+            {
+                answer[knights[i].position] += *it;
+            }
+        }
+
+        best_coin.insert(knights[i].coin);
+    }
+
+
+    for(int i = 1; i <= no_of_knights; i++)
+        printf("%I64d ", answer[i]);
+
+    return 0;
+}
+
