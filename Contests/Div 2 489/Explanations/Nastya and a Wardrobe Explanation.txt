@@ -1,0 +1,48 @@
+Claim - After two months the expected value will be 2^k x - (2^k - 1)/2
+
+Let us see why. 
+
+After one month, we will get 2X or 2X - 1. Average = 2x - 1/2
+
+Similarly, when this gets doubled we'll have 4x - 1, One may be eaten so 4x - 2
+
+Average = 4x - 3/2
+
+Let us assume it's true for k months and prove it by induction. 
+
+If after k months we have 2^k X - (2^K - 1)/2
+
+What happens in the (k + 1)th month
+
+2^{k + 1) X - (2^k - 1) If one gets eaten then 2^{k + 1} X - (2^k)
+
+So average = 2^{k + 1} X - (2^k + 2^k)/2 = 2^{k + 1} X - (2^{k + 1} - 1)/2
+So no eating happens in the last month. 
+
+So we can get rid of the denominator.
+
+Note - x = 0 is a special case. I missed this. This is because nothing gets eaten. So, it will be 0 only. Not negative !
+
+-----------------------------------------------------
+
+int main()
+{
+    long long initial, months;
+    scanf("%I64d %I64d", &initial, &months);
+
+    if(initial == 0)
+    {
+        printf("0\n");
+        return 0;
+    }
+
+    const int MOD = 1e9 + 7;
+    initial %= MOD;
+
+    long long answer = (initial*power_mod(2, months + 1, MOD))%MOD - power_mod(2, months, MOD) + 1;
+    answer = (answer + MOD)%MOD;
+
+
+    printf("%I64d\n", answer);
+    return 0;
+}
