@@ -1,0 +1,89 @@
+If there are 3 different objects of frequency r1 r2 and r3 respectively. 
+
+Then the number of arrangements of all of them is 
+
+(r1 + r2 + r3)!/r1!r2!r3!
+
+-----------------------------------
+
+One possible way is to have 10 for loops, and then make sure the frequency of each alphabet in S is at least one ...
+
+-------------------------------------
+
+Another way is 
+
+1. Extract every possible subset of N.
+
+for(int mask = 0; mask < (1LL << n.size()); mask++)
+    {
+        string subset_n;
+
+        for(int i = 0; i < n.size(); i++)
+        {
+            if(is_bit_set(mask, i))
+            {
+                subset_n += n[i];
+            }
+        }
+
+        answer += solve(subset_n);
+    }
+
+-------------------------------------------------
+
+2. For every subset, check if every element that occurs once in the subset, also occurs at least once in this subset.
+
+for(int i = 0; i < 10; i++)
+        if(original_frequency[i] > 0 && frequency[i] == 0)
+            return 0;
+
+-------------------------------------
+
+3. Check if we've processed a subset before. For instace, 450 and 054 are the same subset. So sort the elements of a subset. Check if it's already been processed.
+
+string sorted_S;
+    for(int i = 0; i < 10; i++)
+        for(int j = 1; j <= frequency[i]; j++)
+            sorted_S += (char)(i + '0');
+
+    if(processed.count(sorted_S) == 1)//Already counted
+        return 0;
+
+    processed.insert(sorted_S);
+
+-------------------------------------------------
+
+4. Count the number of permutations of this string. Then, count the number of permutations with the first character 0. This means put a 0 in the beginning and then leave the others as it is.
+
+long long no_of_permutations = get_count(frequency);
+
+    long long leading_zero_permutations = 0;
+
+    if(frequency[0] > 0)
+    {
+        frequency[0]--;
+        leading_zero_permutations = get_count(frequency);
+    }
+
+    return (no_of_permutations - leading_zero_permutations);
+
+---------------------------------------------
+
+5. Only frequency array is needed to calculate the permutations.
+
+long long get_count(vector <int> &frequency)
+{
+    int sum = 0;
+    long long denominator = 1;
+
+    for(int i = 0; i < 10; i++)
+    {
+        sum += frequency[i];
+        denominator *= factorial[frequency[i]];
+    }
+
+    long long numerator = factorial[sum];
+
+    return (numerator/denominator);
+}
+
