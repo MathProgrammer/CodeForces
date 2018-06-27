@@ -1,0 +1,27 @@
+Blog Link - http://qr.ae/TUpezI
+
+If there were no ones then it would be easy to have an O(n log max P) solution with two loops. Handle the ones well.
+
+-------------
+
+int good_segments = 0;
+
+    for(int left = 1; left <= no_of_elements; left++)
+    {
+        LL product = 1;
+
+        for(int right = left; right <= no_of_elements && !overflow(product, A[right]); right = next_non_1[right])
+        {
+            LL sum_here = sum[right] - sum[left - 1];
+            product *= A[right];
+
+            LL required_sum = 0;
+
+            if(product%k == 0) required_sum = product/k;
+
+            LL ones_in_middle = next_non_1[right] - (right + 1);
+
+            if(sum_here <= required_sum && required_sum <= sum_here + ones_in_middle)
+                good_segments++;
+        }
+    }
