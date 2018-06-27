@@ -31,7 +31,7 @@ for(int mask = 0; mask < (1LL << n.size()); mask++)
 
 -------------------------------------------------
 
-2. For every subset, check if every element that occurs once in the subset, also occurs at least once in this subset.
+2. For every subset, check if every element that occurs once in the set, also occurs at least once in this subset.
 
 for(int i = 0; i < 10; i++)
         if(original_frequency[i] > 0 && frequency[i] == 0)
