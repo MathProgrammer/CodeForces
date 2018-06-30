@@ -1,0 +1,58 @@
+I was thinking of a very complicated solution involving tries, but there's actually a very simple, elegant and beautiful solution to 
+this problem !
+
+Maintain a frequency array. 
+
+Rather than storing the numbers, store the mask of the number ! We only have about 2^{18} masks !
+
+Here's how you get the mask of an integer - 
+
+int get_mask(long long n)
+{
+    int mask = 0;
+
+    for(int bit = 0; n > 0; bit++)
+    {
+        int digit = n%10;
+
+        if(digit%2 == 1)
+            mask |= (1LL << bit);
+
+        n /= 10;
+    }
+
+    return mask;
+}
+
+Set the bit at all the odd digits.
+
+-----------------------------------------------------
+
+For each query, give the frequency of the mask ! We're done !
+
+while(no_of_queries--)
+    {
+        const char INSERTION = '+', DELETION = '-', QUERY = '?';
+        char query_type;
+
+        cin >> query_type;
+
+        if(query_type == INSERTION)
+        {
+            long long n;
+            cin >> n;
+            frequency[get_mask(n)]++;
+        }
+        else if(query_type == DELETION)
+        {
+            long long n;
+            cin >> n;
+            frequency[get_mask(n)]--;
+        }
+        else if(query_type == QUERY)
+        {
+            string mask;
+            cin >> mask;
+            cout << frequency[to_integer(mask)] << "\n";
+        }
+    }
