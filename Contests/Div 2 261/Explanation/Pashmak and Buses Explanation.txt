@@ -1,0 +1,65 @@
+{\rtf1\ansi\ansicpg1252\deff0\nouicompat\deflang16393{\fonttbl{\f0\fnil\fcharset0 Courier New;}}
+{\*\generator Riched20 10.0.17134}\viewkind4\uc1 
+\pard\f0\fs22 Let us represent the activities of each student as a d-tuple. \par
+\par
+(b1, b2, ... bd), where bi represents the bus taken on day i.\par
+\par
+Each day you can take k buses. Overall, there are k^d distinct d-tuples. \par
+\par
+If two tuples are the same, then it means two students take the same bus everyday. \par
+\par
+If k^d < N, then by the pigeonhole principle there will be two d-tuples that are the same at every spot. \par
+\par
+So, if k^d < N, then it is not possible. \par
+\par
+int possible(int people, int buses, int days)\par
+\{\par
+    //Check if k^d > n\par
+    for(int power = 1, d = 0; d <= days; power *= buses, d++)\par
+    \{\par
+        if(power >= people)\par
+            return true;\par
+    \}\par
+\par
+    return false;\par
+\}\par
+\par
+-------------------------------------------------\par
+\par
+Otherwise, let us generate the first N numbers of length d in base k. \par
+\par
+(In other words, we're visiting the d-tuples in lexicographic order.)\par
+\par
+
+\pard for(int p = 0; p < no_of_people; p++)\par
+    \{\par
+        for(int d = 0; d < no_of_days; d++)\par
+        \{\par
+            arrangement[p][d] = (p == 0 ? 0 : arrangement[p - 1][d]);\par
+        \}\par
+\par
+        for(int d = no_of_days - 1; d >= 0; d--)\par
+        \{\par
+            arrangement[p][d]++;\par
+            arrangement[p][d] %= no_of_buses;\par
+\par
+            if(arrangement[p][d] != 0)\par
+                break;\par
+        \}\par
+    \}\par
+
+\pard\par
+\par
+-----------------------------------------\par
+\par
+It's easy to generate this with respect to d-tuples, but the output must be in n-tuples\par
+\par
+    for(int d = 0; d < no_of_days; d++)\par
+    \{\par
+        for(int p = 0; p < no_of_people; p++)\par
+        \{\par
+            printf("%d ", arrangement[p][d] + 1);\par
+        \}\par
+        printf("\\n");\par
+    \}\par
+}
