@@ -1,0 +1,19 @@
+Blog Link - http://qr.ae/TUpmul
+
+Main insight is there can be at most 2 root(n) numbers x who's frequency in the array is > x
+
+--------------------------
+
+ vector <int> answer(no_of_queries + 1, 0);
+
+    for(int i = 1; i <= MAX_N; i++)
+    {
+        if(frequency[i] >= i) //There can't be more than 2 root(n) such elements
+        {
+            vector <int> frequency_till(no_of_elements + 1, 0);
+
+            for(int j = 1; j <= no_of_elements; j++) frequency_till[j] = frequency_till[j - 1] + (A[j] == i);
+
+            for(int q = 1; q <= no_of_queries; q++) answer[q] += (frequency_till[right[q]] - frequency_till[left[q] - 1] == i);
+        }
+    }
