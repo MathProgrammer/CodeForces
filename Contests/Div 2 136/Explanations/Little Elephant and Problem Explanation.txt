@@ -1,0 +1,32 @@
+The Little Elephant has got a problem — somebody has been touching his sorted by non-decreasing array a of length n and possibly swapped some elements of the array.
+
+The Little Elephant doesn't want to call the police until he understands if he could have accidentally changed the array himself. 
+He thinks that he could have accidentally changed array a, only if array a can be sorted in no more than one operation of swapping elements (not necessarily adjacent). 
+That is, the Little Elephant could have accidentally swapped some two elements.
+
+Help the Little Elephant, determine if he could have accidentally changed the array a, sorted by non-decreasing, himself.
+
+-------------------------------------------------------
+
+Sort the array and check how many positions differ with the original array.
+
+int main()
+{
+    int no_of_elements;
+    scanf("%d", &no_of_elements);
+
+    vector <int> original_array(no_of_elements);
+    for(int i = 0; i < no_of_elements; i++)
+        scanf("%d", &original_array[i]);
+
+    vector <int> sorted_array = original_array;
+
+    sort(all(sorted_array));
+
+    int differences = 0;
+    for(int i = 0; i < no_of_elements; i++)
+        differences += (sorted_array[i] != original_array[i]);
+
+    printf(differences <= 2 ? "YES\n" : "NO\n");
+    return 0;
+}

@@ -1,0 +1,53 @@
+Blog Link - http://qr.ae/TUpmul
+
+Very similar to DQUERY. 
+
+The idea is that we set the index of the last x-th occurence of x to 1, the one before that to -1 and all others to 0 and do offline processing !
+
+It's quite beautiful actually ! This ensures that when we're processing queries that end at i, we have all the required information. We can't answer the queries online as it's not convenient and it gets messy but solving them offline makes the problem so beautiful !
+
+---------------------------------------------------
+
+for(int i = 1; i <= no_of_elements; i++)
+    {
+        if(A[i] < MAX_N)
+        {
+            occurence[A[i]].push_back(i);
+
+            int A_i_frequency = occurence[A[i]].size();
+
+            if(A_i_frequency >= A[i])
+            {
+                int last = A_i_frequency - A[i];
+
+                int last_occurence = occurence[A[i]][last];
+
+                update(1, 1, no_of_elements, last_occurence, 1);
+            }
+
+            if(A_i_frequency >= A[i] + 1)
+            {
+                int second_last = A_i_frequency - (A[i] + 1);
+
+                int second_last_occurence = occurence[A[i]][second_last];
+
+                update(1, 1, no_of_elements, second_last_occurence, -1);
+            }
+
+            if(A_i_frequency >= A[i] + 2)
+            {
+                int third_last = A_i_frequency - (A[i] + 2);
+
+                int third_last_occurence = occurence[A[i]][third_last];
+
+                update(1, 1, no_of_elements, third_last_occurence, 0);
+            }
+        }
+
+        while(Q[last_query].right == i)
+        {
+            answer[Q[last_query].index] = get_sum(1, 1, no_of_elements, Q[last_query].left, Q[last_query].right);
+
+            last_query++;
+        }
+    }
