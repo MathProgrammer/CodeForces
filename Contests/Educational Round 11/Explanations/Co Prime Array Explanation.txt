@@ -1,0 +1,52 @@
+You are given an array of n elements, you must make it a co-prime array in as few moves as possible.
+
+In each move you can insert any positive integral number you want not greater than 109 in any place in the array.
+
+An array is co-prime if any two adjacent numbers of it are co-prime.
+
+In the number theory, two integers a and b are said to be co-prime if the only positive integer that divides both of them is 1.
+
+----------------------------------------------
+
+This is similar to the question asking what is the smallest currency that cannot be expressed. If there is no 1, it is 1 and if 1 is there all can be expressed.
+
+Or is there an element in this array which divides every other element ? If it is yes, then it has to be the smallest element.
+
+Or what is the length of longest coprime sequence in array ? If any two elements are coprime, entire array is coprime.
+
+Here, the observation needed is that gcd(1, n) = 1.
+
+Insert all elements into the new vector, but just check if adjacent elements are coprime. If any two adjacent elements are not coprime. Insert a 1 in between.
+
+-----------------------------------------------------
+
+int main()
+{
+    int no_of_numbers;
+    scanf("%d", &no_of_numbers);
+
+    vector <int> coprime_array;
+    for(int i = 1; i <= no_of_numbers; i++)
+    {
+        int number_i;
+        scanf("%d", &number_i);
+
+        if(i == 1 || gcd(coprime_array.back(), number_i) == 1)
+        {
+            coprime_array.push_back(number_i);
+        }
+        else
+        {
+            coprime_array.push_back(1);
+            coprime_array.push_back(number_i);
+        }
+    }
+
+    int no_of_operations = coprime_array.size() - no_of_numbers;
+
+    printf("%d\n", no_of_operations);
+    for(unsigned int i = 0; i < coprime_array.size(); i++)
+        printf("%d ", coprime_array[i]);
+
+    return 0;
+}
