@@ -26,10 +26,7 @@ int main()
     {
         if(i < middle)
         {
-            if(A[i] > median_target)
-            {
-                no_of_operations += A[i] - median_target;
-            }
+            no_of_operations += max(0, A[i] - median_target);
         }
         else if(i == middle)
         {
@@ -37,10 +34,7 @@ int main()
         }
         else if(i > middle)
         {
-            if(A[i] < median_target)
-            {
-                no_of_operations += median_target - A[i];
-            }
+            no_of_operations += max(0, median_target - A[i]);
         }
     }
 
