@@ -43,7 +43,7 @@ int main()
             tree[parent].erase(child);
             tree[child].erase(parent);
         }
-        else
+        else if(tree[head].count(v) == 0)
         {
             valid_visit_order = false;
             break;
