@@ -1,0 +1,103 @@
+Observation - If an element occurs two times, then it does not affect the difference in the number of nice elements in the multisets. 
+
+Proof - If we place them in same multiset, then the number of nice elements in both subsets remain the same and does not increase.
+
+If we place them in different multisets, then the number of nice elements in both subsets increases by one.
+
+---------------------------------------------------
+
+Case 1 - There are an even number of elements which occcur one time. 
+
+Then we place half of them in either multiset. 
+
+And place all the remaining elements in A.
+
+--------------------------------------------
+
+Case 2 - There are an odd number of elements which occur one time. 
+
+Case 2a - There is at least one element who's frequency is greater than 2. 
+
+If there are (2n + 1) elements which occur one time, then place n of them in A, (n + 1) of them in B. 
+
+Then place exactly one occurence of the element who's frequency > 2 in A, and place the others in B. 
+
+Now, A and B both have exactly (n + 1) nice elements. 
+
+We know place the remaining elements in A.
+
+---------------------------------------------
+
+Case 2b - There is no element who's frequency > 2
+
+Since there are an odd number of elements who's frequency is 1, there must be one multiset which has more nice elements than the other. 
+
+As per our observation, elements who's frequency is 2, will not make the difference of nice elements in A and B 0 from 1. 
+
+So, it is never possible in this case. 
+
+----------------------------------------------
+
+How do we implement this ? 
+
+We keep track of where we placed the last nice element (A or B). 
+Whenever we come across any other nice element, place it in the OPPOSITE side. 
+
+If an element comes who's frequency is greater than 1, then just dump it in A. 
+
+This suffices for Case 1. 
+
+What to do about the Case 2b ? 
+
+In that case, the first time we encounter an element who's frequency is greater than 2, we mark it as a special character and then place it on either side. Whenever we come across it's next occurences, we will place it on the opposite side than the first side. 
+
+Something like this - 
+
+        if(frequency[A[i]] > 2 && special == NOT_USED)
+        {
+            split += opposite(last);
+            special_place = opposite(last);
+            last = opposite(last);
+
+            special_char = A[i];
+            special = USED;
+        }
+        else if(A[i] == special_char)
+        {
+            split += opposite(special_place);
+        }
+
+
+-----------------------------------
+
+The below code will make it clearer.
+
+const int USED = 0, NOT_USED = 1;
+    int special = (frequency_1_elements%2 == 0 ? USED : NOT_USED), special_char = -1;
+    char last = 'B', special_place;
+
+    for(int i = 0; i < no_of_numbers; i++)
+    {
+        if(frequency[A[i]] == 1)
+        {
+            split += opposite(last);
+            last = opposite(last);
+        }
+        else if(frequency[A[i]] > 2 && special == NOT_USED)
+        {
+            split += opposite(last);
+            special_place = opposite(last);
+            last = opposite(last);
+
+            special_char = A[i];
+            special = USED;
+        }
+        else if(A[i] == special_char)
+        {
+            split += opposite(special_place);
+        }
+        else
+        {
+            split += 'A';
+        }
+    }
