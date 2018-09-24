@@ -1,0 +1,155 @@
+A common idea to solve questions involving tiling is bitmasks. 
+
+Let us represent black with 0 and white with 1. 
+
+Suppose our last column is 
+
+0 
+1
+
+----------------------------------
+
+How many NEW components do we get by adding another column ?
+
+Let's go case by case. 
+
+Case 1 :
+
+0 0
+1 0
+
+The number of components remains the same. 
+
+Case 2 : 
+
+0 0 
+1 1
+
+Number of components remains the same. 
+
+Case 3 : 
+
+0 1
+1 0
+
+We have created two new components.
+
+Case 4 : 
+
+0 1
+1 1
+
+The number of components remains the same. 
+
+---------------------------------------------------
+
+Let us analyse all the 16 cases. 
+
+int additional_components(int second_last, int last)
+{
+    switch(second_last)
+    {
+        case BB : switch(last)
+                  {
+                      case BB : return 0;
+                      case BW : return 1;
+                      case WB : return 1;
+                      case WW : return 1;
+                  }
+        case BW : switch(last)
+                  {
+                      case BB : return 0;
+                      case BW : return 0;
+                      case WB : return 2;
+                      case WW : return 0;
+                  }
+        case WB : switch(last)
+                  {
+                      case BB : return 0;
+                      case BW : return 2;
+                      case WB : return 0;
+                      case WW : return 0;
+                  }
+        case WW : switch(last)
+                  {
+                      case BB : return 1;
+                      case BW : return 1;
+                      case WB : return 1;
+                      case WW : return 0;
+                  }
+    }
+}
+
+----------------------------------------------------
+
+
+Now, let f(n, k, xx) denote the number of ways of having 
+- n columns
+- k components
+- xx last column
+
+Suppose we have inserted a new column xy
+Now, 
+
+(xx, xy) will fall in one of the 16 cases mentioned above. 
+
+Let the number of components be k' now.
+
+Accordingly, f(n + 1, k', xy) += f(n, k, xx)
+
+----------------------------------------------
+
+So, this is how we define the recurrence - 
+
+For every possible last column we can have, we iterate over every possible second last column and add it to the answer with the corresponding number of components.
+
+f(n + 1, k', xy) = sum(f(n, k, xx))
+
+for all (k, xx) such that inserting the column xy after xx results in k' components from k components. 
+
+The code may make it clearer.
+
+--------------------------------------------
+
+for(int column = 2; column <= no_of_columns; column++)
+    {
+        for(int components = 1; components <= 2*no_of_columns; components++)
+        {
+            for(int last = 0; last < NO_OF_COLUMN_ARRANGEMENTS; last++)
+            {
+                for(int second_last = 0; second_last < NO_OF_COLUMN_ARRANGEMENTS; second_last++)
+                {
+                    int new_components = components + additional_components(second_last, last);
+
+                    no_of_ways[column][new_components][last] += no_of_ways[column - 1][components][second_last];
+
+                    no_of_ways[column][new_components][last] %= MOD;
+                }
+            }
+        }
+    }
+
+------------------------------
+
+What is the base case ? 
+
+f(1, 1, BB) = f(1, 1, WW) = 1
+f(1, 2, BW) = f(1, 2, WB) = 1
+
+
+All other f(1, _ , __) = 0
+
+-----------------------------------------------
+
+Now, the answer = 
+
+f(n, k, BB) + f(n, k, BW) + f(n, k, WB) + f(n, k, WW)
+
+LL answer = 0;
+    for(int last = 0; last < NO_OF_COLUMN_ARRANGEMENTS; last++)
+    {
+        answer += no_of_ways[no_of_columns][no_of_components][last];
+
+        answer %= MOD;
+    }
+
