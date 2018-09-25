@@ -1,0 +1,51 @@
+Now if the question was asking if there is some way to break it into 2 segments of equal sums, it would be a pretty easy question ... we'd just need to look for a prefix who's sum = S/2. 
+
+-------------------------
+
+Let us break it down into a smaller question ...
+
+Given K, how do we check if A can be divided into K segments each of who's sums are equal.
+
+If the sum of the array is S, then the sum of each segment should be S/K. (S should be divisible by K.)
+
+-------------------------------------
+
+That means we must search for some prefix who's sum = S/k. 
+
+Then remove that prefix, and once again look for a prefix who's sum = S/k. 
+
+We keep doing this ... If at any point our sum exceeds S/k, then it means we can't divide the array into segments who's sum is K because the current segment will always have sum > k.
+
+----------------------------------
+
+int possible_to_divide(vector <int> &A, int target_no_of_parts)
+{
+    int sum = 0;
+    for(int i = 1; i < A.size(); i++)
+        sum += A[i];
+
+    int target_part_sum = sum/target_no_of_parts;
+
+    int parts_that_are_made = 0;
+
+    for(int current_part_sum = 0, i = 1; i < A.size(); i++)
+    {
+        current_part_sum += A[i];
+
+        if(current_part_sum == target_part_sum)
+        {
+            parts_that_are_made++;
+
+            current_part_sum = 0;
+        }
+
+        if(current_part_sum > target_part_sum)
+            return false;
+    }
+
+    return (parts_that_are_made == target_no_of_parts);
+}
+
+-----------------------------
+
+So first find Sum S, and then iterate over all divisors of S.
