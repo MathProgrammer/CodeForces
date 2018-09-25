@@ -44,18 +44,19 @@ int main()
     for(int i = 1; i <= no_of_digits; i++)
         sum += A[i];
 
+    int division_possible = false;
     for(int i = 2; i <= no_of_digits; i++)
     {
         if(sum%i == 0)
         {
             if(possible_to_divide(A, i))
             {
-                printf("YES\n");
-                return 0;
+                division_possible = true;
+                break;
             }
         }
     }
 
-    printf("NO\n");
+    printf(division_possible ? "YES\n" : "NO\n");
     return 0;
 }
