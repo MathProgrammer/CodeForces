@@ -1,0 +1,68 @@
+Area = 1/2 |  1 1  1  |
+           | x1 x2 x3 |
+           | y1 y2 y3 |
+
+The determinant is an integer since all the lattice points are integers. 
+
+So, we can say that 
+
+2*Area = Integer. 
+
+------------------------------
+
+Now, 2*Area = 2(mn)/k = (2mn)/k
+
+This means that k must divide 2mn. 
+
+
+---------------------------------------
+
+If k does not divide 2mn, then no triangle is possible. 
+
+---------------------------------
+
+1. Cancel all common factors of k and m. 
+2. Cancel all common factors of k and n. 
+
+This means k should be either = 1 or = 2
+
+k = 1, if (mn) is a multiple of k
+k = 2, if (2mn) is a multiple of k
+
+If k is any value greater than 2, then it is not possible to have such a triangle. 
+
+--------------------------------------
+
+Now, how do we construct this triangle ?
+
+Let g1 = gcd(k, m) and g2 = gcd(k, n)
+
+m' = m/g1  ... n' = n/g2
+
+k' = k/(g1g2)
+
+If we have a triangle with vertices
+
+(0, 0) (m', 0), (0, n')
+
+Area = (m'n')/(2)
+
+= (mn)/2(g1g2)
+
+Now, 
+
+---------------------
+
+Case 1 - if K = 1 after dividing by g1 g2, then it means K = g1 g2. 
+
+Area = mn/2k ... In this case, we multiply numerator and denominator by 2.
+
+K was initially 2, so if K is 1 now, then it means either the m' or n' has been divided by some number. 
+
+So, we pick (0, 0) (2m', 0) (0, n') or (0, 0), (m', 0), (0, 2n') whichever is within the limits.
+
+---------------------------------
+
+Case 2 - K = 2 after dividing by g1g2 then it means K = 2g1g2
+
+Then area = (mn)/k .. .There is nothing further to do.
