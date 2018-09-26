@@ -57,7 +57,7 @@ Case 1 - if K = 1 after dividing by g1 g2, then it means K = g1 g2.
 
 Area = mn/2k ... In this case, we multiply numerator and denominator by 2.
 
-K was initially 2, so if K is 1 now, then it means either the m' or n' has been divided by some number. 
+K was initially at least 2, so if K is 1 now, then it means either the m' or n' has been divided by some number. 
 
 So, we pick (0, 0) (2m', 0) (0, n') or (0, 0), (m', 0), (0, 2n') whichever is within the limits.
 
