@@ -1,3 +1,5 @@
+Blog Link - http://qr.ae/TUGuqG
+
 Let us do this ... Firstly, calculate the volumes of all the cylinders. 
 
 Let the volumes be v_1, v_2, ... , v_n
