@@ -1,0 +1,40 @@
+Let us solve this recursively. 
+
+To know if it is possible to do so in x weighings, 
+
+all we need to do is keep track of the current move and check if it's possible to do so in x-1 weighings. 
+
+-----------------------
+
+Let f(n, last, difference) denote whether or not it is possible to complete the process with n weighings with the difference between left and right pans = difference.
+
+-------------------
+
+For our next move, we make all legal moves and update the difference accordingly. 
+
+int possible(int difference, int current_weigh_no, int no_of_weighs)
+{
+    if(current_weigh_no > no_of_weighs)
+    {
+        return true;
+    }
+
+    int previous_weight = answer[current_weigh_no - 1];
+
+    for(int next_weight = difference + 1; next_weight <= MAX_WEIGHT; next_weight++)
+    {
+        if(available[next_weight] && next_weight != previous_weight)
+        {
+            answer[current_weigh_no] = next_weight;
+
+            if(possible(next_weight - difference, current_weigh_no + 1, no_of_weighs))
+            {
+                return true;
+            }
+        }
+    }
+
+    return false;
+}
+
+-----------------------------
