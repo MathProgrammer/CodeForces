@@ -1,0 +1,77 @@
+Let us do this ... Firstly, calculate the volumes of all the cylinders. 
+
+Let the volumes be v_1, v_2, ... , v_n
+
+for(int i = 1; i <= no_of_cylinders; i++)
+    {
+        int radius, height;
+        scanf("%d %d", &radius, &height);
+
+        const double PI = 3.14159;
+
+        volume[i] = (PI*radius*radius*1LL*height);
+        sorted_volume[i] = volume[i];
+    }
+
+-----------------------------
+
+Let us sort the volumes and give each volume a rank indicating it's position in the sorted list. 
+
+    sort(all(sorted_volume));
+
+    map <double, int> rank;
+    for(int i = 1; i <= no_of_cylinders; i++)
+        rank[sorted_volume[i]] = i;
+
+---------------------------
+
+Now, let f(i) represent the maximum volume possible if the last cylinder used was the one with RANK i.
+
+Then what is the recurrence for i ? 
+
+f(i) = V(i) + max{f(j)}
+
+where 
+
+1. j < i
+2. V(j) < V(i)
+
+In other words, 
+
+1. j < i
+2. Rank(V(j)) < Rank(V(i))
+
+How do we find out this j ? We can obviously do so in O(n^2) time. But, that will not fit in the time limit and there is a more insightful way of doing it !
+
+Let us maintain a maximum segment tree over an array Z.  
+
+1. Process the volumes in the order that it is given. 
+2. After processing, insert f(i) into Z at the position Rank(V(i)). 
+Z[Rank(V(i))] = f(i)
+
+We will add f(i) = V(i) + max{Z[1, ... , Rank[V(i)] - 1]}
+
+We know that this is the j we want because 
+
+1. j < i because we have processed V(j) already and inserted it into Z. 
+2. Rank(V(j)) < Rank(V(i)) because we are only searching in that range.
+3. Among all such j which satsifies both conditions, we have chosen the one that maximises f(i).
+
+map <double, double> answer_with_last;
+
+    for(int i = 1; i <= no_of_cylinders; i++)
+    {
+        answer_with_last[volume[i]] = volume[i] + get_max(1, 1, no_of_cylinders, 1, rank[volume[i]] - 1);
+
+        insert(1, 1, no_of_cylinders, answer_with_last[volume[i]], rank[volume[i]]);
+    }
+
+--------------------------
+
+Now, the answer is the maximum value of f(i) in the array.
+
+double answer = 0;
+
+for(int i = 1; i <= no_of_cylinders; i++)
+    answer = max(answer, answer_with_last[volume[i]]);
+
