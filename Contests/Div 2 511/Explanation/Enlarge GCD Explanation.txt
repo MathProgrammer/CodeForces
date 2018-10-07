@@ -1,0 +1,51 @@
+Every integer is divisible by the gcd - g. 
+
+We want to look for the largest set of integers which have an additional common factor. Suppose it is x. Then all numbers are divisible by g and by x.
+
+If all numbers are divisible by some common factor x, then they all must have some common prime factor p. 
+
+
+We look for the largest set of integers which are divisible by (gp), for some prime p. 
+
+Now, we can't just look for a prime p which has the largest number of multiples as it is ... Because p might be a factor of g. 
+
+--------------
+
+Step 1 - Divide all integers by their gcd g. 
+
+int array_gcd = 0;
+    vector <int> A(no_of_elements + 1);
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        scanf("%d", &A[i]);
+
+        array_gcd = gcd(array_gcd, A[i]);
+    }
+
+------------------
+
+Step 2 - Now you have N coprime numbers. Look for the largest set of integers which have some common prime factor - p.
+
+We can't factorise every integer. 
+
+Go through every prime, and find out the number of multiples it has. 
+
+The prime which has the largest number of multiples in the set is the one we want. 
+
+int max_set_with_same_gcd = 0;
+    vector <int> is_prime(MAX_NUM + 1, true);
+    for(int i = 2; i <= MAX_NUM; i++)
+    {
+        if(!is_prime[i]) continue;
+
+        int no_of_i_multiples = 0;
+
+        for(int multiple = i; multiple <= MAX_NUM; multiple += i)
+        {
+            no_of_i_multiples += frequency[multiple];
+
+            is_prime[multiple] = false;
+        }
+
+        max_set_with_same_gcd = max(max_set_with_same_gcd, no_of_i_multiples);
+    }
