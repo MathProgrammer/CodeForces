@@ -1,0 +1,36 @@
+Now from a given number i, we can only move to squares which have higher number. 
+
+This suggests there is optimal substructure. 
+
+Winner[n] = 2, since you can't move. 
+
+-------------
+
+Insight - If Player 1, makes a move from i, and places it on token j, then she becomes Player 2 for game i
+
+----------------
+
+From a given point, check all legal moves to see if any legal move leads to a position that is winning for player 2. If so, make that move. 
+
+Else, second player will win that position.
+
+---------------------------
+
+vector <int> winner(no_of_elements + 1, 2);
+    for(int i = no_of_elements; i >= 1; i--)
+    {
+        for(int step = i; step <= no_of_elements; step += i)
+        {
+            int backward_square = (position[i] - step);
+            if(backward_square > 0 && A[backward_square] > i && winner[backward_square] == 2)
+            {
+                winner[position[i]] = 1;
+            }
+
+            int forward_square = (position[i] + step);
+            if(forward_square <= no_of_elements && A[forward_square] > i && winner[forward_square] == 2)
+            {
+                winner[position[i]] = 1;
+            }
+        }
+    }
