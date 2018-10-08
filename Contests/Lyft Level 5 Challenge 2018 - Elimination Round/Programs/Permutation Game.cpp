@@ -20,15 +20,15 @@ int main()
     vector <int> winner(no_of_elements + 1, 2);
     for(int i = no_of_elements; i >= 1; i--)
     {
-        for(int multiple = i; multiple <= no_of_elements; multiple += i)
+        for(int step = i; step <= no_of_elements; step += i)
         {
-            int backward_square = (position[i] - multiple);
+            int backward_square = (position[i] - step);
             if(backward_square > 0 && A[backward_square] > i && winner[backward_square] == 2)
             {
                 winner[position[i]] = 1;
             }
 
-            int forward_square = (position[i] + multiple);
+            int forward_square = (position[i] + step);
             if(forward_square <= no_of_elements && A[forward_square] > i && winner[forward_square] == 2)
             {
                 winner[position[i]] = 1;
