@@ -1,0 +1,19 @@
+The number N = A^2 - B^2
+
+N = (A - B)(A + B)
+
+
+This is always composite unless one of these two terms = 1 and the other is prime. 
+
+Now only A - B can be = 1, because both are positive integers. 
+
+All we need to check is if A + B = 1
+
+----------------------------------------
+
+void solve()
+{
+    long long a, b;
+    scanf("%I64d %I64d", &a, &b);
+    printf(a - b == 1 && is_prime(a + b) ? "YES\n" : "NO\n");
+}
