@@ -1,0 +1,123 @@
+Let us keep track of the exponent of every prime we encounter. 
+
+We know that if N = p^n1 p2^n2 ... 
+
+No of factors = (n1 + 1)(n2 + 1) ... 
+
+Case 1 - The number has either 3 or 5 factors. 
+
+Only perfect squares have an odd number of factors. 
+
+So this means the number is of the form p^2 or p^4
+
+So, we will check whether the number is a perfect square. 
+
+If yes, then check if it is a perfect fourth power. Update the exponent accordingly.
+
+long long root = (long long) sqrt(A[i]);
+
+        if(root*root == A[i]) //Perfect square. Either 3 or 5 factors
+        {
+            long long fourth_root = (long long) sqrt(root);
+
+            if(fourth_root*fourth_root == root) //A[i] = p^4
+            {
+                prime_exponent[fourth_root] += 4;
+            }
+            else
+            {
+                prime_exponent[root] += 2; //A[i] = p^2
+            }
+
+            factorised[i] = true;
+        }
+
+-------------------------
+
+Case 2 - N has 4 factors
+
+Now, we know that it is not a perfect square. 
+
+It is either of the form pq or p^3 since 4 = 2x2 = 4x1
+
+Let us check all prime numbers till 10^6
+
+Case 2a - N has a factor less than 10^6. 
+
+Check if N is of the form pq or p^3 and update the exponent accordingly
+
+Case 2b - N has no factor smaller than 10^6
+
+N has to be of the form pq, since if it was p^3 with all three factors > 10^6, then N > 10^{18}
+
+Let us check if N has any common factors with any of the other numbers by finding it's gcd. 
+
+Case 2bi
+If it does, then we can factorise N
+
+
+Case 2bii
+Else, if N = pq and N occurs f times. The number of factors increases by (f + 1)(f + 1) ... [Since both p and q occur f times].
+Note that in this case, we don't need to explicitly know the values of p and q.
+
+------------------
+
+long long factor_1 = 0, factor_2 = 0;
+
+            for(int p = 0; p < primes.size(); p++)
+            {
+                if(A[i]%primes[p] == 0)
+                {
+                    factor_1 = primes[p];
+
+                    if(factor_1*factor_1*factor_1 == A[i]) // A[i] = p^3
+                    {
+                        prime_exponent[factor_1] += 3;
+                    }
+                    else
+                    {
+                        prime_exponent[factor_1]++;
+                        prime_exponent[A[i]/factor_1]++;
+                    }
+
+                    factorised[i] = true;
+                    break;
+                }
+            }
+
+            if(!factorised[i])
+            {
+                for(int j = 1; j <= no_of_numbers; j++)
+                {
+                    if(gcd(A[j], A[i]) > 1 && gcd(A[i], A[j]) < A[i])
+                    {
+                        factor_1 = gcd(A[i], A[j]);
+                        factor_2 = A[i]/factor_1;
+
+                        prime_exponent[factor_1]++;
+                        prime_exponent[factor_2]++;
+
+                        factorised[i] = true;
+                        break;
+                    }
+                }
+            }
+
+            int frequency = 0;
+            if(!factorised[i])
+            {
+                for(int j = 1; j <= no_of_numbers; j++)
+                {
+                    if(A[i] == A[j])
+                    {
+                        frequency++;
+
+                        factorised[j] = true;
+                    }
+                }
+            }
+
+            if(factor_1 == 0 && factor_2 == 0) //Two new factors
+                no_of_divisors = (no_of_divisors*(frequency + 1)*(frequency + 1))%MOD;
+        }
+

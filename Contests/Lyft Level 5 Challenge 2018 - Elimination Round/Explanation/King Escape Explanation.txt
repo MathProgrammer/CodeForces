@@ -1,0 +1,17 @@
+If the queen is in between the king and the target, then the king can never reach the target square as an entire row or column is blocked. 
+
+However, otherwise the king can always reach his target since an entire row/column can't be blocked. There will always be squares.
+
+----------------
+
+int main()
+{
+    int n, queen_x, queen_y, king_x, king_y, center_x, center_y;
+    scanf("%d %d %d %d %d %d %d", &n, &queen_x, &queen_y, &king_x, &king_y, &center_x, &center_y);
+
+    int queen_middle_x = in_middle(king_x, queen_x, center_x);
+    int queen_middle_y = in_middle(king_y, queen_y, center_y);
+
+    printf(queen_middle_x || queen_middle_y ? "NO\n" : "YES\n");
+    return 0;
+}
