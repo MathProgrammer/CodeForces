@@ -1,0 +1,28 @@
+It is always optimal to use the largest coin size we have at the current moment. 
+
+Suppose we don't use coin x, we will have to use more coins of size y < x ... Since y is a divisor of x.
+
+So, let us be greedy and do it in O(N log N) time. 
+
+-------------------
+
+void solve(map <int, int> &frequency)
+{
+    int target;
+    scanf("%d", &target);
+
+    int coins_used = 0;
+
+    for(int bit = 30; bit >= 0; bit--)
+    {
+        if(frequency[1 << bit] == 0) continue;
+
+        int coins_used_here = min(frequency[(1 << bit)], target/(1 << bit));
+
+        target = target - coins_used_here*(1 << bit);
+
+        coins_used += coins_used_here;
+    }
+
+    printf("%d\n", target > 0 ? -1 : coins_used);
+}
