@@ -1,0 +1,19 @@
+The maximum amount of money that can be spent = Money/c
+
+These many candies are paid for. 
+
+For every 'a' free candies, 'b' free candies are gotten.
+
+-------------------
+
+void solve()
+{
+    long long money, a, b, cost;
+    cin >> money >> a >> b >> cost;
+
+    long long paid_candies = (money/cost);
+    long long free_candies = (paid_candies/a)*b;
+
+    long long total_candies = paid_candies + free_candies;
+    cout << total_candies << "\n";
+}
