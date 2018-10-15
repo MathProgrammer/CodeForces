@@ -1,0 +1,49 @@
+Firstly, we need to print the modified array not just print the number of changes required. 
+
+So, we will keep track of the positions of each index of modulus. 
+
+That is we will know the indices of all the A[i]%m = x, 
+
+---------------------
+
+Now, we will make a pass from i = 0 to m - 1
+
+If any modulus occurs more than N/m times, then we will remove the excess indices and put them in 'extra'
+
+If any modulus occurs less than N/m times, we will remove from extra from the end [Since the ones in the end will be closer to the current modulus.] and put it here. 
+
+We need to do two passes, not one. (This is an unusual feature of this problem.)
+
+Because The first element might be deficient and the last may be in excess.
+
+-----------------------------
+long long no_of_changes = 0;
+    vector <int> extra;
+
+    for(int runs = 1; runs <= 2; runs++)
+    {
+        for(int i = 0; i < m; i++)
+        {
+            while(position[i].size() > target)
+            {
+                int index = position[i].back();
+
+                extra.push_back(index);
+
+                position[i].pop_back();
+            }
+
+            while(position[i].size() < target && extra.size() > 0)
+            {
+                int index = extra.back();
+
+                no_of_changes += (A[index]%m < i ? i - A[index]%m : m - A[index]%m + i);
+
+                A[index] += (A[index]%m < i ? i - A[index]%m : m - A[index]%m + i);
+
+                position[i].push_back(index);
+
+                extra.pop_back();
+            }
+        }
+    }
