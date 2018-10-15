@@ -1,0 +1,34 @@
+Now, let us try to minimise the number of isolated vertices. 
+
+We will connect 2 new vertices with each edge. 
+
+We need V/2 number of edges. 
+
+If we have less ... Then isolated = V - 2E
+
+What if we try to maximise it ?
+
+Let us have a fully connected component of as small size as possible. 
+
+A fully connected component of size k requires C(k, 2) edges. Use up edges greedily like this and see how many are remaining.
+
+-------------------------------------
+
+int main()
+{
+    long long vertices, edges;
+    cin >> vertices >> edges;
+
+    int minimum_isolated_vertices = max(0, vertices - 2*edges);
+
+    long long i = 0;
+    while(edges > 0 && choose_2(i) <= edges)
+        i++;
+
+    int fully_connected_component = (choose_2(i - 1) == edges ? i - 1 : i);
+    int maximum_isolated_vertices = vertices - fully_connected_component;
+
+    cout << minimum_isolated_vertices << " " << maximum_isolated_vertices << "\n";
+
+    return 0;
+}
