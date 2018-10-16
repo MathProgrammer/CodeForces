@@ -1,0 +1,59 @@
+#include <cstdio>
+#include <string>
+#include <algorithm>
+#include <vector>
+#include <iostream>
+
+#define all(v) (v).begin(), (v).end()
+using namespace std;
+
+int main()
+{
+    int n;
+    cin >> n;
+
+    vector <int> A(n);
+    for(int i = 0; i < n; i++) cin >> A[i];
+
+    sort(all(A));
+
+    vector <int> B(n);
+    for(int i = 0; i < n; i++) cin >> B[i];
+
+    sort(all(B));
+
+    long long answer = 0;
+
+    int a_ptr = n - 1, b_ptr = n - 1;
+
+    for(int i = 1; i <= 2*n; i++)
+    {
+        if(i%2 == 1) //A's turn
+        {
+            if(b_ptr < 0 || (a_ptr >= 0 && A[a_ptr] >= B[b_ptr]))
+            {
+                answer += A[a_ptr--];
+            }
+            else
+            {
+                b_ptr--;
+            }
+        }
+        else if(i%2 == 0) //B's turn
+        {
+            if(a_ptr < 0 || (b_ptr >= 0 && B[b_ptr] >= A[a_ptr]) )
+            {
+                answer -= B[b_ptr--];
+            }
+            else
+            {
+                a_ptr--;
+            }
+        }
+    }
+
+    cout << answer;
+
+    return 0;
+}
+
