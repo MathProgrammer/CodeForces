@@ -1,0 +1,56 @@
+Every integer smaller than m has some matching prefix, and then has a 0 where m has a 1. 
+
+For example if m = 100010010
+
+Then Some numbers will have same first four bits and fifth bits = 0
+
+10000 ..... and can have anything after that.
+
+Since all the numbers are positive integers. 
+
+We will set a 1 to a 0 and then activate all integers after that. 
+
+So in this case, we will check
+
+011111111
+100001111
+100010001
+
+And of course, we will have to check m itself !
+
+-------------------------
+
+int main()
+{
+    int n;
+    scanf("%d", &n);
+
+    vector <int> A(n + 1);
+    for(int i = 1; i <= n; i++)
+        scanf("%d", &A[i]);
+
+    vector <long long> prefix_sum(n + 1, 0);
+    for(int i = 1; i <= n; i++)
+        prefix_sum[i] = prefix_sum[i - 1] + A[i];
+
+    const int MAX_N = 1e5 + 5;
+    char S[MAX_N];
+    scanf("%s", S + 1);
+
+    long long answer = 0, set_bit_sum = 0;
+
+    for(int i = n; i > 0; i--)
+    {
+        if(S[i] == '1')
+        {
+            answer = max(answer, set_bit_sum + prefix_sum[i - 1]);
+
+            set_bit_sum += A[i];
+        }
+    }
+
+    answer = max(answer, set_bit_sum);
+
+    printf("%I64d\n", answer);
+    return 0;
+}
