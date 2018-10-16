@@ -1,0 +1,34 @@
+It is always optimal to print chunks of each character together. 
+
+(One way of doing this is by simply sorting the string.)
+
+-----------
+
+Why is it optimal ?
+
+Every palindrome will have at least two characters.
+
+Suppose a certain character occurs f times. 
+
+Then it can be involved in at most C(f, 2) + C(f, 1) = f(f + 1)/2  palindromes.
+
+We get C(f, 2) whenever this character is the end points of any palindrome
+We get C(f, 1) whenever we have a 1-character palindrome.
+
+
+When they are all printed together there will be f(f + 1)/2 palindromes. 
+
+Palindrome of length 1, 2, 3, ... , f
+
+-----------------------------
+
+int main()
+{
+    string S;
+    int length;
+    cin >> length >> S;
+
+    sort(S, S + length);
+    printf("%s\n", S);
+    return 0;
+} 

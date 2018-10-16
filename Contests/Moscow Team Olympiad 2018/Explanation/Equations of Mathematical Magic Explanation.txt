@@ -1,0 +1,53 @@
+We want all x that satisfy the following equation - 
+
+a - x = a^x
+
+Let us look at a from the last bit onwards
+
+Suppose the last bit of a is 1, then the last bit of x can 1
+
+1 - 1 = 1^1 = 0
+
+It can also be 0 
+
+1 - 0 = 1^0 = 1
+
+What if the last bit of a is 0 ?
+
+Then last bit of x can be 0
+
+0 - 0 = 0^0 = 0
+
+Suppose the last bit of a is 0 and the last bit of x is 1. What happens ?
+
+Let us look at the leftmost 1 in a. All the bits till this leftmost 1 are toggled. 
+
+For example if fifth bit is the leftmost 1 and after that there are 4 0s. 
+
+If we subtract 1 from the first bit, the the other four bits in A are toggled. 
+
+Now whatever the value of x is for bits 2, 3, 4, 5 ... A - x cannot be equal to A^x because the bits of A are different here now. 
+
+---------------
+
+Hence, there are two possibilites for every 1 and only one possibility for every 0.
+
+---------------------------------------------
+
+void solve()
+{
+    int n;
+    scanf("%d", &n);
+
+    long long no_of_ways = 1;
+
+    while(n)
+    {
+        if(n%2 == 1)
+            no_of_ways = no_of_ways << 1;
+
+        n = n >> 1;
+    }
+
+    printf("%I64d\n", no_of_ways);
+}
