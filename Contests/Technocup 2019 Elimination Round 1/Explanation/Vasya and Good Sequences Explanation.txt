@@ -1,0 +1,47 @@
+Fact - If the number of 1's in the range is odd, or if any number has more than half the number of 1s in the range, it is not possible. 
+
+Proof - If there are an odd number of 1s clearly, there will always be at least one 1 left over. 
+
+If one number has more than half the number of 1s, then there will always be some 1s in it that are left over. 
+
+-----------------------------------------------------
+
+Fact - This condition is necessary, but it is also sufficient. 
+
+Proof - Let us place exactly two 1s in each bit position. 
+
+For example, the first position from the left has exactly 2 ones. 
+The second position has exactly 2 ones. 
+The third has exactly 2 ones. 
+
+And so on.
+
+-----------------------
+
+How do we do this ? 
+
+First we count all ranges, where the sum is even. 
+
+long long good_sequences = 0;
+    long long odd_sums = 0;
+    long long even_sums = 1;
+
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        if(sum[i]%2 == 0)
+        {
+            good_sequences += even_sums;
+
+            even_sums++;
+        }
+        else
+        {
+            good_sequences += odd_sums;
+
+            odd_sums++;
+        }
+    }
+
+---------------------------------
+
+Now, we have to discount the number of ranges where
