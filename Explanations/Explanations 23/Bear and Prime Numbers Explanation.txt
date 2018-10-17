@@ -1,0 +1,39 @@
+The numbers are only until 10^7. 
+
+For each prime till 10^7, keep track of it's number of multiples. 
+
+Don't do this by factorising each integer. Rather go over all it's multiples frequencies. Similar to sieving.
+
+vector <int> no_of_multiples(MAX_N + 1, 0);
+    for(int i = 1; i <= MAX_N; i++)
+    {
+        if(!is_prime[i]) continue;
+
+        for(int multiple = i; multiple <= MAX_N; multiple += i)
+        {
+            no_of_multiples[i] += frequency[multiple];
+        }
+    }
+
+-----------------------------
+
+Now build a prefix sum for this. Answer queries in O(1) time. 
+
+vector <int> answer(MAX_N + 1, 0);
+    for(int i = 1; i <= MAX_N; i++)
+        answer[i] = answer[i - 1] + no_of_multiples[i];
+
+-------------------------
+
+There's a catch. Both left and right should be at most 10^7, not 10^9. Because all the numbers are guaranteed to be less than 10^7.
+
+    while(no_of_queries--)
+    {
+        int left, right;
+        scanf("%d %d", &left, &right);
+
+        right = min(right, MAX_N);
+        left = min(left, MAX_N);
+
+        printf("%d\n", answer[right] - answer[left - 1]);
+    }
