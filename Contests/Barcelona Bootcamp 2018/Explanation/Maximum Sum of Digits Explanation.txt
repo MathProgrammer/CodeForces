@@ -1,0 +1,25 @@
+We try to maximise the number of 9s in the digit sum 
+
+
+Let A = all 9s except the first digit. 
+
+B = N - A
+
+-----------------------
+
+int main()
+{
+    string N;
+    cin >> N;
+
+    string A;
+    A = N[0] - 1;
+    for(int i = 1; i < N.size(); i++)
+        A += '9';
+
+    long long n = to_int(N), a = to_int(A);
+    long long b = n - a;
+
+    cout << digit_sum(a) + digit_sum(b);
+    return 0;
+}
