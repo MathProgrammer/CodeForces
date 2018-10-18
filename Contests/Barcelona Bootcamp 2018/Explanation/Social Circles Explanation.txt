@@ -1,0 +1,48 @@
+Let us imagine everyone is sitting at their own table at first. 
+
+They will need max(l, r) + 1 chairs. 
+
+Now, what happens if we want to combine first and second person to one table. 
+
+We will need ... Max(l[1], r[2]) + Max(l[2], r[1]) + 2
+
+This is equal to = Max(l[1], r[2]) + 1 + Max(l[2], r[1]) + 1 chairs. 
+
+This is equal to what happens when there is a new person (l[1], r[2]) is sitting on his own table. 
+
+------------------------------------
+
+Let Next(i) be the person sitting next to person i
+
+Now the number of chairs will be equal to 
+
+N + sum[max{Left(i), Right(Next(i))}]
+
+Now we will prove that it is always optimal to match the smallest left to the smallest right. 
+
+If we have matched l2 to r1 and l1 to something else - rx, 
+
+Note that we cannot get more chairs by swapping and matching (l1, r1) and (l2, rx)
+
+----------------------------
+
+
+int main()
+{
+    int no_of_guests;
+    scanf("%d", &no_of_guests);
+
+    vector <int> left(no_of_guests + 1, 0), right(no_of_guests + 1, 0);
+    for(int i = 1; i <= no_of_guests; i++)
+        scanf("%d %d", &left[i], &right[i]);
+
+    sort(all(left));
+    sort(all(right));
+
+    long long no_of_chairs = 0;
+    for(int i = 1; i <= no_of_guests; i++)
+        no_of_chairs += max(left[i], right[i]) + 1;
+
+    printf("%I64d\n", no_of_chairs);
+    return 0;
+}
