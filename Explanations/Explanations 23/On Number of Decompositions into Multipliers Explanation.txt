@@ -1,0 +1,52 @@
+Let us notice that if N is a prime number we can't break it down further and can only assign it to one of k places. 
+
+------------------------
+
+If N = p^m, 
+
+Then it is equal to the number of ways of writing m as the result of m summands. 
+
+This is like stars and bars. 
+
+The answer is C(m + k - 1, k - 1)
+
+----------------------------------
+
+Each prime is independent.
+
+We will break down N into it's prime factors and solve seperately for each prime exponent.
+
+--------------------------------
+
+int main()
+{
+    sieve();
+    precompute();
+
+    int no_of_elements;
+    cin >> no_of_elements;
+
+    map <int, int> prime_exponents;
+
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        int element;
+        cin >> element;
+
+        factorise(element, prime_exponents);
+    }
+
+    const int MOD = 1e9 + 7;
+    long long answer = 1;
+    for(map <int, int> :: iterator it = prime_exponents.begin(); it != prime_exponents.end(); it++)
+    {
+        int exponent = it->second;
+
+        answer *= choose(no_of_elements + exponent - 1, no_of_elements - 1);
+
+        answer %= MOD;
+    }
+
+    cout << answer;
+    return 0;
+}
