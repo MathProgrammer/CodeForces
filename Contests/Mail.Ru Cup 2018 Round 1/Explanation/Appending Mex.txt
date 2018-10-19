@@ -1,0 +1,45 @@
+Initially, the mex = 0
+
+At each step, 
+
+Case 1 - Element > mex
+
+This is not possible as the element has to be at most the Mex. 
+
+If this happens, it's a mistake. Stop.
+
+Case 2 - Element = mex
+
+Then, mex is not mex + 1
+
+Case 3 - Element < mex
+
+This is allowed. Just move on to the next step.
+
+----------------------------------------------------
+
+int main()
+{
+    int no_of_elements;
+    cin >> no_of_elements;
+
+    int mex_so_far = 0;
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        int element;
+        cin >> element;
+
+        if(element > mex_so_far)
+        {
+            cout << i;
+            return 0;
+        }
+        else if(element == mex_so_far)
+        {
+            mex_so_far++;
+        }
+    }
+
+    cout << "-1";
+    return 0;
+}
