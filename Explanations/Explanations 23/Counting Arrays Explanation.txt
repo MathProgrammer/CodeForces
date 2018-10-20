@@ -1,0 +1,33 @@
+Firstly, let us try to count the number of ways to factorise into positive integers. 
+
+This is equal to the number of ways of distributing each prime factor into y factors. 
+
+We use stars and bars for each prime. 
+
+int x, no_of_summands;
+    cin >> x >> no_of_summands;
+
+    map <int, int> prime_exponents;
+    factorise(x, prime_exponents);
+
+    long long answer = 1;
+    for(map <int, int> :: iterator it = prime_exponents.begin(); it != prime_exponents.end(); it++)
+    {
+        int exponent = it->second;
+
+        answer *= choose(no_of_summands + exponent - 1, no_of_summands - 1);
+
+        answer %= MOD;
+    }
+
+-----------------------------
+
+Now, after this we need to make an even number of integers even. 
+
+C(n, 0) + C(n, 2) + ... C(n, 2m), where 2m <= n and 2m + 1 >= n
+
+This is equal to 2^{n - 1}
+
+long long ways_to_distribute_signs = power_mod(2, no_of_summands - 1);
+
+    answer = (answer*ways_to_distribute_signs)%MOD;%= MOD;
