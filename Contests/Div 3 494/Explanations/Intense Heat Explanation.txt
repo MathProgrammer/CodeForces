@@ -31,3 +31,46 @@ int main()
     printf("%.12f\n", best);
     return 0;
 }
+
+#### My Changes,
+Approach 2:
+We can also use sliding window technique to solve this question.We can keep on calculating the size of various subarrays of size k where(k<=n) and finally we select the max from each segment and then compare the various size subarrays and keep on inserting them in a vector. At the end we sort the vector and print the last element.
+
+My code:
+#include<bits/stdc++.h>
+using namespace std;
+typedef long long int ll;
+#define MAX 1000000007
+#define pb push_back		
+
+int main()
+{   ios_base::sync_with_stdio(false);
+	long double t,i,ans=0,n,j,k,c=0,index,pos,maxsum=0,sum=0;
+	cin>>n>>k;
+	vector<long double>v(n);
+	vector<long double>avg;
+	for(i=0;i<n;i++)
+	{
+		cin>>v[i];
+	}
+	while(k<=n)         // segments greater than equal to k consecutive days
+	{
+		long double sum=0;
+		long double temp=0;
+		for(i=0;i<k;i++)
+		{
+			sum+=v[i];
+		}
+		maxsum=sum;
+		for(i=k;i<n;i++)      // sliding window
+		{
+			sum+=v[i]-v[i-k];
+			maxsum=max(maxsum,sum);
+		}
+		temp=maxsum/k;     // calculating average of max temp over segment of length k
+		avg.pb(temp);
+		k++;
+	}
+	sort(avg.begin(),avg.end());
+	cout<<fixed<<setprecision(10)<<avg[avg.size()-1]<<'\n';
+}
