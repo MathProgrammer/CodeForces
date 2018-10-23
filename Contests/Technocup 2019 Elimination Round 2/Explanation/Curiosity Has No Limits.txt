@@ -1,0 +1,35 @@
+There are only four values each can take. 
+
+Let us first set T[n] = 0, 
+
+Then check if there's any number existing such that 
+
+x|T[n] = A[n - 1] and x&T[n - 1] = B[n - 1]
+
+If there is, check if there's any possibile value for T[n - 2] and so on. 
+
+Here is a recurisve way of doing it - 
+
+-----------------
+
+int is_possible(vector <int> &T, vector <int> &A, vector <int> &B, int n)
+{
+    if(n == 0)
+        return true;
+
+    for(int ele = 0; ele <= 3; ele++)
+    {
+        T[n] = ele;
+
+        if((T[n]|T[n + 1]) == A[n] && (T[n]&T[n + 1]) == B[n])
+        {
+            if(is_possible(T, A, B, n - 1))
+                return true;
+        }
+    }
+
+    return false;
+}
+
+------------------------------
+
