@@ -1,0 +1,21 @@
+The total displacement towards right is positive, and left is negative. 
+
+The answer is their difference.
+
+All we need to do is calculate the number of jumps in either direction and then the displacement in both directions.
+
+
+void solve()
+{
+    long long left_jump, right_jump, total_jumps;
+    cin >> right_jump >> left_jump >> total_jumps;
+
+    long long no_of_right_jumps = total_jumps/2 + total_jumps%2;
+    long long no_of_left_jumps = total_jumps/2;
+
+    long long right_distance = no_of_right_jumps*right_jump;
+    long long left_distance = no_of_left_jumps*left_jump;
+
+    long long distance = right_distance - left_distance;
+    cout << distance << "\n";
+}
