@@ -1,0 +1,40 @@
+Case 1 -  n is even
+ 
+The smallest divisor is 2. We subtract 2 and the smallest divisor is always 2. So the answer is simply n/2. 
+
+Case 2 - n is odd, 
+
+Then we subtract the smallest odd divisor from n. This makes n even and the problem is reduced the Case 1
+
+Answer = 1 + (n - p)/2, where p is the smallest prime factor of n
+
+-----------
+
+int main()
+{
+    long long n;
+    cin >> n;
+
+    const long long NOT_FOUND = 0;
+    long long smallest_odd_prime_factor = NOT_FOUND;
+    if(n%2 == 1)
+    {
+        for(long long i = 3; i*i <= n; i++)
+        {
+            if(n%i == 0)
+            {
+                smallest_odd_prime_factor = i;
+                break;
+            }
+        }
+
+        if(smallest_odd_prime_factor == NOT_FOUND)
+            smallest_odd_prime_factor = n;
+    }
+
+    long long even_operations = (n - smallest_odd_prime_factor)/2;
+    long long no_of_operations = (n%2 == 1) + even_operations;
+
+    cout << no_of_operations;
+    return 0;
+}

@@ -1,0 +1,42 @@
+Now, we have two equations to solve - 
+
+a + b = d
+ab = d
+
+Now, we simply reduce it to one variable
+
+b(d - b) = d
+
+bd - b^2 = d
+
+b^2 - bd + d = 0
+
+---------------
+
+We solve this quadratic equation and print 10 decimal places.
+
+There is not solution only when d = 1.
+
+-----
+
+void solve()
+{
+    int d;
+    scanf("%d", &d);
+
+    if(d == 0)
+    {
+        printf("Y 0.000000 0.000000\n");
+    }
+    else if(d*d - 4*d < 0)
+    {
+        printf("N\n");
+    }
+    else
+    {
+        double b = (d + sqrt(d*d - 4*d))/2;
+        double a = b/(b - 1);
+
+        printf("Y %.10f %.10f\n", a, b);
+    }
+}
