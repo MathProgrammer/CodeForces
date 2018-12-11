@@ -1,0 +1,54 @@
+The sum of the prime exponents of numbers in both A and B should be a multiple of 3. 
+
+Let A win X points in total and let B win Y points in total. 
+
+Then A = X^2 Y and B = X^2 Y
+
+Now we notice that AB = (XY)^3
+
+We can compute the first million cubes to find the cube roots till 10^{18}.
+
+After finding XY = (AB)^(1/3)
+
+A = X (XY) and B = Y (XY)
+
+Now we can simply find X and Y and then we check if the A and B are consistent.
+
+----------------
+
+int main()
+{
+    int no_of_people, distinct_targets;
+    scanf("%d %d", &no_of_people, &distinct_targets);
+
+    vector <int> A(no_of_people + 1);
+    for(int i = 1; i <= no_of_people; i++)
+        scanf("%d", &A[i]);
+
+    vector <int> time(no_of_people + 1);
+    for(int i = 1; i <= no_of_people; i++)
+        scanf("%d", &time[i]);
+
+    map <int, int> max_time_for_task;
+    vector <int> free_time;
+    for(int i = 1; i <= no_of_people; i++)
+    {
+        if(max_time_for_task[A[i]] != 0)
+            free_time.push_back(min(time[i], max_time_for_task[A[i]]));
+
+        max_time_for_task[A[i]] = max(max_time_for_task[A[i]], time[i]);
+    }
+
+    sort(all(free_time));
+
+    int distinct_numbers = max_time_for_task.size();
+    int required_new_distinct_numbers = distinct_targets - distinct_numbers;
+
+    long long total_time = 0;
+    for(int i = 0; i < required_new_distinct_numbers; i++)
+        total_time += free_time[i];
+
+    printf("%I64d\n", total_time);
+    return 0;
+}
+
