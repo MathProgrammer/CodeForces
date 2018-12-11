@@ -1,0 +1,53 @@
+We compute the answer for every range. 
+
+For every range [L, R], we find the answer for every alphabet. We can do this because there are only 26 alphabets. 
+
+Another thing to take care for is that f(c, r) = max{f(c, r), f(c, r - 1)}
+
+where f(c, r) is the length of the maximum substring of 'c' with at most r replacements.
+
+---------------
+
+int main()
+{
+    int length;
+    string S;
+    cin >> length >> S;
+
+    for(int ch = 0; ch < MAX_ALPHABETS; ch++)
+    {
+        for(int left = 0; left < length; left++)
+        {
+            int replacements = 0;
+
+            for(int right = left; right < length; right++)
+            {
+                replacements += (S[right] != 'a' + ch);
+
+                maximum_segment[ch][replacements] = max(maximum_segment[ch][replacements], right - left + 1);
+            }
+        }
+    }
+
+    for(int ch = 0; ch < MAX_ALPHABETS; ch++)
+    {
+        for(int replacements = 1; replacements <= length; replacements++)
+        {
+            maximum_segment[ch][replacements] = max(maximum_segment[ch][replacements], maximum_segment[ch][replacements - 1]);
+        }
+    }
+
+    int no_of_queries;
+    cin >> no_of_queries;
+
+    while(no_of_queries--)
+    {
+        int max_replacements;
+        char character;
+
+        cin >> max_replacements >> character;
+        cout << maximum_segment[character - 'a'][max_replacements] << '\n';
+    }
+
+    return 0;
+}
