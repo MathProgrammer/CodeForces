@@ -1,0 +1,47 @@
+1. Write a custom sort function that sorts strings by length. 
+
+int sort_by_length(const string &A, const string &B)
+{
+    return (A.size() < B.size());
+}
+
+--------
+
+2. If any S[i] is not a substring of S[i + 1], then we don't have a desireable order. 
+
+Let us suppose there is some j such that j > i + 1
+
+and S[i] is a substring of S[j] but not of S[i + 1].
+
+Then we have to put S[j] after S[i] and S[i + 1] after S[j]. Either way S[j] cannot be a substring of S[i + 1] because S[j] is longer. (If they are the same length, they are clearly not equal.)
+
+------------
+
+If every S[i] is a substring of S[i + 1], then the sorted order is the order we want. 
+
+int main()
+{
+    int no_of_strings;
+    cin >> no_of_strings;
+
+    vector <string> S(no_of_strings);
+    for(int i = 0; i < no_of_strings; i++)
+        cin >> S[i];
+
+    sort(all(S), sort_by_length);
+
+    for(int i = 1; i < no_of_strings; i++)
+    {
+        if(!substring_of(S[i], S[i - 1]))
+        {
+            cout << "NO\n";
+            return 0;
+        }
+    }
+
+    cout << "YES\n";
+    for(int i = 0; i < no_of_strings; i++)
+        cout << S[i] << "\n";
+
+    return 0;
+}
