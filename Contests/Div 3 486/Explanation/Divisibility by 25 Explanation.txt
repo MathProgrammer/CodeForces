@@ -1,0 +1,78 @@
+Check if it's possible to get all four suffixes. 
+
+Now, whether it is possible to get a given suffix can be done in better time complexity but it will cost more complexity in the code. 
+
+Here's what I did - 
+
+1. Iterate over every pair of digits and simulate making this pair the last two digits. 
+
+2. Check if the first digit is 0. If so, keep swapping it till the first digit becomes non-zero. 
+
+3. If the last two digits are the suffix we desire, then keep track of the number of moves we have used. We want the minimum number. 
+
+----
+
+int min_moves_for_suffix(string S, string suffix)
+{
+    int moves = oo;
+
+    for(int first = 0; first < S.size(); first++)
+    {
+        for(int second = 0; second < S.size(); second++)
+        {
+            if(first == second)
+                continue;
+
+            string N = S;
+            int moves_here = 0;
+
+            for(int i = first; i < N.size() - 1.; i++)
+            {
+                swap(N[i], N[i + 1]);
+                moves_here++;
+            }
+
+            //Second may have been disturbed by first
+            for(int i = second - (second > first); i < N.size() - 2; i++)
+            {
+                swap(N[i], N[i + 1]);
+                moves_here++;
+            }
+
+            int first_non_zero = 0;
+            while(N[first_non_zero] == '0')
+                first_non_zero++;
+
+            for(int i = first_non_zero; i > 0; i--)
+            {
+                swap(N[i], N[i - 1]);
+                moves_here++;
+            }
+
+            if(N[N.size() - 2] == suffix[0] && N[N.size() - 1] == suffix[1])
+                moves = min(moves, moves_here);
+        }
+    }
+
+    return moves;
+}
+
+-----------------------
+
+Now for a number to be a multiple of 25, it must have 1 of 4 suffixes.
+
+int main()
+{
+    string N;
+    cin >> N;
+
+    int minimum_moves = oo;
+
+    minimum_moves = min( min(min_moves_for_suffix(N, "25"), min_moves_for_suffix(N, "50")),
+                         min(min_moves_for_suffix(N, "75"), min_moves_for_suffix(N, "00")) );
+
+    cout << (minimum_moves >= oo ? -1 : minimum_moves);
+
+    return 0;
+}
+
