@@ -1,0 +1,92 @@
+1. For a moment, let us forget about the numbers 1, 2 and 3 and just focus on parity. For two vertices to have an odd sum, they must be of different parity. 
+
+2. For each vertex, we must connect a vertex of a different parity to it. 
+
+3. There are two ways of choosing the odd parity and one way of choosing an even number. 
+
+4. When we are given a graph, we must check if it is possible to treat this graph as a bipartite graph. In that case, each group will have one parity. 
+
+Note - If a graph is not bipartite, it will have a cycle of odd length. 
+
+5. If the component sizes are C1 and C2, then we can make the C1 component odd in 2^C1 ways and the C2 component odd in 2^C2 ways. Answer = 2^C1 + 2^C2
+
+----------------
+
+A few points I missed - 
+
+1. The graph is not necessarily connected. In that case, the above algorithm must be repeated for each connected component. 
+
+2. For each test case, don't clean all MAX_N points ... as that will time out, clean only n.
+
+3. To check if a graph is bipartite, do BFS. Paint a graph as red, and all of it's unpainted children as blue and all the blue's unpainted children red and so on. If there comes a point when a vertex and it's child have the same colour, the graph is not bipartite. 
+
+-------
+
+long long get_component_answer_bfs(int source)
+{
+    queue <int> Q;
+    Q.push(source);
+
+    colour[source] = 1;
+
+    vector <long long> component(2, 0);
+    component[colour[source]]++;
+
+    long long this_component_answer = 1;
+
+    while(!Q.empty())
+    {
+        int current_v = Q.front();
+
+        Q.pop();
+
+        for(int i = 0; i < graph[current_v].size(); i++)
+        {
+            int child_v = graph[current_v][i];
+
+            if(colour[child_v] == NOT_KNOWN)
+            {
+                colour[child_v] = get_complement(colour[current_v]);
+
+                component[colour[child_v]]++;
+
+                Q.push(child_v);
+            }
+            else if(colour[child_v] == colour[current_v]) //It's not bipartite
+            {
+                return 0;
+            }
+        }
+    }
+
+    this_component_answer = (power_mod(2, component[0]) + power_mod(2, component[1]))%MOD;
+
+    return this_component_answer;
+}
+
+void solve()
+{
+    int no_of_vertices, no_of_edges;
+    scanf("%d %d", &no_of_vertices, &no_of_edges);
+
+    for(int i = 1; i <= no_of_edges; i++)
+    {
+        int u, v;
+        scanf("%d %d", &u, &v);
+
+        graph[u].push_back(v);
+        graph[v].push_back(u);
+    }
+
+    long long answer = 1;
+
+    for(int i = 1; i <= no_of_vertices; i++)
+    {
+        if(colour[i] == NOT_KNOWN)
+            answer = (answer*get_component_answer_bfs(i))%MOD;
+    }
+
+    printf("%I64d\n", answer);
+
+    clean_for_next_query(no_of_vertices);
+}

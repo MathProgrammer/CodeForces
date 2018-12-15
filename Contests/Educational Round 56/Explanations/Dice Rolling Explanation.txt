@@ -1,0 +1,12 @@
+Obviously, there are many answers to this question. The simplest is ceil(n/7).
+
+---------------
+
+void solve()
+{
+    int target_score;
+    cin >> target_score;
+
+    int no_of_rolls = ceil(target_score, 7);
+    cout << no_of_rolls << "\n";
+}

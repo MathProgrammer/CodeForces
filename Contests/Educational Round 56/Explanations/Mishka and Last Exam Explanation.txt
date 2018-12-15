@@ -1,0 +1,62 @@
+We will be greedy. For each B[i], 
+
+1. Try to make A[i] as small as possible. The smallest possible value that A[i] can take on is A[i - 1]. 
+
+If A[i] = A[i - 1], then A[n - i + 1] = B[i] - A[i - 1]
+
+It is important to check if (B[i] - A[i - 1]) <= A[n - i + 1 + 1]
+
+If it is, then we are done
+
+A[i] = A[i - 1], 
+A[n - i + 1] = B[i] - A[i]
+
+2. If not, then we will make A[n - i + 1] as large as possible and then find A[i]
+
+A[n - i + 1] = A[n - i + 1 + 1]
+A[i] = B[i] - A[n - i + 1]
+
+3. We need not worry that both these situations won't occur as the question guarantees us this. 
+
+-----------------------------
+
+We are given that there is always an answer so we need not worry. This greedy algorithm ensures that A[i - 1] <= A[i] and A[i] <= A[i + 1]. We have maintained this invariant in building it. 
+
+If the answer weren't possible, then we would be getting negative integers at some point. 
+
+--------------
+
+int main()
+{
+    int no_of_elements;
+    scanf("%d", &no_of_elements);
+
+    vector <long long> B(no_of_elements/2 + 1);
+    for(int i = 1; i <= no_of_elements/2; i++)
+        scanf("%I64d", &B[i]);
+
+    vector <long long> A(no_of_elements + 2, 0);
+    int front = 0, back = no_of_elements + 1;
+
+    const long long oo = 2e18;
+    A[back] = oo;
+
+    for(int i = 1; i <= no_of_elements/2; i++)
+    {
+        if(B[i] - A[front] > A[back])
+        {
+            A[back - 1] = A[back]; back--;
+            A[front + 1] = B[i] - A[back]; front++;
+        }
+        else
+        {
+            A[front + 1] = A[front]; front++;
+            A[back - 1] = B[i] - A[front]; back--;
+        }
+    }
+
+    for(int i = 1; i <= no_of_elements; i++)
+        printf("%I64d ", A[i]);
+
+    return 0;
+}
