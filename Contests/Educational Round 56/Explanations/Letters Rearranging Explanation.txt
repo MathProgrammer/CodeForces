@@ -1,0 +1,38 @@
+Now, the only time when it is impossible to re-arrange a string to get a non-palindrome is when all characters are the same !
+
+If all characters are the same, then don't do anything. 
+
+Else, print any valid non-palindrome. 
+
+Now, there are many ways to do this. 
+
+But, here was my elegant solution. 
+
+1. Sort the string. 
+
+2. If the first and character are the same, it means all the characters are the same. 
+
+3. If they aren't then simply print the string in sorted order. 
+
+--------
+
+void solve()
+{
+    string S;
+    cin >> S;
+
+    sort(all(S));
+
+    cout << (S[0] == S[S.size() - 1] ? "-1" : S) << "\n";
+}
+
+int main()
+{
+    int no_of_queries;
+    cin >> no_of_queries;
+
+    while(no_of_queries--)
+        solve();
+
+    return 0;
+}
