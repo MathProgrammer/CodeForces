@@ -1,0 +1,16 @@
+Whatever N is, we can subtract with N - 1 and get 1. 
+
+The only exception is 2. Because it is the only integer for which N - 1 | N. 
+
+------------
+
+int main()
+{
+    int n;
+    cin >> n;
+
+    int minimum_value = (n <= 2 ? n : 1);
+    cout << minimum_value;
+
+    return 0;
+}
