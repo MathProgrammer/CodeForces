@@ -1,0 +1,50 @@
+We give each person (A[i] - Left[i] - Right[i]) and then perform an O(n^2) check. 
+
+
+------------------
+
+#include <cstdio>
+#include <vector>
+
+using namespace std;
+
+int main()
+{
+    int no_of_people;
+    scanf("%d", &no_of_people);
+
+    vector <int> left(no_of_people + 1);
+    for(int i = 1; i <= no_of_people; i++)
+        scanf("%d", &left[i]);
+
+    vector <int> right(no_of_people + 1);
+    for(int i = 1; i <= no_of_people; i++)
+        scanf("%d", &right[i]);
+
+    vector <int> candies(no_of_people + 1);
+    for(int i = 1; i <= no_of_people; i++)
+        candies[i] = no_of_people - left[i] - right[i];
+
+    for(int i = 1; i <= no_of_people; i++)
+    {
+        int left_greater = 0;
+        for(int j = 1; j < i; j++)
+            left_greater += (candies[j] > candies[i]);
+
+        int right_greater = 0;
+        for(int j = i + 1; j <= no_of_people; j++)
+            right_greater += (candies[j] > candies[i]);
+
+        if(left_greater != left[i] || right_greater != right[i])
+        {
+            printf("NO\n");
+            return 0;
+        }
+    }
+
+    printf("YES\n");
+    for(int i = 1; i <= no_of_people; i++)
+        printf("%d ", candies[i]);
+
+    return 0;
+}
