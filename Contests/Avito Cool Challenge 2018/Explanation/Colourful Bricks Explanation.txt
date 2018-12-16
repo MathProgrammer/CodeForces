@@ -1,0 +1,24 @@
+Blog Link - https://qr.ae/TUtWEt
+
+The number of ways of making the K + 1 groups is given by stars and bars - C(N - 1, K)
+
+The number of ways to colour them is M (M - 1)^K
+
+---------------
+
+int main()
+{
+    int no_of_bricks, no_of_colours, no_of_divisions;
+    scanf("%d %d %d", &no_of_bricks, &no_of_colours, &no_of_divisions);
+
+    int no_of_groups = no_of_divisions + 1;
+
+    const int MOD = 998244353;
+    long long group_size_count = choose(no_of_bricks - 1, no_of_divisions, MOD);
+    long long colour_distribution_count = (no_of_colours* power_mod(no_of_colours - 1,no_of_groups - 1, MOD))%MOD;
+
+    long long answer = (group_size_count*colour_distribution_count)%MOD;
+
+    printf("%I64d\n", answer);
+    return 0;
+}
