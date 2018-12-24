@@ -1,0 +1,47 @@
+Let f(i) denote the number of sequences if A[i] is the first element. 
+
+If A[i] <= 0, then f(i) = 0
+
+Otherwise, we have to count the number of ways of choosing A[i] elements from [i + 1, ... , j] x f(j). 
+
+Ultimately, we have to sum f(i) for all i.
+
+-----------------
+
+int main()
+{
+    precompute();
+
+    int no_of_elements;
+    scanf("%d", &no_of_elements);
+
+    vector <int> A(no_of_elements + 1);
+    for(int i = 1; i <= no_of_elements; i++)
+        scanf("%d", &A[i]);
+
+    vector <long long> answer_from(no_of_elements + 2, 0);
+    answer_from[no_of_elements + 1] = 1;
+
+    for(int i = no_of_elements; i >= 1; i--)
+    {
+        if(A[i] <= 0)
+        {
+            answer_from[i] = 0;
+            continue;
+        }
+
+        for(int j = i + A[i]; j <= no_of_elements; j++)
+        {
+            answer_from[i] += (choose[j - i][A[i]]*answer_from[j + 1])%MOD;
+        }
+
+        answer_from[i] %= MOD;
+    }
+
+    long long answer = 0;
+    for(int i = 1; i <= no_of_elements; i++)
+        answer += answer_from[i];
+
+    printf("%I64d\n", answer%MOD);
+    return 0;
+}

@@ -1,0 +1,41 @@
+Keep track of the begginng and end of each segment and then sort them. 
+
+Then go through them. The number of lines that are presently covered can be found out by going through the lines and changing accordingly whether we are at a beginning or an end. 
+
+The amount that is covered can be found out by taking the difference of the last two points. 
+
+-------------
+
+int main()
+{
+    int no_of_segments;
+    scanf("%d", &no_of_segments);
+
+    vector <info> edge(2*no_of_segments + 1);
+    edge[0] = info(0, 0);
+    for(int i = 1; i <= no_of_segments; i++)
+    {
+        LL left, right;
+        scanf("%I64d %I64d", &left, &right);
+
+        edge[2*i - 1] = info(left, 1);
+        edge[2*i] = info(right + 1, -1);
+    }
+
+    sort(all(edge));
+
+    vector <LL> points_covered_by(no_of_segments + 1, 0);
+    int no_of_covering_lines = 0;
+
+    for(int i = 1; i <= 2*no_of_segments; i++)
+    {
+        points_covered_by[no_of_covering_lines] += edge[i].location - edge[i - 1].location;
+
+        no_of_covering_lines += edge[i].new_segments;
+    }
+
+    for(int i = 1; i <= no_of_segments; i++)
+        printf("%I64d ", points_covered_by[i]);
+
+    return 0;
+}
