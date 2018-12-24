@@ -1,0 +1,12 @@
+The answer is the number of bits in n.
+
+int main()
+{
+    int n;
+    cin >> n;
+
+    int no_of_bits = count_bits(n);
+
+    cout << no_of_bits;
+    return 0;
+}
