@@ -1,0 +1,39 @@
+Let us consider the range S[L, ... , R]. The sum is Sum[R] - Sum[L - 1]
+
+Now for a given R, how many L's exist such that Sum[R] - Sum[L - 1] = k ? 
+
+It is equal to the number of Ls such that Sum[L - 1] = Sum[R] - k
+
+Let us maintain the frequency of all sums. Then at each i, add Sum_frequency[Sum[i] - k] to the answer.
+
+-----------------
+
+int main()
+{
+    int target_no_of_1s;
+    scanf("%d", &target_no_of_1s);
+
+    const int MAX = 1e6 + 3;
+    char S[MAX];
+    scanf("%s", S);
+
+    vector <int> sum(MAX, 0);
+    sum[0] = (S[0] == '1');
+    for(int i = 1; S[i] != '\0'; i++)
+        sum[i] = sum[i - 1] + (S[i] == '1');
+
+    vector <int> sum_frequency(MAX, 0);
+    sum_frequency[0] = 1; //Empty string
+
+    long long no_of_good_substrings = 0;
+    for(int i = 0; S[i] != '\0'; i++)
+    {
+        if(sum[i] >= target_no_of_1s)
+            no_of_good_substrings += (sum_frequency[sum[i] - target_no_of_1s]);
+
+        sum_frequency[sum[i]]++;
+    }
+
+    printf("%I64d\n", no_of_good_substrings);
+    return 0;
+}
