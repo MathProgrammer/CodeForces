@@ -1,0 +1,43 @@
+Notice that the diameter is always between two leaf vertices. 
+
+(Suppose by contradiction that the diamater is in between two non-leafs u-v. Then we can extend both u and v to their nearest leaves - l1 and l2. 
+
+The path between l1 and l2 cannot weigh less than u-v because it contains u-v.)
+
+------------
+
+The diameter will always be between two leafs. So, let us set all non-leaf edges to 0 and make all leaf edges equal. 
+
+If we don't make them equal, then some diameters will always be more than others. 
+
+------------
+
+We set every leaf = S/no_of_leaves.
+
+---------
+
+int main()
+{
+    int no_of_vertices, total_weight;
+    scanf("%d %d", &no_of_vertices, &total_weight);
+
+    vector <int> degree(no_of_vertices + 1, 0);
+    for(int i = 1; i <= no_of_vertices - 1; i++)
+    {
+        int u, v;
+        scanf("%d %d", &u, &v);
+
+        degree[u]++;
+        degree[v]++;
+    }
+
+    int no_of_leafs = 0;
+    for(int i = 1; i <= no_of_vertices; i++)
+        no_of_leafs += (degree[i] == 1);
+
+    double leaf_weight = ( (double) total_weight)/ no_of_leafs;
+    double diameter = leaf_weight*2;
+
+    printf("%.12f\n", diameter);
+    return 0;
+}
