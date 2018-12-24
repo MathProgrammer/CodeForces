@@ -1,0 +1,44 @@
+int neighbour_bomb_count(int x, int y)
+{
+    const int NO_OF_NEIGHBOURS = 8;
+    int step_x[NO_OF_NEIGHBOURS] = {-1, 0, 1, -1, 1, - 1, 0, 1};
+    int step_y[NO_OF_NEIGHBOURS] = {-1, -1, -1, 0, 0, 1, 1, 1};
+
+    int no_of_bombs = 0;
+    for(int i = 0; i < NO_OF_NEIGHBOURS; i++)
+    {
+        no_of_bombs += (grid[x + step_x[i]][y + step_y[i]] == BOMB);
+    }
+
+    return no_of_bombs;
+}
+
+int main()
+{
+    int rows, columns;
+    scanf("%d %d", &rows, &columns);
+
+    for(int i = 1; i <= rows; i++)
+        scanf("%s", grid[i] + 1);
+
+    int valid = true;
+    for(int i = 1; i <= rows; i++)
+    {
+        for(int j = 1; j <= columns; j++)
+        {
+            if(grid[i][j] == EMPTY)
+            {
+                if(neighbour_bomb_count(i, j) != 0)
+                    valid = false;
+            }
+            else if('0' <= grid[i][j] && grid[i][j] <= '9')
+            {
+                if(neighbour_bomb_count(i, j) != grid[i][j] - '0')
+                    valid = false;
+            }
+        }
+    }
+
+    printf(valid ? "YES\n" : "NO\n");
+    return 0;
+}
