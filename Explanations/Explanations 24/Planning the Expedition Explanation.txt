@@ -1,0 +1,64 @@
+Let us use binary search over the number of days.
+ 
+It can be proved that it is a monotonic function. 
+
+---------------
+
+int possible(vector <int> A, int days, int min_participants)
+{
+    int participants = 0;
+    for(int i = 0; i < A.size(); i++)
+    {
+        participants += A[i]/days;
+        A[i] %= days;
+    }
+
+    return (participants >= min_participants);
+}
+
+int main()
+{
+    int no_of_participants, no_of_packages;
+    scanf("%d %d", &no_of_participants, &no_of_packages);
+
+    const int MAX = 100;
+    vector <int> frequency(MAX + 1, 0);
+    for(int i = 1; i <= no_of_packages; i++)
+    {
+        int type;
+        scanf("%d", &type);
+
+        frequency[type]++;
+    }
+
+    if(no_of_packages < no_of_participants)
+    {
+        printf("0");
+        return 0;
+    }
+
+    int left_days = 1, right_days = MAX;
+    while(left_days <= right_days)
+    {
+        int mid_days = (left_days + right_days) >> 1;
+
+        if(possible(frequency, mid_days, no_of_participants))
+        {
+            if(mid_days == right_days || !possible(frequency, mid_days + 1, no_of_participants))
+            {
+                printf("%d\n", mid_days);
+                return 0;
+            }
+            else
+            {
+                left_days = mid_days + 1;
+            }
+        }
+        else
+        {
+            right_days = mid_days - 1;
+        }
+    }
+
+    return 0;
+}
