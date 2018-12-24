@@ -1,0 +1,26 @@
+The fraction is finite, if gcd(p, q) = 1 and q | b^k. 
+
+Let us keep dividing denominator by base to determine if there are prime factors in q that are not in b. 
+
+-----------------
+
+void solve()
+{
+    LL numerator, denominator, base;
+    scanf("%I64d %I64d %I64d", &numerator, &denominator, &base);
+
+    LL gcd_fraction = gcd(numerator, denominator);
+    numerator /= gcd_fraction;
+    denominator /= gcd_fraction;
+
+    base = gcd(base, denominator);
+
+    while(base > 1)
+    {
+        while(denominator%base == 0) denominator /= base;
+
+        base = gcd(base, denominator);
+    }
+
+    printf(denominator == 1 ? "Finite\n" : "Infinite\n");
+}
