@@ -1,0 +1,38 @@
+Let us iterate over the divisors of n. 
+
+For each pair of factors (f1, f2) such that f1 x f2 = n, 
+
+One will be the quotient and one will the remainder. 
+
+We need to check if the remainder is smaller than k, of course. 
+
+And then among all such values we set x to the minimum. 
+
+-------------
+
+int main()
+{
+    int n, k;
+    cin >> n >> k;
+
+    const int oo = 1e9;
+    int answer = oo;
+
+    for(int i = 1; i*i <= n; i++)
+    {
+        if(n%i == 0)
+        {
+            int quotient = i, remainder = n/i;
+
+            if(remainder < k)
+                answer = min(answer, quotient*k + remainder);
+
+            quotient = n/i, remainder = i;
+            if(remainder < k)
+                answer = min(answer, quotient*k + remainder);
+        }
+    }
+
+    cout << answer;
+    return 0;
+}
