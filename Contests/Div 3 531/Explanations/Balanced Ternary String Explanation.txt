@@ -1,0 +1,47 @@
+We will do four operations at the end of which the string will be the lexicographically smallest balanced string. 
+
+1. The number of 0s is < N/3. 
+
+Go through the string from beginning to end. Replace A[i] with 0 if frequency(A[i]) > N/3. 
+
+This is because it is always better to put the new 0s in the leftmost positions rather than the rightmost ones. 
+
+After we have finished this, we are guaranteed that the number of 0s is >= N/3.
+
+-------------
+
+2. The number of 2s is < N/3
+
+Go through the string from end to beginning. Replace A[i] with 2 if frequency(A[i]) > N/3
+
+It is always better to put 2s in the end rather than the beginning.
+
+After we have finished this, we are sure that the number of 2s is >= N/3.
+
+-------
+
+Now, after these two operations, the number of 1s is <= N/3. 
+
+If the number of 1s is > N/3, then one among the 0s and 2s have to be less than N/3 which is not possible. 
+
+----
+
+So, all we need to do is place the remaining 1s. 
+
+The excess 2s need to be replaced with 1. 
+
+3. We need to replace the rightmost 0s. Because it is always better. to post a 1 instead of a 0 in the end rather than in the beginning. 
+
+4. We need to replace the leftmost 2s. 
+
+After we are done, the number of 1s is = N/3. 
+The number of 2s and 0s are both >= N/3, which is only possible if both are = N/3. 
+
+--------
+
+So here are the four operations - 
+
+1. If the number of 0s is < N/3, place them as early as possible. 
+2. If the number of 2s is < N/3, place the 2s as late as possible. 
+3. If the 0s are in excess now, replace the latest 0s with 1s. 
+4. If the 2s are in excess now, replace the earliest 2s with 1s.
