@@ -1,0 +1,59 @@
+Let f(i, j) represent the probability that there are i people at time j. 
+
+f(i, j) = p f(i - 1, j - 1) + (1 - p) f(i, j - 1)
+
+The first term represents the case where a person comes on at time j. So there have to be (i - 1) people at time (j - 1). 
+
+The second term represents the case where no new person steps on at time j. So there have to be (i) people at time (j - 1). 
+
+----
+
+Now, f(N, j) = f(N, j - 1) + (p) f(N - 1, j - 1)
+
+The reason is that if there are N people already on the esclator, no new person can step on so there's no need to multiply it with (1 - p).
+
+----
+
+f(0, j) = (i - p) f(0, j - 1)
+
+-----
+
+Now to find the expectation, we will sum over i f(i, T).
+
+-----------
+
+
+int main()
+{
+    int no_of_people, total_time;
+    double new_person_probability;
+    cin >> no_of_people >> new_person_probability >> total_time;
+
+    double no_new_person_probability = 1 - new_person_probability;
+
+    memset(probability, 0, sizeof(probability));
+    probability[0][0] = 1;
+
+    for(int t = 1; t <= total_time; t++)
+    {
+        probability[0][t] = no_new_person_probability*probability[0][t - 1];
+
+        for(int i = 1; i < no_of_people; i++)
+        {
+            probability[i][t] = new_person_probability*probability[i - 1][t - 1] +
+                                no_new_person_probability*probability[i][t - 1];
+
+        }
+
+        probability[no_of_people][t] = probability[no_of_people][t - 1] +
+                        new_person_probability*probability[no_of_people - 1][t - 1];
+    }
+
+    double expectation = 0;
+    for(int i = 1; i <= no_of_people; i++)
+        expectation += i*probability[i][total_time];
+
+    cout << setprecision(7) << expectation;
+
+    return 0;
+}
