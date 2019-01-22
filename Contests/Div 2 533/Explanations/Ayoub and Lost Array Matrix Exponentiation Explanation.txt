@@ -1,0 +1,51 @@
+This one uses the approach of the previous solution but uses matrix exponentiation. 
+
+Let us write down the recurrence - 
+
+f(i, 0) = F[0]f(i - 1, 0) + F[2]f(i - 1, 1) + F[1]f(i - 1, 2);
+f(i, 1) = F[1]f(i - 1, 0) + F[0]f(i - 1, 1) + F[2]f(i - 1, 2);
+f(i, 2) = F[2]f(i - 1, 0) + F[1]f(i - 1, 1) + F[0]f(i - 1, 2);
+
+Let A = [f(i, 0) f(i, 1) f(i 2)]
+
+Let F = | F[0] F[1] F[2] |
+        | F[2] F[0] F[1] |
+        | F[1] F[2] F[0] |
+
+Then A^N = A^{N - 1} F = A^0 F^N
+
+------------
+
+int main()
+{
+    int no_of_elements, left, right;
+    scanf("%d %d %d", &no_of_elements, &left, &right);
+
+    vector <long long> frequency(3, 0);
+
+    for(int i = 0; i < 3; i++)
+    {
+        frequency[i] = get_count(right, i) - get_count(left - 1, i);
+    }
+
+    int no_of_ways_sum_0_from_0_elements = 1, no_of_ways_sum_1_from_0_elements = 0, no_of_ways_sum_2_from_0_elements = 0;
+
+  /*f(i, 0) = F[0]f(i - 1, 0) + F[2]f(i - 1, 1) + F[1]f(i - 1, 2);
+    f(i, 1) = F[1]f(i - 1, 0) + F[0]f(i - 1, 1) + F[2]f(i - 1, 2);
+    f(i, 2) = F[2]f(i - 1, 0) + F[1]f(i - 1, 1) + F[0]f(i - 1, 2);*/
+
+    long long A[SIZE][SIZE] = {{no_of_ways_sum_0_from_0_elements, no_of_ways_sum_1_from_0_elements, no_of_ways_sum_2_from_0_elements}};
+
+    long long F[SIZE][SIZE] = { {frequency[0], frequency[1], frequency[2]},
+                                {frequency[2], frequency[0], frequency[1]},
+                                {frequency[1], frequency[2], frequency[0]} };
+
+    //A^n = A^{n - 1}F = A^1 F^{n-1}
+
+    power(F, no_of_elements);
+
+    multiply(A, F);
+
+    printf("%I64d\n", A[0][0]);
+    return 0;
+}
