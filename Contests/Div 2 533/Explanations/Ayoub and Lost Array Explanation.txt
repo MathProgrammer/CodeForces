@@ -1,0 +1,62 @@
+Let f(i, r) be the number of ways of filling first i elements such that they sum upto r. 
+
+Then the last element l can be either 0, 1, or 2. 
+
+Let F(r) denote the frequency of r = {0, 1, 2}
+
+Now, we can fix the last element. 
+
+Suppose last element is 0. 
+
+Then f(i + 1, (0 + 0)) += F(0)f(i, 0)
+
+f(i + 1, (0 + 1)) += F(0)f(i, 1)
+
+f(i + 1, (0 + 2)) += F(0)f(i, 2)
+
+-----
+
+These would be the transitions. The last can be l. The previous can be p = {0, 1, 2}
+
+---
+
+int get_count(int limit, int remainder)
+{
+    if(remainder == 0)
+        return limit/3;
+    else
+        return (limit/3 + (limit%3 >= remainder));
+}
+
+--------
+
+Accordingly, we update the DP like this - 
+
+A total_remainder is made by combination of {last, previous}.
+
+So, f(i, total) += F(last)f(i - 1, previous)
+
+For example, 
+
+f(i, 0) = F(0)f(i - 1, 0) + F(1)f(i - 1, 2) + F(2)f(i - 1, 1)
+
+---
+
+    no_of_ways[0][0] = 1;
+    no_of_ways[0][1] = no_of_ways[0][2] = 0;
+
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        for(int last = 0; last < 3; last++)
+        {
+            for(int previous = 0; previous < 3; previous++)
+            {
+                int total_remainder = (previous + last)%3;
+
+                no_of_ways[i][total_remainder] += (frequency[last]*no_of_ways[i - 1][previous])%MOD;
+
+                no_of_ways[i][total_remainder] %= MOD;
+            }
+        }
+
+    }
