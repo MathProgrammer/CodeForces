@@ -1,0 +1,14 @@
+Print N 1s. This ensures that they sum to N and they are all the same. 
+
+---
+
+int main()
+{
+    int n;
+    cin >> n;
+
+    cout << n << "\n";
+    for(int i = 1; i <= n; i++) cout << "1 ";
+
+    return 0;
+}
