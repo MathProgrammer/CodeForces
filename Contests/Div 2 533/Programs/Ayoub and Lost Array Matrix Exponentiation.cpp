@@ -90,7 +90,7 @@ int main()
                                 {frequency[2], frequency[0], frequency[1]},
                                 {frequency[1], frequency[2], frequency[0]} };
 
-    //A^n = A^{n - 1}F = A^1 F^{n-1}
+    //A^n = A^{n - 1}F = A^0 F^n
 
     power(F, no_of_elements);
 
