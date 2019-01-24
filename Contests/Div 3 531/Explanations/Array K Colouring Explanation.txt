@@ -1,0 +1,48 @@
+We have to ensure that for all elements of a given value x, we use all k colours. 
+
+So, let us sort the array by value. 
+We will colour the first element in colour 1, second in colour 2 and so on. When we go to colour k + 1, we will check if that colour has already been used on such a colour. 
+
+This approach works because - 
+
+1. We are using colours 1 by 1, so guaranteed each colour will be used once. 
+
+2. For a given value, we are using all k colours before using the same again. This greedy strategy helps us. 
+
+--------
+
+int main()
+{
+	int no_of_elements, no_of_colours;
+	cin >> no_of_elements >> no_of_colours;
+
+	vector <bricks> A(no_of_elements);
+	for(int i=0; i < no_of_elements ;i++)
+	{
+		cin >> A[i].value;
+		A[i].position=i;
+	}
+
+	sort(all(A));
+
+	vector <int> last_brick_of_colour(no_of_colours + 1, 0);
+    vector <int> colour(no_of_elements + 1);
+
+    for(int c = 0, i = 0; i < no_of_elements; i++, c = (c + 1)%no_of_colours)
+    {
+        if(last_brick_of_colour[c] == A[i].value)
+        {
+            cout << "NO\n";
+            return 0;
+        }
+
+        colour[A[i].position] = c;
+        last_brick_of_colour[c] = A[i].value;
+    }
+
+    cout << "YES\n";
+    for(int i = 0; i < no_of_elements; i++)
+        cout << colour[i] + 1 << " ";
+
+	return 0;
+}
