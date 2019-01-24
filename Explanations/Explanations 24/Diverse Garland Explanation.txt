@@ -1,0 +1,49 @@
+Greedy Solution works.
+
+We will from from i = 1 to N
+
+Whenever S[i] = S[i - 1], we will change S[i]'s colour. 
+
+
+Note that if we change whenever S[i] = S[i + 1], then it might not be optimal as swapping S[i] when it is different from S[i + 1] might solve at most one position's problem. 
+
+But swapping when S[i] = S[i - 1] can solve two positions' problems.
+
+---
+
+I kept a string called colour "RGB" for convenience in knowing what to swap. 
+
+Similar to the C of this contest, where I kept 6 string - RGB, RBG, BGR, BRG, GRB, GBR
+
+And counted number of replacements for each string S[i] = R[i%3].
+
+---
+ 
+int main()
+{
+    int length;
+    string S;
+    cin >> length >> S;
+
+    string colour = "RGB";
+    int replacements = 0;
+
+    for(int i = 1; i < length; i++)
+    {
+        if(S[i] == S[i - 1])
+        {
+            for(int j = 0; j < colour.size(); j++)
+            {
+                if( (i + 1 == length && colour[j] != S[i - 1]) || (colour[j] != S[i + 1] && colour[j] != S[i - 1]) )
+                {
+                    replacements++;
+                    S[i] = colour[j];
+                    break;
+                }
+            }
+        }
+    }
+
+    cout << replacements << "\n" << S;
+    return 0;
+}
