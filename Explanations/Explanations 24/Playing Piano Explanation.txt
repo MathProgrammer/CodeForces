@@ -1,0 +1,120 @@
+Let f(i, j) be true if it is possible to play the first i notes using the finger j for the last note.
+
+We will first calculate f(i, j). 
+
+If f(N, j) is true for any j, it is possible other wise it is not. 
+
+For example, if A[i - 1] < A[i], 
+
+Then f(i, j) is true, if for some j', where j' < j and f(i - 1, j) is true. 
+
+Since j' is a smaller finger, if we can play (i - 1) with j' last, then we can play i notes with j last. 
+
+
+for(int i = 1; i <= no_of_notes; i++)
+    {
+        for(int finger = 1; finger <= NO_OF_FINGERS; finger++)
+        {
+            if(i == 1)
+            {
+                is_possible[i][finger] = true;
+                continue;
+            }
+
+            if(notes[i - 1] <= notes[i])
+            {
+                for(int previous_finger = 1; previous_finger < finger; previous_finger++)
+                {
+                    if(is_possible[i - 1][previous_finger])
+                    {
+                        is_possible[i][finger] = true;
+                    }
+                }
+            }
+
+            if(notes[i - 1] >= notes[i])
+            {
+                for(int previous_finger = NO_OF_FINGERS; previous_finger > finger; previous_finger--)
+                {
+                    if(is_possible[i - 1][previous_finger])
+                    {
+                        is_possible[i][finger] = true;
+                    }
+                }
+            }
+        }
+    }
+
+
+
+-----
+
+Now to actually construct the sequence, we must go backwards. 
+
+For every i, look at A[i] and A[i + 1]. 
+
+Case 1 - A[i] < A[i + 1]. 
+
+Then look at the finger assigned to note (i + 1). Find any smaller finger j, such that f(i, j) is true. Then assign finger j to note i. 
+
+Case 2 - A[i] > A[i + 1]
+
+Then look at the finger assigned to note (i + 1). Find any greater finger j, such that f(i, j) is true. 
+
+Case 3 - A[i] = A[i + 1]
+
+Assign any finger j, such that f(i, j) is true and j is not the finger used for the i-th note. 
+
+vector <int> playing_finger(no_of_notes + 1);
+    for(int i = no_of_notes; i >= 1; i--)
+    {
+        if(i == no_of_notes)
+        {
+            for(int finger = 1; finger <= NO_OF_FINGERS; finger++)
+            {
+                if(is_possible[i][finger])
+                {
+                    playing_finger[i] = finger;
+                    break;
+                }
+            }
+
+            continue;
+        }
+
+        if(notes[i] < notes[i + 1])
+        {
+            for(int finger = playing_finger[i + 1] - 1; finger >= 1; finger--)
+            {
+                if(is_possible[i][finger])
+                {
+                    playing_finger[i] = finger;
+                    break;
+                }
+            }
+        }
+
+        if(notes[i] > notes[i + 1])
+        {
+            for(int finger = playing_finger[i + 1] + 1; finger <= NO_OF_FINGERS; finger++)
+            {
+                if(is_possible[i][finger])
+                {
+                    playing_finger[i] = finger;
+                    break;
+                }
+            }
+        }
+
+        if(notes[i] == notes[i + 1])
+        {
+            for(int finger = 1; finger <= NO_OF_FINGERS; finger++)
+            {
+                if(is_possible[i][finger] && finger != playing_finger[i + 1])
+                {
+                    playing_finger[i] = finger;
+                    break;
+                }
+            }
+        }
+    }
