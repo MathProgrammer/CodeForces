@@ -1,0 +1,68 @@
+Blog Link - 
+
+If X = 2^N - 1, then precompute the answer offline for all N from 1 to 25. 
+
+Else, the answer is always 2^N - 1, where N is the number of bits in X. We can get this by choosing Y as the complement of X.
+
+X xor Y = 2^N - 1
+X and Y = 0
+
+gcd(0, 2^N - 1) = 2^N - 1
+
+This is the highest possible because the XOR and AND of two N bit number cannot have more than N bits. 
+
+And gcd(a, b) <= max(a, b)
+
+-----------------
+
+void solve()
+{
+    int x;
+    cin >> x;
+
+    int max_gcd = (is_all_ones(x) ? answer[x] : all_ones(no_of_bits(x)));
+    cout << max_gcd << "\n";
+}
+
+void precompute()
+{
+    answer[1] = 0;
+    answer[3] = 1;
+    answer[7] = 1;
+    answer[15] = 5;
+    answer[31] = 1;
+    answer[63] = 21;
+    answer[127] = 1;
+    answer[255] = 85;
+    answer[511] = 73;
+    answer[1023] = 341;
+    answer[2047] = 89;
+    answer[4095] = 1365;
+    answer[8191] = 1;
+    answer[16383] = 5461;
+    answer[32767] = 4681;
+    answer[65535] = 21845;
+    answer[131071] = 1;
+    answer[262143] = 87381;
+    answer[524287] = 1;
+    answer[1048575] = 349525;
+    answer[2097151] = 299593;
+    answer[4194303] = 1398101;
+    answer[8388607] = 178481;
+    answer[16777215] = 5592405;
+    answer[33554431] = 1082401;
+
+}
+
+int main()
+{
+    precompute();
+
+    int no_of_queries;
+    cin >> no_of_queries;
+
+    while(no_of_queries--)
+        solve();
+
+    return 0;
+}
