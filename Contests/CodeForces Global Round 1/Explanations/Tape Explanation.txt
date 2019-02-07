@@ -1,0 +1,78 @@
+First, let us sort the N points given to us - A1, A2, ... , An. 
+
+Next, let us take their distances - 
+
+We will construct a difference array - D1, D2, ... , D(n - 1)
+
+Di = Ai - A(i - 1)
+
+-----------------
+
+We will sort the N - 1 differences.
+
+We will then be greedy. 
+
+We will start our first part from point 1, and then go right. If the distance between our current point Ai and next A(i + 1) is one of the (k - 1) greatest distances, then we will not use it.
+
+--------
+
+Here is how we implement it -
+
+If a difference d belongs to one of the K - 1 greatest differences, then mark the ending i as 'not allowed'. 
+
+Then start scanning the array A from 1 to N. Keep two pointers left and right. 
+
+left points to the first point which we haven't counted yet and right points to the last point that is allowed from left. Maintain this invariant. 
+
+We stop whenever right hits a point that is not allowed or reaches the end of the array. 
+
+After we count the current segment [L, R], we set L = R + 1 and R to L + 1.
+
+-------------
+
+
+int main()
+{
+    int no_of_points, total_length, max_parts;
+    cin >> no_of_points >> total_length >> max_parts;
+
+    vector <int> A(no_of_points);
+    for(int i = 0; i < no_of_points; i++)
+        cin >> A[i];
+
+    sort(all(A));
+
+    vector <Point> X;
+    for(int i = 1; i < no_of_points; i++)
+        X.push_back(Point(i, A[i] - A[i - 1]));
+
+    sort(all(X));
+
+    vector <int> allowed(no_of_points, true);
+
+    for(int count = 1, i = X.size() - 1; i >= 0 && count < max_parts; count++, i--)
+    {
+        allowed[X[i].position] = false;
+    }
+
+    int left = 0, right = 1;
+    int total_length_used = 0;
+
+    while(left < no_of_points)
+    {
+        while(right < no_of_points && allowed[right])
+        {
+            right++;
+        }
+
+        right--;
+
+        total_length_used += (A[right] - A[left] + 1);
+
+        left = right + 1;
+        right = left + 1;
+    }
+
+    cout << total_length_used << "\n";
+    return 0;
+}
