@@ -1,0 +1,52 @@
+The number of 0s in n! is equal to the exponent of b in (n!)
+
+Let us look at the prime factorisation of b.
+
+b = p1^k1 p2^k2 .... pm^km
+
+--------------
+
+The exponent of a prime number p in n! is 
+(n/p) + (n/p^2) + (n/p^3) + ... 
+
+The exponent of p^k in n! is e/k, where e is the exponent of p in n! (which can be calculated by the method given above).
+
+LL get_exponent_sum(LL n, LL p, int e)
+{
+    LL sum = 0;
+
+    while(n > 0)
+    {
+        sum += n/p;
+
+        n /= p;
+    }
+
+    return (sum/e);
+}
+
+-------------
+
+The exponent of b in (n!) is 
+
+min{exp(p1^k1), exp(p2^k2), ... , (exp(pm^km))} in n!
+
+int main()
+{
+    LL n, base;
+    cin >> n >> base;
+
+    vector <LL> prime_factors;
+    vector <int> exponents;
+    factorise(prime_factors, exponents, base);
+
+    const LL oo = 1e18;
+    LL trailing_zeroes = oo;
+    for(int i = 0; i < prime_factors.size(); i++)
+    {
+        trailing_zeroes = min(trailing_zeroes, get_exponent_sum(n, prime_factors[i], exponents[i]));
+    }
+
+    cout << trailing_zeroes;
+    return 0;
+}
