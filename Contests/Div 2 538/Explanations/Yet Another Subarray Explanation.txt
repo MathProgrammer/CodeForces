@@ -1,0 +1,62 @@
+Let us look at the greatest mk elements. 
+
+We will divide the arrays in such a way that each subarray has exactly m of these mk elements. 
+
+This is always possible since mk <= n. 
+
+We will mark all the indices which belong to the greatest mk elements. 
+
+Then we will do a linear sweep through the array. Whenever the current segment has m of these indices, we will end the segment and begin a new one. 
+
+-----------------------
+
+int main()
+{
+    int no_of_elements, min_size, no_of_subarrays;
+    cin >> no_of_elements >> min_size >> no_of_subarrays;
+
+    vector <info> A;
+    for(int i = 0; i < no_of_elements; i++)
+    {
+        int element;
+
+        cin >> element;
+
+        A.push_back(info(i, element));
+    }
+
+    sort(all(A));
+    reverse(all(A));
+
+    int greatest_elements = min_size*no_of_subarrays;
+    long long total_sum = 0;
+    vector <int> is_special(no_of_elements, false);
+    for(int i = 0; i < greatest_elements; i++)
+    {
+        is_special[A[i].index] = true;
+
+        total_sum += A[i].value;
+    }
+
+    int no_of_subarrays_made = 0, current_subarray_special_elements = 0;
+    vector <int> partition_points;
+    for(int i = 0; i < no_of_elements; i++)
+    {
+        current_subarray_special_elements += (is_special[i]);
+
+        if(current_subarray_special_elements == min_size)
+        {
+            partition_points.push_back(i + 1);
+
+            no_of_subarrays_made++;
+
+            current_subarray_special_elements = 0;
+        }
+    }
+
+    cout << total_sum << "\n";
+    for(int i = 0; i < no_of_subarrays_made - 1; i++)
+        cout << partition_points[i] << " ";
+
+    return 0;
+}
