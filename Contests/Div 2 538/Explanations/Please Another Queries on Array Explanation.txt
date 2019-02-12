@@ -1,0 +1,108 @@
+Let N = p1^k1 p2^k2 ... pm^k
+phi(N) = p1^(k1 - 1)(p1 - 1) p2^(k2 - 1)(p2 - 1) ... pm^(km - 1)(pm - 1)
+
+= p1^K1 p2^k2 ... pm^km {(p1 - 1)(p2 - 1) ... (pm - 1)}/(p1 p2 ... pm)
+
+The reason this form of phi(N) is important is because it is independent of exponents of primes. 
+
+-----------
+
+To answer a range query, we need two informations - 
+
+1. The product of the range
+2. The list of all primes having factors in the range. 
+
+We can get the product of a range very easily by maintaining a segment tree. 
+
+--------------
+
+How do we keep the list of all primes having factors ? 
+
+Note that Ai < 300. There are less than 64 (62 to be exact) primes from [2, 300].
+
+We will represent each integer x, by a bitmask where the i-th bit will be set if the i-th prime divides x
+
+For example, if x = 24, then bitmask will have 00000 ... 0011
+
+The first two bits set since it is divisible by 2 and 3. 
+
+Here is how we precompute the masks - 
+
+void precompute_mask()
+{
+    for(int i = 1; i < MAX_N; i++)
+    {
+        mask[i] = 0;
+
+        for(int bit = 0; bit < primes.size(); bit++)
+        {
+            if(i%primes[bit] == 0)
+            {
+                set_bit(mask[i], bit);
+            }
+        }
+    }
+}
+
+---------------
+
+Now, how do we find out the mask of a range of numbers ? 
+
+It is simple. We want the i-th bit set, if the i-th prime divides any of the integers in the range. 
+
+In other words, if any of the masks in the range have the i-th bit set, then the mask of the range should have the i-th bit set. 
+
+All we need to do is find the OR of the masks of the segment !
+
+When we are multiplying a number x with every integer in the range, we need to perform OR(x, ) with every integer in the range. 
+
+It will be too slow to perform each update in O(n) time so we will maintain a segment tree that performs the OR operation !
+
+----------------
+
+Here is how we answer each query - 
+
+void solve()
+{
+    string query;
+    int left, right;
+    cin >> query >> left >> right;
+
+    if(query == "MULTIPLY")
+    {
+        int x;
+        cin >> x;
+
+        product_tree.update(1, 1, no_of_elements, left, right, x);
+        OR_tree.update(1, 1, no_of_elements, left, right, mask[x]);
+    }
+    else if(query == "TOTIENT")
+    {
+        LL totient = product_tree.get_product(1, 1, no_of_elements, left, right);
+
+        LL segment_mask = OR_tree.get_mask(1, 1, no_of_elements, left, right);
+
+        for(int bit = 0; bit < primes.size(); bit++)
+        {
+            if(!is_bit_set(segment_mask, bit))
+                continue;
+
+            totient = (totient*(primes[bit] - 1))%MOD;
+            totient = (totient*prime_inverse[bit])%MOD;
+        }
+
+        cout << totient << "\n";
+    }
+}
+
+---------
+
+We cannot divide since we are dealing with a MOD so we will need to multiply by the inverse of the prime. It is better to precompute the inverses as well using Fermat's Little Theorem. 
+
+I had a lot of bugs in implementation of segment tree such as - 
+
+1. The Lazy Function of Product Segment Tree should multiply tree[n] by x^r, where r is the size of the range under n, not just by x. 
+2. The OR Tree should allow long long masks and the tree should be long long. And the value of MAX_N should be properly set to 300.
+3. The set bit function had a mistake
+4. The prime sieve should start from 2, not 1 or 0.
+5. The base case of the product function should have an OR condition, not AND, which will cause an infinite loop.
