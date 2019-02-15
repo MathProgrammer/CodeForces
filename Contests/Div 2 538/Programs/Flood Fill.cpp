@@ -4,8 +4,8 @@
 using namespace std;
 
 typedef long long LL;
-const int MAX_N = 5005, oo = 5005;
-int minimum_moves[MAX_N][MAX_N][2];
+const int MAX_N = 5005, oo = 5005, LEFT_COLOUR = 0, RIGHT_COLOUR = 1, NO_OF_ENDS = 2;
+int minimum_moves[MAX_N][MAX_N][NO_OF_ENDS];
 
 int main()
 {
@@ -18,38 +18,22 @@ int main()
 
     for(int i = 1; i <= no_of_squares; i++)
     {
-        for(int j = i; j <= no_of_squares; j++)
-        {
-            for(int direction = 0; direction < 2; direction++)
-            {
-                minimum_moves[i][j][direction] = (i == j ? 0 : oo);
-            }
-        }
+        minimum_moves[i][i][LEFT_COLOUR] = minimum_moves[i][i][RIGHT_COLOUR] = 0;
     }
 
     for(int length = 2; length <= no_of_squares; length++)
     {
         for(int left = 1, right = left + length - 1; right <= no_of_squares; left++, right++)
         {
-            for(int direction = 0; direction < 2; direction++)
-            {
-                int current = (direction == 0 ? A[left + 1] : A[right]);
+            minimum_moves[left][right][LEFT_COLOUR] = min(minimum_moves[left + 1][right][LEFT_COLOUR] + (A[left] != A[left + 1]),
+                                                          minimum_moves[left + 1][right][RIGHT_COLOUR] + (A[left] != A[right]));
 
-                minimum_moves[left][right][0] = min(minimum_moves[left][right][0],
-                                                    minimum_moves[left + 1][right][direction] + (A[left] != current));
-            }
-
-            for(int direction = 0; direction < 2; direction++)
-            {
-                int current = (direction == 0 ? A[left] : A[right - 1]);
-
-                minimum_moves[left][right][1] = min(minimum_moves[left][right][1],
-                                                    minimum_moves[left][right - 1][direction] + (current != A[right]));
-            }
+            minimum_moves[left][right][RIGHT_COLOUR] = min(minimum_moves[left][right - 1][LEFT_COLOUR] + (A[left] != A[right]),
+                                                           minimum_moves[left][right - 1][RIGHT_COLOUR] + (A[right - 1] != A[right]));
         }
     }
 
-    LL answer = min(minimum_moves[1][no_of_squares][0], minimum_moves[1][no_of_squares][1]);
+    LL answer = min(minimum_moves[1][no_of_squares][LEFT_COLOUR], minimum_moves[1][no_of_squares][RIGHT_COLOUR]);
     cout << answer;
 
     return 0;
