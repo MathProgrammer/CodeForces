@@ -1,0 +1,31 @@
+Fact - If a segment [L, R] is of one colour, then it is either A[L] or A[R] regardless of the starting square. 
+
+Proof - In the last move of making the segment the same colour, we must absorb one of the ends - L or R (or both). 
+
+When we absorb an end we must cover the entire segment with one colour. 
+
+---------------
+
+Let f(L, R, 0) represent the minimum number of moves to make the segment [L, R] in one colour if the colour is A[L].
+
+Let f(L, R, 1) represent the minimum number of moves to make the segment [L, R] in one colour if the color is A[R]. 
+
+How do we build [L, R] from smaller states ? 
+
+Suppose we want to find out f(L, R, 0) ... Then it means we are using the colour of A[L]. 
+
+So we need to know the minimum number of moves to make [L + 1, R] the same colour.
+
+-----
+
+There are 2 cases - 
+
+Case 1 - Either [L - 1, R] is the same colour as A[L]. 
+
+Then the number of moves is given by f(L - 1, R, 0) and the colour is A[L]. 
+
+Case 2 - [L - 1, R] is the same colour as A[R]. 
+
+The the number of moves is given by f(L - 1, R, 1) and the colour is A[R].
+
+-------
