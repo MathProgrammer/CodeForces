@@ -1,4 +1,4 @@
-Blog Link - 
+Blog Link - https://qr.ae/TUreZ2
 
 If X = 2^N - 1, then precompute the answer offline for all N from 1 to 25. 
 
