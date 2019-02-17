@@ -1,0 +1,36 @@
+It is always better to buy the liter as early as possible as we will pay more for the same amount as time goes on. 
+
+We will be greedy. We will first buy v literes in first city
+
+Then, we will go to each city and buy only one liter, and make sure the capacity is full. 
+
+We will not refill, if the remaining journey x, is smaller than the the fuel we have v.
+
+
+-------------------
+
+Of course, if we capacity is more than the number of cities, then we will only refuel n - 1 times.
+
+-------------------
+
+int main()
+{
+    int no_of_cities, capacity;
+    cin >> no_of_cities >> capacity;
+
+    int fuel;
+    if(capacity >= no_of_cities - 1)
+    {
+        fuel = no_of_cities - 1;
+    }
+    else
+    {
+        fuel = capacity - 1;
+
+        for(int i = 1; i <= no_of_cities - capacity; i++)
+            fuel += i;
+    }
+
+    cout << fuel;
+    return 0;
+}
