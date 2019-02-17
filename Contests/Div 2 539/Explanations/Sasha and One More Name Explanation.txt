@@ -1,0 +1,66 @@
+Given a palindrome string S, we must cut it into some k parts and then rearrange them to get a string R, such that 
+
+R is a palindrome and R is not equal to S.
+
+We want to find the minimum such k.
+
+-------
+
+Suppose - S has only one character, then only one palindromic string is possible. 
+If S is odd palindrome, and has n - 1 same characters and one different character (central character), even then only one palindrome is possible. 
+
+In these situations it is impossible to get a palindrome R =/= S. 
+
+int is_cut_impossible(string &S)
+{
+    int same = 0, length = S.size();
+    for(int i = 0; i < length; i++)
+    {
+        same += (S[i] == S[0]);
+    }
+
+    int not_possible = ( (length%2 == 0 && same == length ) || (length%2 == 1 && same >= length - 1) );
+
+    return not_possible;
+}
+
+---------
+
+Let us suppose this is not the case.
+
+Firstly, let us check if it is possible with one cut. 
+
+If we make only one cut, S[1, 2, ... i] S[i + 1, ... , n]
+
+And if we put the second part first, then it is like a cyclic rotations of S. 
+
+We will check all cyclic rotations of S and check if any of those rotations yield a string R that is not equal to S and is also a palindrome. 
+
+(Don't physically rotate the string. Just maintain two pointers.)
+
+for(int start = 1; start < S.size(); start++)
+    {
+        if(!is_equal(S, start) && is_palindrome(S, start))
+        {
+            cout << "1\n";
+            return 0;
+        }
+    }
+
+------------
+
+If this is also not the case, then we will show that it is always possible with 2 cuts and 3 pieces.
+
+Let p be the smallest length prefix such that there are at least 2 distinct characters. 
+
+This prefix will be of the form - xxxxxxxxxxA
+
+Let us look at the suffix of the same length p. 
+
+It will be of the form Axxxxxxxxx.
+
+Clearly p =/= reverse(p) because
+
+and p = reverse( reverse(p) )
+
+So we will interchange the prefix and suffix. The middle part is unchanged. The string R is a palindrome and R is not equal to S.
