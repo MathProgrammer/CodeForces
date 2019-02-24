@@ -1,0 +1,44 @@
+I thought of approaching this question by treating each bit independently, like most bitwise questions. I couldn't find a way to combine answers for different bits. I read the editorial used the insight that the XOR of the segment is 0 and then I immediately understood how to use prefix XOR to solve this problem.
+
+-------------
+
+We keep track of the frequency of every prefix_xor and each parity. 
+
+If XOR[L, ... , R] = 0, then 
+
+Prefix[R] = Prefix[L - 1]
+
+For every i, let f(i, 0) be the frequency of prefix XOR i in even positions and 
+f(i, 1) be the frequency of prefix XOR i in odd positions.
+
+We will go through the array and for each i, we will add f(Prefix[i], i%2) to the answer and then update f(Prefix[i], i%2). 
+
+Remember to set f(0, 0) = 1. That represents the empty array.
+
+-------------
+
+int main()
+{
+    int no_of_elements;
+    cin >> no_of_elements;
+
+    int prefix_xor = 0;
+    long long good_subarrays = 0;
+    memset(frequency, 0, sizeof(frequency));
+
+    frequency[0][0] = 1;
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        int element;
+        cin >> element;
+
+        prefix_xor ^= element;
+
+        good_subarrays += (frequency[prefix_xor][i%2]);
+
+        frequency[prefix_xor][i%2]++;
+    }
+
+    cout << good_subarrays;
+    return 0;
+}
