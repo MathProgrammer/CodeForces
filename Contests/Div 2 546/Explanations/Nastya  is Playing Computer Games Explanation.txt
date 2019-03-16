@@ -1,0 +1,27 @@
+Here is what is optimal. At the first hole, we will throw the stone into the neighbouring hole. Then go to the neighbouring hole and throw back to the first stone 
+After this, whenever we visit any hole, throw the stones into the first hole. Rather than simulate the entire movement, there is a clean solution.
+
+Let us notice that we must visit each and every hole. The number of movements = Min{k - 1, n - k} + N - 1
+
+We will throw a stone at every hole except the second hole where we throw 2 stones. Total stones thrown = N + 1
+
+Total coins picked up = N
+
+The total number of moves is the sum of all 3. 
+
+---------
+
+int main()
+{
+	int no_of_holes, position;
+	cin >> no_of_holes >> position;
+
+	int movement = min(position - 1, no_of_holes - position) + no_of_holes - 1;
+	int stones_thrown = no_of_holes + 1;
+	int coins_picked = no_of_holes;
+
+	int total_moves = movement + stones_thrown + coins_picked;
+	cout << total_moves;
+
+	return 0;
+}
