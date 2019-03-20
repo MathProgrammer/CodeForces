@@ -1,0 +1,98 @@
+Let us notice that 
+
+1. The first element of the permutation uniquely determines the permutation. 
+
+2. If we can reach [p1, p2, ... , pn], then we can also reach [p1 + x, p2 + x, ... , pn + x]. 
+Also note that we cannot reach any other permutation.
+
+So we will set p1 = 1 and generate a permutation P. 
+Then, we will check if P is a block of n consecutive integers. 
+
+Then we will have [1, p2, p3, ... , pn]. 
+
+We can reach [1 + x, p2 + x, ... , pn + x]. 
+
+We cannot reach any other permutation.
+
+---
+
+To check if it is a block of n consecutive integers, we will first find the smallest element x in P. 
+
+1. If x <= 0, then we will add |x| + 1 to every element in P. 
+
+2. Let the maximum element in P be x. If x > n, then we will subtract |x - n| from every element in P. 
+
+-------
+
+After doing these two operations, P should be a permutation of [1, n]. 
+
+Suppose P is a permutation, then we are done. 
+
+If P is not a permutation, then it can be because of 2 reasons - 
+
+1. P has duplicates. This property will always hold. 
+2. P has some element that is not in [1, n]. This property will also always be true regardless of the first element.
+
+----
+int main()
+{
+    int length;
+    cin >> length;
+
+    vector <int> difference(length);
+    for(int i = 1; i <= length - 1; i++)
+        cin >> difference[i];
+
+    vector <int> permutation(length + 1);
+    permutation[1] = 1;
+    int minimum = 1, maximum = 1;
+    for(int i = 2; i <= length; i++)
+    {
+        permutation[i] = permutation[i - 1] + difference[i - 1];
+
+        minimum = min(minimum, permutation[i]);
+        maximum = max(maximum, permutation[i]);
+    }
+
+    if(minimum < 1)
+    {
+        for(int i = 1; i <= length; i++)
+            permutation[i] += abs(minimum) + 1;
+    }
+
+    if(maximum > length)
+    {
+        for(int i = 1; i <= length; i++)
+            permutation[i] -= (maximum - length);
+    }
+
+    int is_permutation = true;
+    vector <int> frequency(length + 1, 0);
+    for(int i = 1; i <= length; i++)
+    {
+        if(permutation[i] < 1 || permutation[i] > length)
+        {
+            is_permutation = false;
+            continue;
+        }
+
+        frequency[permutation[i]]++;
+    }
+
+    for(int i = 1; i <= length; i++)
+    {
+        if(frequency[i] != 1)
+            is_permutation = false;
+    }
+
+    if(!is_permutation)
+    {
+        cout << "-1\n";
+        return 0;
+    }
+
+    for(int i = 1; i <= length; i++)
+        cout << permutation[i] << " ";
+
+    return 0;
+}
