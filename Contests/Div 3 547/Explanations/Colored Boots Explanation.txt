@@ -1,0 +1,65 @@
+We can be greedy. First, we will match alphabets to each other. 
+
+Then we will map alphabets to question marks. 
+
+And lastly, we will map the question marks to each other. 
+
+It is important to map question marks to each other only after we have mapped question marks to alphabets. 
+
+When we map question marks to alphabets, we get one pair for each question mark we have used. 
+But, if we map question marks to each other first, then we will be left with at most one question mark in the end. 
+
+We must map alphabets to each other first because we don't want to map any alphabet to a question mark if we can map it to another alphabet. 
+Mapping alphabets to each other rather than to question marks does not reduce the number of pairs and generally increases it.
+
+-------
+
+void match(char a, char b)
+{
+    int common_elements = min(A_indices[a].size(), B_indices[b].size());
+
+    while(common_elements > 0)
+    {
+        pair <int, int> current_pair = make_pair(A_indices[a].back(), B_indices[b].back());
+        answer.push_back(current_pair);
+
+        A_indices[a].pop_back();
+        B_indices[b].pop_back();
+
+        common_elements--;
+    }
+}
+
+int main()
+{
+    int length;
+    string A, B;
+    cin >> length >> A >> B;
+
+    for(int i = 0; i < length; i++)
+    {
+        A_indices[A[i]].push_back(i);
+
+        B_indices[B[i]].push_back(i);
+    }
+
+    for(char ch = 'a'; ch <= 'z'; ch++)
+        match(ch, ch);
+
+    for(char ch = 'a'; ch <= 'z'; ch++)
+        match('?', ch);
+
+    for(char ch = 'a'; ch <= 'z'; ch++)
+        match(ch, '?');
+
+    match('?', '?');
+
+    cout << answer.size() << "\n";
+    for(int i = 0; i < answer.size(); i++)
+    {
+        cout << answer[i].first + 1 << " " << answer[i].second + 1 << "\n";
+    }
+
+    return 0;
+}
+

@@ -1,0 +1,45 @@
+We will make the power of 2 and 3 equal in m and n. 
+
+If m and n are not equal after that, then it is impossible.
+
+Else, we are done.
+
+---
+
+int main()
+{
+    ULL target, source;
+    cin >> source >> target;
+
+    int target_power_of_2 = exponent(target, 2);
+    int target_power_of_3 = exponent(target, 3);
+
+    int source_power_of_2 = exponent(source, 2);
+    int source_power_of_3 = exponent(source, 3);
+
+    int no_of_moves = 0;
+
+    for(int i = source_power_of_2 + 1; i <= target_power_of_2; i++)
+    {
+        if(source <= target/2)
+        {
+            source *= 2;
+
+            no_of_moves++;
+        }
+    }
+
+    for(int i = source_power_of_3 + 1; i <= target_power_of_3; i++)
+    {
+        if(source <= target/3)
+        {
+            source *= 3;
+
+            no_of_moves++;
+        }
+    }
+
+    const int IMPOSSIBLE = -1;
+    cout << (source == target ? no_of_moves : IMPOSSIBLE);
+    return 0;
+}
