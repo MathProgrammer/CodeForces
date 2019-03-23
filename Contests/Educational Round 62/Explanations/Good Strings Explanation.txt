@@ -1,0 +1,31 @@
+We will keep only one character in the string. It will either be the first '>' or the last '<', whichever requires fewer deletions. 
+
+--------
+
+void solve()
+{
+    int length;
+    string S;
+    cin >> length >> S;
+
+    int answer;
+    for(int i = 0; i < length; i++)
+    {
+        if(S[i] == '>')
+        {
+            answer = i;
+            break;
+        }
+    }
+
+    for(int i = length - 1; i >= 0; i--)
+    {
+        if(S[i] == '<')
+        {
+            answer = min(answer, length - 1 - i);
+            break;
+        }
+    }
+
+    cout << answer << "\n";
+}

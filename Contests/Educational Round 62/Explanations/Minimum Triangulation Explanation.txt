@@ -1,0 +1,31 @@
+We want to divide the N numbers - 1, 2, 3, ... , N into N - 2 triplets (a, b, c) such that the sum of the products of abc is minimum
+
+1. Each side must occur in at least one triplet. 
+
+---
+
+If we want to minimise the sum, we need to ensure that the smallest element - 1, is present in each triplet. 
+
+Now each triplet is really the product of 2 integers. We want to minimise the product. 
+
+So, we will pair 2 with 3. Pairing 2 with any other number will yield a greater product. 
+
+Then, by the same logic we will pair 3 with 4, 
+
+4 with 5 and so on. 
+
+----
+
+
+int main()
+{
+    int n;
+    cin >> n;
+
+    int weight = 0;
+    for(int i = 3; i <= n; i++)
+        weight += i*(i - 1);
+
+    cout << weight;
+    return 0;
+}
