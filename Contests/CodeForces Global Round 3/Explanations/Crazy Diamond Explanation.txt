@@ -1,0 +1,113 @@
+For every element x, let P(x) denote the position where x currently is. 
+
+We will scan the array from i = 1 to N. 
+
+If (i = A[i]), we will not do anything. 
+
+Otherwise, we will find out the current position of i, it is P(i). 
+
+We want to swap A(i) and A(P(i)). We also want to update the array P. 
+
+To make things simpler, let us abstract the complexity and create a function for swapping elements - 
+
+void arrange_swaps(int start, int destination)
+{
+    int original_start = A[start], original_destination = A[destination];
+    swap(A[start], A[destination]);
+
+    position[original_start] = destination;
+    position[original_destination] = start;
+
+    swaps.push_back(make_pair(start, destination));
+}
+
+---------
+
+Now, let us see how we will swap. 
+
+Let L = min{i, P(i)} and R = max{i, P(i)}
+
+We have to swap A[L] and A[R].
+
+---
+
+Case 1 - Both L and R are in the first half
+
+We can swap like this - 
+
+swap(A[R], A[N])
+swap(A[N], A[L]) => Now, A[R] has reached A[L]
+swap(A[N], A[R]) => Now, A[L] has reached A[R]
+
+------
+
+Case 2 - Both L and R are in the second half
+
+swap(A[L], A[1])
+swap(A[1], A[R]) => Now, A[L] has reached A[R]
+swap(A[1], 
+
+------
+
+Case 3 - L and R are in different halves
+
+
+------
+
+int main()
+{
+    int no_of_elements;
+    cin >> no_of_elements;
+
+    for(int i =1 ; i <= no_of_elements; i++)
+        cin >> A[i];
+
+    for(int i = 1; i <= no_of_elements; i++)
+        position[A[i]] = i;
+
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        if(i == A[i])
+            continue;
+
+        int target = i;
+        int target_position = position[target];
+
+        int left = min(target_position, i);
+        int right = max(target_position, i);
+
+        if(right - left >= no_of_elements/2)
+        {
+            arrange_swaps(i, target_position);
+
+            continue;
+        }
+
+        if(left > no_of_elements/2)
+        {
+            arrange_swaps(1, left);
+            arrange_swaps(1, right);
+            arrange_swaps(left, 1);
+        }
+        else if(right <= no_of_elements/2)
+        {
+            arrange_swaps(right, no_of_elements);
+            arrange_swaps(no_of_elements, left);
+        }
+        else
+        {
+            arrange_swaps(left, no_of_elements);
+            arrange_swaps(no_of_elements, 1);
+            arrange_swaps(1, right);
+
+            arrange_swaps(1, no_of_elements);
+            arrange_swaps(no_of_elements, left);
+        }
+    }
+
+    cout << swaps.size() << "\n";
+    for(int i = 0; i < swaps.size(); i++)
+        cout << swaps[i].first << " " << swaps[i].second << "\n";
+
+    return 0;
+}
