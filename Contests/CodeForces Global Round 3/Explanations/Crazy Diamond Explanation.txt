@@ -45,12 +45,26 @@ Case 2 - Both L and R are in the second half
 
 swap(A[L], A[1])
 swap(A[1], A[R]) => Now, A[L] has reached A[R]
-swap(A[1], 
+swap(A[1], A[L]) => Now, A[R] has reached A[L]. 
+
+Also, A[1] has reached it's correct position again. 
+
+Please note that when we are at position i, A[1, ... i - 1] is sorted. So A[1] will hold 1. We need to take care that A[1] contains 1 after we are done.
+
+We do not need to worry about this in Case 1 since A[N] need not hold the correct value - N
 
 ------
 
 Case 3 - L and R are in different halves
 
+Here, we will utilise both ends. 
+
+swap(A[L], A[N])
+swap(A[N], A[1])
+swap(A[1], A[R]) => Now, A[L] has reached A[R]
+
+swap(A[1], A[N]) => Now, the correct value of A[1] has been put back in A[1]
+swap(A[N], A[L]) => Now, A[R] has reached A[L]
 
 ------
 
