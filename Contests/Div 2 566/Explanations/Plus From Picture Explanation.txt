@@ -1,0 +1,129 @@
+Let us precompute d(i, j), u(i, j), l(i, j) and r(i, j) which holds the number of consecutive stars from (i, j)
+in the down, up, left and right directions respectively. 
+
+Now, a square is the center of a plus if it has at least 2 consecutive stars in each direction.
+
+Case 1 - No of Plus Centers is not 1
+
+If the gird has more than 1 plus center or 0 plus center, then the answer is NO. 
+
+----
+
+Case 2 - Nof Plus Centers is exactly 1
+
+We need to check every single star on the grid. Let us say a star lies on (X, Y) and the center is on (Cx, Cy)
+
+----
+
+  Case 2a - Cx = X or Cx = y
+
+  That means (X, Y) lies on the same line as (Cx, Cy). We just need to check if it lies on the same plus sign.
+  For this, there has to be an uninterrupted streak of stars in between (X, Y) and (Cx, Cy)
+
+  Then, we will need to first find the direction of (X, Y) from (Cx, Cy) [Left, Up, Right, Down].
+
+  Suppose (X, Y) is to the left of (Cx, Cy), then we must check if X + left(Cx) - 1 <= Cx
+
+---
+
+  Case 2b - Cx != X and Cx != Y
+
+  This means (X, Y) is not in the same line as (Cx, Cy) and the answer is no, regardless of the distance between them.
+  
+  
+  ---
+  
+  #include <cstdio>
+#include <cstring>
+
+const int MAX_N = 505;
+const char STAR = '*', EMPTY = '.';
+char grid[MAX_N][MAX_N];
+int up[MAX_N][MAX_N], down[MAX_N][MAX_N], left[MAX_N][MAX_N], right[MAX_N][MAX_N];
+
+int main()
+{
+    int height, width;
+    scanf("%d %d", &height, &width);
+
+    for(int i = 1; i <= height; i++)
+    {
+        scanf("%s", grid[i] + 1);
+    }
+
+    memset(up, 0, sizeof(up));
+    memset(left, 0, sizeof(left));
+    for(int i = 1; i <= height; i++)
+    {
+        for(int j = 1; j <= width; j++)
+        {
+            up[i][j] = (grid[i][j] == STAR ? 1 + up[i - 1][j] : 0);
+            left[i][j] = (grid[i][j] == STAR ? 1 + left[i][j - 1] : 0);
+        }
+    }
+
+    memset(down, 0, sizeof(down));
+    memset(right, 0, sizeof(right));
+    for(int i = height; i >= 1; i--)
+    {
+        for(int j = width; j >= 1; j--)
+        {
+            down[i][j] = (grid[i][j] == STAR ? 1 + down[i + 1][j] : 0);
+            right[i][j] = (grid[i][j] == STAR ? 1 + right[i][j + 1] : 0);
+        }
+    }
+
+    int no_of_plus_centers = 0, center_i = 0, center_j = 0;
+    for(int i = 1; i <= height; i++)
+    {
+        for(int j = 1; j <= width; j++)
+        {
+            if(down[i][j] >= 2 && right[i][j] >= 2 && up[i][j] >= 2 && left[i][j] >= 2)
+            {
+                no_of_plus_centers++;
+
+                center_i = i, center_j = j;
+            }
+        }
+    }
+
+    int possible = true;
+
+    if(no_of_plus_centers != 1)
+    {
+        possible = false;
+    }
+
+    for(int i = 1; i <= height; i++)
+    {
+        for(int j = 1; j <= width; j++)
+        {
+            if(grid[i][j] == EMPTY) continue;
+
+            if(i != center_i && j != center_j)
+            {
+                possible = false;
+            }
+
+            if(i < center_i && i + up[center_i][center_j]  - 1 < center_i)
+            {
+                possible = false;
+            }
+            if(center_i < i && center_i + down[center_i][center_j] - 1 < i)
+            {
+                possible = false;
+            }
+            if(j < center_j && j + left[center_i][center_j] - 1 < center_j)
+            {
+                possible = false;
+            }
+            if(center_j < j && center_j + right[center_i][center_j] - 1 < j)
+            {
+                possible = false;
+            }
+        }
+    }
+
+    printf("%s", (possible ? "YES\n" : "NO\n"));
+    return 0;
+}
