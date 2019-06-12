@@ -1,0 +1,29 @@
+A 2x3 block can be tiled in two ways. 
+
+2 2     2 2
+1 2 and 2 1
+1 1     1 1
+
+In whatever way we place the first block, the second block will have to be placed in the way above. 
+This shows that we will always be filing blocks of 2x3 at a time. If n is odd, then nx3 cannot be tiled. 
+
+If it is 3xn, then there are n/2 blocks of 2 if n is even. 
+
+So the number of tilings is 2^{n/2}
+
+----
+
+#include <iostream>
+
+using namespace std;
+
+int main()
+{
+    int n;
+    cin >> n;
+
+    long long no_of_fillings  = (n%2 == 1 ? 0 : (1LL << (n/2)) );
+    cout << no_of_fillings;
+
+    return 0;
+}
