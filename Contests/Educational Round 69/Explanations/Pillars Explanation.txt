@@ -1,0 +1,43 @@
+It is not possible, whenever there exists any element A[i], such that there are values greater than A[i] both to it's left and it's right. 
+
+Proof - Let A[i] = x, Let Y > x and Z > x
+
+Let Y be to the left of x and Z to the right of x. 
+
+Without loss of generatlity, let Z > Y
+
+We need to put Y on top of Z and then X on top of Y. 
+
+But Y has to cross X to reach Z. This is not possible.
+
+---
+
+If this isn't the case, then every array element has all the elements greater than it on one side. We simply move the coins along that direction.
+
+---
+
+int main()
+{
+    int no_of_elements;
+    cin >> no_of_elements;
+
+    vector <long long> A(no_of_elements + 1);
+    for(int i = 1; i <= no_of_elements; i++)
+        cin >> A[i];
+
+    vector <long long> max_till(no_of_elements + 1, 0);
+    for(int i = 1; i <= no_of_elements; i++)
+        max_till[i] = max(max_till[i - 1], A[i]);
+
+    vector <long long> max_from(no_of_elements + 2, 0);
+    for(int i = no_of_elements; i >= 1; i--)
+        max_from[i] = max(max_from[i + 1], A[i]);
+
+    int possible = true;
+    for(int i = 2; i < no_of_elements; i++)
+        if(max_till[i] > A[i] && max_from[i] > A[i])
+            possible = false;
+
+    cout << (possible ? "YES\n" : "NO\n");
+    return 0;
+}

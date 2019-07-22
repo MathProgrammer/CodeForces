@@ -1,0 +1,24 @@
+We want the ladder to be as big as possible. SO we will use the largest pieces of wood available to us to make the ladder's bases. 
+
+Then we will be using A[n] and A[n - 1] to make the base. 
+
+Now, we will try to use as many of the (n - 2) available planks available to us to make the ladder. But we cannot use more than (A[n - 1] - 1) planks. 
+
+The height of the ladder is min{A[n - 1] - 1, n - 2}
+
+---
+
+void solve()
+{
+    int no_of_elements;
+    cin >> no_of_elements;
+
+    vector <int> length(no_of_elements + 1, 0);
+    for(int i = 1; i <= no_of_elements; i++)
+        cin >> length[i];
+
+    sort(all(length));
+
+    int no_of_steps = min(length[no_of_elements - 1] - 1, no_of_elements - 2);
+    cout << no_of_steps << "\n";
+}
