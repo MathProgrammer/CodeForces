@@ -1,0 +1,51 @@
+Let us suppose that we want to break (A[1], ... , A[n]) at point P. 
+
+What is the cost ? 
+
+(A[p] - A[1]) + (A[n] - A[p + 1])
+
+Suppose we want to break it at two points - p1 and p2. What is the cost ? 
+
+(A[p1] - A[1]) + (A[p2] - A[p1 + 1]) + (A[n] - A[p2 + 1])
+
+= (A[p1] - A[p1 + 1]) + (A[p2] - A[p2 + 1]) + (A[n] - A[1])
+
+Every time we break it at point p, we will add A[p + 1] - A[p] to the cost. (A[n] - A[1]) is a fixed cost that will be there
+regardless of how we choose our cuts. 
+
+So, we will create an array of all possible costs of all (N - 1) cuts. The cost is (A[i + 1] - A[i])
+
+Among these costs, we will take the lowest (K - 1) values. These are the cuts we need to split the array into K subarrays.
+
+-----
+
+#include <iostream>
+#include <vector>
+#include <algorithm>
+ 
+#define all(v) (v).begin(), (v).end()
+using namespace std;
+ 
+int main()
+{
+    int no_of_elements, no_of_subarrays;
+    cin >> no_of_elements >> no_of_subarrays;
+ 
+    vector <long long> A(no_of_elements + 1);
+    for(int i = 1; i <= no_of_elements; i++)
+        cin >> A[i];
+ 
+    vector <long long> costs;
+    for(int i = 1; i < no_of_elements; i++)
+        costs.push_back(A[i] - A[i + 1]);
+ 
+    sort(all(costs));
+ 
+    long long total_cost = A[no_of_elements] - A[1];
+ 
+    for(int i = 0; i < no_of_subarrays - 1; i++)
+        total_cost += costs[i];
+ 
+    cout << total_cost;
+    return 0;
+}
