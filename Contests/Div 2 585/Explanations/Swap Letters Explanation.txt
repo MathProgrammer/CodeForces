@@ -1,0 +1,123 @@
+Now, let us get the impossibility criteria clear. When is it not possible ? 
+
+If the strings S and T are equal, it means whenever there is an A, it occurs twice and whenever there is a B, it occurs twice.
+
+If the number of As or number of Bs is odd, then there is no solution. 
+
+-----
+
+Now let us suppose that both the As and Bs are even. 
+
+We will ignore all the positions (A, A) and (B, B) since they are already equal. 
+
+Let us look at (A, B)
+
+If we have two (A, B) and (A, B). One operation can make both pairs equal. 
+
+If we have two (B, A) and (B, A). One operation can also make both pairs equal. 
+
+----
+
+Case 1 - The number of pairs (A, B) and (B, A) is even. 
+
+Then we will pair up pairs of (A, B) and pairs of (B, A) and get our solution. 
+
+----
+
+Case 2 - The number of pairs (A, B) and (B, A) is both odd. 
+
+We will match as above until we have only one pair of (A, B) and (B, A) left. 
+
+When we have only one left, we will do one swap on the same position on (B, A). Now, it becomes (A, B)
+
+Now we have two (A, B) pairs and we will do one operation to make the pairs equal !
+
+---
+
+Case 3 - One of the number of pairs (A, B) and (B,A) is odd. 
+
+This will not happen since it means that A and B occur an odd number of times. We have already checked this condition when we were doing the impossibility check
+
+----
+
+int main()
+{
+    int length;
+    string S, T;
+    cin >> length >> S >> T;
+
+    const int NO_OF_ALPHABETS = 2, A = 0, B = 1;
+    vector <int> frequency(NO_OF_ALPHABETS, 0);
+    for(int i = 0; i < S.size(); i++)
+    {
+        frequency[S[i] - 'a']++;
+    }
+
+    for(int i = 0; i < T.size(); i++)
+    {
+        frequency[T[i] - 'a']++;
+    }
+
+    if(frequency[A]%2 == 1 || frequency[B]%2 == 1)
+    {
+        cout << "-1\n";
+
+        return 0;
+    }
+
+    vector <int> ABs;
+    for(int i = 0; i < length; i++)
+    {
+        if(S[i] == 'a' && T[i] == 'b')
+        {
+            ABs.push_back(i + 1);
+        }
+    }
+
+    vector <int> BAs;
+    for(int i = 0; i < length; i++)
+    {
+        if(S[i] == 'b' && T[i] == 'a')
+        {
+            BAs.push_back(i + 1);
+        }
+    }
+
+    int no_of_operations = 0;
+
+    if(ABs.size()%2 == 1 && BAs.size()%2 == 1)
+    {
+        no_of_operations = ABs.size()/2 + BAs.size()/2 + 2;
+    }
+    else if(ABs.size()%2 == 0 && BAs.size()%2 == 0)
+    {
+        no_of_operations = ABs.size()/2 + BAs.size()/2;
+    }
+    else //Redundant but just to be safe
+    {
+        cout << "-1\n";
+
+        return 0;
+    }
+
+    cout << no_of_operations << "\n";
+    for(int i = 0; i + 1 < ABs.size(); i += 2)
+    {
+        cout << ABs[i] << " " << ABs[i + 1] << "\n";
+    }
+
+    for(int i = 0; i + 1 < BAs.size(); i += 2)
+    {
+        cout << BAs[i] << " " << BAs[i + 1] << "\n";
+    }
+
+    if(ABs.size()%2 == 1 && BAs.size()%2 == 1)
+    {
+        int last_AB = ABs.size() - 1, last_BA = BAs.size() - 1;
+
+        cout << ABs[last_AB] << " " << ABs[last_AB] << "\n";
+        cout << ABs[last_AB] << " " << BAs[last_BA] << "\n";
+    }
+
+    return 0;
+}
