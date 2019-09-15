@@ -1,0 +1,145 @@
+Here is what this question asks us. 
+
+You are given a string S. Split it into two sequences S1 and S2. 
+
+S1 and S2 are both sorted in non-decreasing order. 
+The string (S1 S2) must also be sorted in non-decreasing oder.
+
+Now one observation to make is that the number of possible characters is small (10) even though the length is large. 
+
+Let us iterate over all 10 digits. We will put all digits < d in S1 and > d in S2. 
+
+The reason we are not touching the digits = d is that they can be put into either of the strings based on convenience. 
+
+1. Iterate over 10 digits. 
+2. For the current digit d, put all characters < d in S1 and > d in S2. 
+3. Check if S1 and S2 are non-decreasing
+Here is what this question asks us. 
+
+You are given a string S. Split it into two sequences S1 and S2. 
+
+S1 and S2 are both sorted in non-decreasing order. 
+The string (S1 S2) must also be sorted in non-decreasing oder.
+
+Now one observation to make is that the number of possible characters is small (10) even though the length is large. 
+
+Let us iterate over all 10 digits. We will put all digits < d in S1 and > d in S2. 
+
+The reason we are not touching the digits = d is that they can be put into either of the strings based on convenience. 
+
+1. Iterate over 10 digits. 
+2. For the current digit d, put all characters < d in S1 and > d in S2. 
+3. Check if S1 and S2 are non-decreasing
+
+---
+
+int possible_to_split(string S, int n)
+{
+    string new_string_lesser_than_n, new_string_greater_than_n;
+
+    for(int i = 0; i < S.size(); i++)
+    {
+        if(S[i] - '0' < n)
+        {
+            new_string_lesser_than_n += S[i];
+        }
+        else if(S[i] - '0' > n)
+        {
+            new_string_greater_than_n += S[i];
+        }
+    }
+
+    return (is_non_decreasing(new_string_greater_than_n) && is_non_decreasing(new_string_lesser_than_n));
+}
+
+-----
+
+We can use a very simple function to check if a string S in non-decreasing. 
+
+int is_non_decreasing(string S)
+{
+    for(int i = 0; i + 1 < S.size(); i++)
+    {
+        if(S[i] > S[i + 1])
+            return false;
+    }
+
+    return true;
+}
+
+---
+
+Let us now suppose that there exists some digit d such that we can make 2 non-decreasing strings S1 and S2 such that all characters in S1 < d and all characters in S2 > d. 
+
+Is this sufficient ? 
+No. We need to accomodate the digit d too. 
+
+---
+
+Let x be the leftmost occurrence of any digit > d. 
+
+int second_sequence_beginning = length - 1;
+for(int i = length - 1; i >= 0; i--)
+{
+      if(S[i] - '0' > possible_endings_1)
+      {
+          second_sequence_beginning = i;
+      }
+}
+
+---
+
+Let y be the rightmost occurence of any digit < d
+
+int first_sequence_ending = 0;
+for(int i = 0; i < length; i++)
+{
+     if(S[i] - '0' < possible_endings_1)
+     {
+          first_sequence_ending = i;
+     }
+}
+
+----
+
+1. Any occurence of d that is before x can be put in the beginning of S2
+
+2. Any occurence of d that is after y can be put at the end of S1
+
+3.Occurences of d that are in between x and y cannot be put in either S1 or S2 
+
+If this is the case, then we will continue searching for another digit for which we can construct this
+
+----
+
+int colouring_possible = true;
+for(int i = second_sequence_beginning; i < first_sequence_ending; i++)
+{
+      if(S[i] - '0' == possible_endings_1)
+      {
+           colouring_possible = false;
+      }
+ }
+
+ if(!colouring_possible)
+      continue;
+
+---------
+
+If the colouring is possible, we will construct it according to the rules above
+
+string colouring;
+for(int i = 0; i < length; i++)
+{
+    if( (S[i] - '0' < possible_endings_1) || (S[i] - '0' == possible_endings_1 && i >= first_sequence_ending) )
+     {
+                colouring += '1';
+     }
+     else if( (S[i] - '0' > possible_endings_1) || (S[i] - '0' == possible_endings_1 && i <= second_sequence_beginning))
+     {
+                colouring += '2';
+     }
+}
+
+-----------
+---
