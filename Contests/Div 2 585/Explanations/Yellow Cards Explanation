@@ -1,0 +1,37 @@
+How do we minimise the number of eliminations ? 
+
+We will try to use out as many cards as possible without eliminating a single player. This means we will first give every player
+1 card less than the number of cards he is allowed. This is
+
+a1(k1 - 1) + a2(k2 - 1)
+
+If the number of yellow cards is lesser than this, we will not have a single elimination. 
+
+If it is more than this, we will have one elimination for every card that we cross from this threshold. 
+
+Of course, the number cannot be greater than (k1 + k2) as that is the total number of people. 
+
+-------
+
+int total_people = team_1 + team_2;
+int max_cards_without_elimination = team_1*(yellow_1 - 1) + team_2*(yellow_2 - 1);
+
+int minimum_eliminations, maximum_eliminations;
+
+if(max_cards_without_elimination >= yellow)
+{
+    minimum_eliminations = 0;
+}
+else
+{
+    minimum_eliminations = min(total_people, (yellow - max_cards_without_elimination));
+}
+
+------
+
+Now, let us try to maximise the number of eliminations. 
+
+First, let us assume without loss of generality that k1 < k2. (If not, we just swap (k1, k2) and (a1, a2))
+
+----
+
