@@ -39,6 +39,15 @@ We will give as many yellow cards as possible to the players of team 1.
 
 This is K/k1. Of course, this number cannot be greater than a1. 
 
+K = K - K/k1
+
 Then, we will give as many yellow cards as possible to the second team. 
 This number is also K/k2 and cannot be greater than a2. 
 
+-----
+
+maximum_eliminations = min(team_1, yellow/yellow_1);
+
+yellow -= maximum_eliminations*yellow_1;
+
+maximum_eliminations += min(team_2, yellow/yellow_2);
