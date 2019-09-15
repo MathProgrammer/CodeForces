@@ -35,3 +35,10 @@ First, let us assume without loss of generality that k1 < k2. (If not, we just s
 
 ----
 
+We will give as many yellow cards as possible to the players of team 1. 
+
+This is K/k1. Of course, this number cannot be greater than a1. 
+
+Then, we will give as many yellow cards as possible to the second team. 
+This number is also K/k2 and cannot be greater than a2. 
+
