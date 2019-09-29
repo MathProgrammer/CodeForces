@@ -1,0 +1,103 @@
+How do we check if a tiling is not possible ? 
+
+Suppose R[i] = x and it means that the first x-columns of the i-th row must be black and the (x + 1)-th column must be white. 
+
+We will check if C[x + 1] >= i, 
+If this is the case, then in the (x + 1)-th column, we have to make more than i-rows black. 
+
+This causes a contradiction. 
+
+We will check this condition for every row and every column
+
+
+-------
+
+
+for(int i = 1; i <= rows; i++)
+    {
+        int first_empty_column = blocked_cells_row[i] + 1;
+
+        if(blocked_cells_column[first_empty_column] >= i)
+        {
+            cout << "0\n";
+
+            return 0;
+        }
+    }
+
+    for(int j = 1; j <= columns; j++)
+    {
+        int first_empty_row = blocked_cells_column[j] + 1;
+
+        if(blocked_cells_row[first_empty_row] >= j)
+        {
+            cout << "0\n";
+
+            return 0;
+        }
+    }
+
+-----
+
+A question that might arise here is that if R[i] = x, we are checking if the (x + 1)-th cell is allowed to be white (as it should). 
+
+But what if we are forced to make one of the first x columns of the i-th row white ? 
+
+Well, if the y-th column of the i-th row must be white, then it means that 
+
+C[y] = i - 1, 
+
+We will encounter this case, when we are checking the columns. 
+
+------
+
+1. For every row R[i] = X, we will check if we can colour the cell(i, X + 1), white. 
+  1a. This is possible if C[X + 1] < i
+  
+2. For every column C[j] = Y, we will check if we can colour the cell(Y + 1, j) white
+  2a. This is possible if R[Y + 1] < j
+
+-----
+
+A cell(i, j) is blocked if we are forced to colour it either black or white and we do not have a choice in colouring it. 
+
+If R[j] = x, then the first X rows of column j must be black and the (X + 1)-th row of column j must be white. These (X + 1) cells are forced. 
+
+If C[i] = y, then the first Y rows of column i must be black and the (Y + 1)-th column of row i must be white. These (Y + 1) cells are forced.
+
+-----
+
+Then, we will visit each cell and check if it is 'free' or 'forced'. 
+
+Cell (i, j) is forced if 
+
+R[j] + 1 >= i 
+
+ or if 
+
+C[i] + 1 >= j
+
+-----
+
+LL free_cells = 0;
+    for(int i = 1; i <= rows; i++)
+    {
+        for(int j = 1; j <= columns; j++)
+        {
+            if(i <= blocked_cells_column[j] + 1 || j <= blocked_cells_row[i] + 1)
+            {
+                continue;
+            }
+            else
+            {
+                free_cells++;
+            }
+        }
+    }
+
+-----
+
+Suppose, there are F free cells. The answer is 2^F because each of the F free cells can be either black or white.
+
+We must calculate 2^F using binary exponentiation.
+
