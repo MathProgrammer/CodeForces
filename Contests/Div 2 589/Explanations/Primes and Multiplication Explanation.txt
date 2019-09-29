@@ -1,0 +1,101 @@
+Whenever we are asked to calculate a long sum or product, we must try to group the summands and try to calculate the contribution of each prime factor 
+
+----
+
+What is the contribution of prime factor P ? 
+
+We will encounter P as many times as [N/P]
+
+We will encounter P^2 as many times as [N/P^2]
+
+We will encounter P^3 as many times as [N/P^3] 
+
+and so on
+
+The exponent of P is [N/P] + [N/P^2] + ... 
+
+We basically want to find the number of 0s in n! in base p. 
+This is a famous problem.
+
+----
+
+We can factor the number in O(root(n)) time into it's prime factors. 
+
+void factorise(LL n, vector <LL> &P)
+{
+    for(LL i = 2; i*i <= n; i++)
+    {
+        if(n%i == 0)
+        {
+            P.push_back(i);
+
+            while(n%i == 0)
+            {
+                n /= i;
+            }
+        }
+    }
+
+    if(n > 1)
+    {
+        P.push_back(n);
+    }
+}
+
+----
+
+For each of it's prime factors, we will calculate the exponent to which it is raised. 
+
+We need to be careful with how we evaluate this. We need to avoid overflow. 
+
+So, the number of multiples of p till n = n/p
+
+The number of multiples of p^2 till n =  n/p^2
+
+We might not be able to square p if it's too large. Instead, we will divide and bring down n. 
+We will make n = n/p
+
+----
+
+LL get_exponent(LL n, LL p)
+{
+    LL exponent = 0;
+    LL temp_p = p;
+
+    while(n > 0)
+    {
+        exponent += n/p;
+
+        n /= p;
+    }
+
+    return exponent;
+}
+
+----
+
+Then, we will simply multiply all of them in the answer
+
+int main()
+{
+    LL x, n;
+    cin >> x >> n;
+
+    vector <LL> prime_factors;
+    factorise(x, prime_factors);
+
+    const LL MOD = 1e9 + 7;
+    LL answer = 1;
+    for(int i = 0; i < prime_factors.size(); i++)
+    {
+        LL exponent = get_exponent(n, prime_factors[i]);
+
+        answer *= power_mod(prime_factors[i], exponent, MOD);
+
+        answer %= MOD;
+    }
+
+    cout << answer << "\n";
+    return 0;
+}
+
