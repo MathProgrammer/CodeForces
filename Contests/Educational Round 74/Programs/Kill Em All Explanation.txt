@@ -1,0 +1,66 @@
+The best approach is to start throwing the bombs from the rightmost position. 
+
+The reason it pushes everyone closer to the origin. 
+
+Let us sort the positions - X1 < X2 < ... < Xn
+
+Now, we will go through the array from finish till last. 
+
+The current position of X[i] is (X[i] - E.R), where E is the number of explosions that have happened so far and R is the displacement for each blast.
+
+If (X[i] <= 0), then we do not need to throw any more missiles and we are done. 
+
+The beautiful thing is that we do not need to perform a linear sweep through the entire array and update all the individual positions after each blast. 
+If we know x blasts have occured, we can easily calculate the current position of the X[i] in O(1) time through simple subtraction.
+
+-------
+
+Let the difference d = x - y
+
+Case 1 - Difference is 1
+
+Then it is not possible
+
+Case 2 - Difference is prime
+
+Then we just subtract by the entire difference d
+
+Case 3 - Difference is composite 
+
+d = p1^a1 p2^a2 ... pn^an
+
+d = p1 q, where q = p1^(a1 - 1) p2^a2 ... pn^an
+
+We just subtract p1 from d q times
+
+-----
+
+void solve()
+{
+    int no_of_elements, distance;
+    cin >> no_of_elements >> distance;
+
+    vector <int> X(no_of_elements + 1, 0);
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        cin >> X[i];
+    }
+
+    sort(all(X));
+
+    int explosions = 0;
+    for(int i = no_of_elements; i >= 1; i--)
+    {
+        while(X[i] == X[i - 1])
+        {
+            i--;
+        }
+
+        if(X[i] - explosions*distance > 0)
+        {
+            explosions++;
+        }
+    }
+
+    cout << explosions << "\n";
+}
