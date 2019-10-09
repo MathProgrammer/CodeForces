@@ -1,0 +1,81 @@
+Rather than trying to count the good substrings, let us try to count the number of bad substrings. 
+
+Let us use the following fact - 
+
+A substring is bad if and only if it has only one character of a certain type
+
+Proof - If we have only one A in a string, it will never be good since A will not have any palindrome to match with. 
+
+Now, let us prove that any string which has at least 2 of both A and B is always good. 
+
+Let us look at every pair (AA) and (BB)
+
+Case 1 - AA or BB is consecutive. We have a palindrome right here
+
+Case 2 - ABBB..BBBA or BAAA...AAAB
+
+The two As or two Bs are the end points of a palindrome
+
+----
+
+This proves that a substring is bad if and only if either A or B occurs exactly 1 time. 
+
+-----
+
+Now, the question is - Find the number of substrings such that there is only occurence of A or B. 
+
+Here is what we will do. 
+
+Look at the segments of As and Bs. 
+
+Suppose we have x As followed by y Bs
+
+AAAA... AB... BBB
+
+Each of the x As creates a bad substring with the first B and each of the y Bs creates a bad substring with the last A.
+
+We are counting AB twice
+
+So, the number of bad substrings here is (x + y - 1)
+
+-----
+
+If we expand to include even one more A or one more B, we will have a good substring on our hands !
+
+We will make an array of lengths of segments. 
+
+Then, we will iterate over them and add (Segment[i] + Segment[i + 1] - 1) to our answer.
+
+----
+
+int main()
+{
+    long long length;
+    string S;
+    cin >> length >> S;
+
+    vector <int> segments;
+    for(int i = 0; i < S.size(); i++)
+    {
+        if(i == 0 || S[i] != S[i - 1])
+        {
+            segments.push_back(1);
+        }
+        else
+        {
+            segments.back()++;
+        }
+    }
+
+    long long bad_strings = 0;
+    for(int i = 0; i + 1 < segments.size(); i++)
+    {
+        bad_strings += segments[i] + segments[i + 1] - 1;
+    }
+
+    long long total_strings = (length*(length - 1))/2;
+    long long good_substrings = total_strings - bad_strings;
+
+    cout << good_substrings;
+    return 0;
+}
