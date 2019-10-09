@@ -1,0 +1,125 @@
+The brute force approach is to visit all permutations of the array and find the cost for each of them. However, the beautiful thing is that we do not have to do that. Just like the Travelling Salesman problem, we just have to maintain a bitmask that corresponds to which alphabets we have already chosen. 
+
+Let f(m) represent a mask m, where the i-th bit is set if we have used the i-th alphabet. 
+
+f(110001) is the minimum cost where we have a keyboard consisting of the first, second and sixth keys.
+
+----
+
+The question is, how do we transition in between states ? 
+
+When we add a new character to the keyboard, how do we update the cost ? 
+
+In order to do this, it appears that we need to know the relative positions of the remaining keys. 
+
+Suppose we know f(110001) and want to calculate f(110011). We want to add the fourth alphabet too. It appears that we know the exact positions of the first, second and sixth alphabets. 
+
+However, we do not !
+
+We can use the beautiful idea of calculating a sum by the contribution of each of it's components rather than by evaluating each term. 
+
+---
+
+Suppose, we already have the 1st, 2nd and 6th letters and want to add the 5th letter.
+
+The 5-th letter will be added at the 4th position. 
+
+Let us remove the absolute sign and try to evaluate the contribution of the 5-th letter to this mask. 
+
+When we add the 5-th letter at the 4-th position, 
+
+Every time we move from 
+
+1. 5-1, we will be adding (4 - p(1))
+2. 5-2, we will be adding (4 - p(2))
+3. 5-6, we will be adding (4 - p(6))
+
+where p(i) is the position of the i-th key.
+
+There are 3 keys existing that are already placed in earlier positions. To each of them, we will be adding +4.
+
+----
+
+Every time we move from 
+
+4. 5-4, we will be adding (p(4) - 4)
+5. 5-3, we will be adding (p(3) - 4)
+
+Since {4, 3} will be placed after 5, we will be adding -4 to the sum. 
+
+----
+
+So, overall the 5-th letter will be contributing +4 every time it visits a key that is already placed and -4 for every time it visits a key that is not yet placed.
+
+----
+
+Here, is how we will transition - 
+
+1. Visit all masks from 000000 to 111111
+2. For each mask, iterate over all the set bits and assume that this is the key that is added last. 
+3. Let m' = m without the i-th bit set
+4. Calculate the cost of m' if the i-th bit is added last
+5. f(m) = min{f(m), f(m') + cost}
+
+f(0) = 0 and f(111111) is the answer
+
+------
+
+int main()
+{
+    int length, no_of_letters;
+    string password;
+    cin >> length >> no_of_letters >> password;
+
+    memset(neighbours, 0, sizeof(neighbours));
+    for(int i = 0; i + 1 < length; i++)
+    {
+        neighbours[password[i] - 'a'][password[i + 1] - 'a']++;
+        neighbours[password[i + 1] - 'a'][password[i] - 'a']++;
+    }
+
+    int full_mask = (1 << no_of_letters) - 1;
+    for(int mask = 0; mask <= full_mask; mask++)
+    {
+        const int oo = 1e9;
+        cost[mask] = (mask == 0 ? 0 : oo);
+
+        for(int latest_letter = 0; latest_letter < no_of_letters; latest_letter++)
+        {
+            if(!is_bit_set(mask, latest_letter))
+            {
+                continue;
+            }
+
+            int position = bit_count(mask);
+            int cost_to_make_this_last = 0;
+
+            for(int other_letter = 0; other_letter < no_of_letters; other_letter++)
+            {
+                if(other_letter == latest_letter)
+                {
+                    continue;
+                }
+
+                if(is_bit_set(mask, other_letter))
+                {
+                    cost_to_make_this_last += position*neighbours[latest_letter][other_letter];
+                }
+                else
+                {
+                    cost_to_make_this_last -= position*neighbours[latest_letter][other_letter];
+                }
+            }
+
+            int mask_without_last = mask^(1 << latest_letter);
+
+            cost[mask] = min(cost[mask], cost[mask_without_last] + cost_to_make_this_last);
+        }
+    }
+
+    cout << cost[full_mask];
+    return 0;
+}
+
+
+
