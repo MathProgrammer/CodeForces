@@ -1,0 +1,98 @@
+Fact - Every mask chosen M, either has frequency(M) > 1 or is a submask of another mask M' such that frequency(M') > 1
+
+---
+
+Proof - 
+
+Let us say we have chosen bitmask M1 in our set. 
+
+Either the frequency[M1] > 1 or there is another mask M2 such that M1 is a submask of M2. 
+
+Then either frequency[M2] > 1 or there is another mask M3 such that M2 is a submask of M3.
+
+And so on. 
+
+The number of masks chosen is finite so this cannot go on indefinitely. 
+
+We will finally end up at mask Mk, such that frequency(Mk) > 1
+
+M1 -> M2 -> .... -> Mk
+
+All the masks before Mk are submasks of Mk
+
+----
+
+How do we use this idea ? 
+
+First, we will add all masks into our set, if the frequency(mask) > 1
+
+---
+
+    vector <long long> distinct_masks;
+    map <long long, int> selected;
+    for(int i = 1; i <= no_of_students; i++)
+    {
+        if(mask_frequency[mask[i]] > 1 && !selected[mask[i]])
+        {
+            distinct_masks.push_back(mask[i]);
+
+            selected[mask[i]] = true;
+        }
+    }
+
+----
+
+Call the masks who's frequency > 1 'Master' masks.
+
+Now, we will go over the remaining masks. If there is any mask such that it is a submask of one of the 'Master' masks, then we will include it in our set as well. 
+
+If there is some mask M1, such that it is not a submask of any of the 'Master' Masks, then it can't be included in our set. 
+Suppose we choose M1, we have to choose M2 such that M1 is a submask of M2, and then M3 and so on. 
+We will eventually end up at a mask Mk, such that there is no mask M(k + 1) such that Mk is a submask of M(k + 1). 
+Also, M(k) has frequency = 1. Since, M1 is not a submask of any of the 'Master' masks.
+
+So, we cannot choose the entire sequence.
+
+The only masks we can choose are the masks which are submasks of the 'Master' Masks
+
+-----
+
+for(int i = 1; i <= no_of_students; i++)
+    {
+        if(selected[mask[i]])
+        {
+            continue;
+        }
+
+        for(int j = 0; j < distinct_masks.size(); j++)
+        {
+            if(is_submask(distinct_masks[j], mask[i]))
+            {
+                selected[mask[i]] = true;
+
+                break;
+            }
+        }
+    }
+
+----
+
+Then, we just add up the skills of all the players
+
+    for(int i = 1; i <= no_of_students; i++)
+    {
+        if(selected[mask[i]])
+        {
+            continue;
+        }
+
+        for(int j = 0; j < distinct_masks.size(); j++)
+        {
+            if(is_submask(distinct_masks[j], mask[i]))
+            {
+                selected[mask[i]] = true;
+
+                break;
+            }
+        }
+    }
