@@ -1,0 +1,71 @@
+Let us keep track of the time in which each car enters and exits. 
+
+We will sort the cars by their entry time. 
+
+Then, we will go from C1 to CN, C1.Entry < C2.Entry < .... < CN.Entry
+
+Car i is fined if it's exit comes before any of the (i - 1) cars
+
+This means that Car i's exit muct come before some Exit of one of the first (i - 1) cars. 
+
+If that is true, then it will definitely come before the MAXIUMUM of the first (i - 1) exits. 
+
+So we will keep track of the maximum exit time we have seen so far. 
+
+If Car i.Exit is smaller than the maximum of the Exit time so far, then Car i will be fined. 
+
+----
+
+struct cars
+{
+    int entry, exit;
+
+    cars(){};
+
+    const int operator<(cars &C)
+    {
+        return (entry < C.entry);
+    }
+};
+
+int main()
+{
+    int no_of_cars;
+    cin >> no_of_cars;
+
+    vector <cars> car_no(no_of_cars);
+    for(int i = 0; i < no_of_cars; i++)
+    {
+        int car;
+        cin >> car;
+
+        car_no[car - 1].entry = i;
+    }
+
+    int cars_fined = 0;
+    for(int i = 0; i < no_of_cars; i++)
+    {
+        int car;
+        cin >> car;
+
+        car_no[car - 1].exit = i;
+    }
+
+    sort(all(car_no));
+
+    int maximum_exit_so_far = car_no[0].exit;
+    for(int i = 1; i < no_of_cars; i++)
+    {
+        if(car_no[i].exit < maximum_exit_so_far)
+        {
+            cars_fined++;
+        }
+
+        maximum_exit_so_far = max(maximum_exit_so_far, car_no[i].exit);
+    }
+
+    cout << cars_fined << "\n";
+
+    return 0;
+}
+
