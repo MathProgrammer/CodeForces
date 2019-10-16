@@ -1,0 +1,80 @@
+First, we will make R[i] = R[i]/2 rounded down for all the N integers. 
+
+Then, we will check the sum 
+
+Case 1 = Sum S = 0
+
+Then, there is nothing further to do. 
+
+Case 2 = Sum S < 0
+
+That means the sum is too low and we need to raise some integers. 
+
+That means some of the odd integers need to be rounded up.
+
+We will increment some of the odd integers by 1 till our sum is 0.
+
+Case 3 - Sum S > 0
+
+That means the sum is too high. Some of the odd integers need to be rounded down instead of up.
+
+However, this can't happen here. We have already rounded down all the N integers. 
+
+-----
+
+Another alternative approach is that if there are X odd numbers, we will round up X/2 odd integers and round down X/2 odd integers.
+
+----
+
+int main()
+{
+    int no_of_students;
+    cin >> no_of_students;
+
+    vector <int> rating(no_of_students + 1);
+    vector <int> was_odd(no_of_students + 1, false);
+
+    int sum = 0;
+    for(int i = 1; i <= no_of_students; i++)
+    {
+        cin >> rating[i];
+
+        was_odd[i] = (abs(rating[i])%2 == 1);
+
+        rating[i] /= 2;
+
+        sum += rating[i];
+    }
+
+    if(sum < 0)
+    {
+        for(int i = 1; i <= no_of_students && sum != 0; i++)
+        {
+            if(was_odd[i] && rating[i] > 0)
+            {
+                rating[i]++;
+
+                sum++;
+            }
+        }
+    }
+    else if(sum > 0)
+    {
+        for(int i = 1; i <= no_of_students && sum != 0; i++)
+        {
+            if(was_odd[i] && rating[i] < 0)
+            {
+                rating[i]--;
+
+                sum--;
+            }
+        }
+    }
+
+    for(int i = 1; i <= no_of_students; i++)
+    {
+        cout << rating[i] << "\n";
+    }
+
+    return 0;
+}
