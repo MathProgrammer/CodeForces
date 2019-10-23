@@ -1,0 +1,99 @@
+Let us write each number in ternary base. 
+
+A few facts - 
+
+1. 1000 > 0222
+
+This can be proved by summing the series 
+
+2.3^n + 2.3^{n - 1} + ... + 2.3^0
+
+= 2 (3^{n + 1} - 1)/2 
+
+= 3^{n + 1} - 1
+
+----
+
+If the number in ternary has only 1s and 0s, then it is a good number. 
+
+Otherwise there is some 2. 
+
+Suppose there is some 2 at position k. We want to make this 0. So, we will have to make (k)th position 0, we will have to make increase some other position to it's left. (To maintain the invairant m >= n).
+
+We cannot make any 1 a 2. 
+
+So, we will make some 0 a 1. 
+
+Once, we will a 0 to a 1, we will make all bits to it's right 0. 
+
+For example, suppose the integer was 100012121002112, then we will make it
+
+100012121002112
+100100000000000
+
+---
+
+void solve()
+{
+    unsigned long long n;
+    cin >> n;
+
+    unsigned long long temp_n = n;
+    vector <int> exponent(powers.size() + 5, 0);
+    for(int i = powers.size() - 1; i >= 0; i--)
+    {
+        while(temp_n >= powers[i])
+        {
+            temp_n -= powers[i];
+
+            exponent[i]++;
+        }
+    }
+
+    int left_most_2 = powers.size();
+    for(int i = powers.size() - 1; i >= 0; i--)
+    {
+        if(exponent[i] == 2)
+        {
+            left_most_2 = i;
+
+            break;
+        }
+    }
+
+    if(left_most_2 == powers.size())
+    {
+        cout << n << "\n";
+
+        return;
+    }
+
+    int next_zero = left_most_2;
+    for(int i = left_most_2; i < powers.size(); i++)
+    {
+        if(exponent[i] == 0)
+        {
+            next_zero = i;
+
+            break;
+        }
+    }
+
+    vector <int> answer_exponent(powers.size() + 5, 0);
+    for(int i = powers.size() - 1; i > next_zero; i--)
+        answer_exponent[i] = exponent[i];
+
+    answer_exponent[next_zero] = 1;
+    for(int i = next_zero - 1; i >= 0; i--)
+    {
+        answer_exponent[i] = 0;
+    }
+
+    unsigned long long answer = 0;
+    for(int i = 0; i < powers.size(); i++)
+    {
+        answer += answer_exponent[i]*powers[i];
+    }
+
+    cout << answer << "\n";
+}
