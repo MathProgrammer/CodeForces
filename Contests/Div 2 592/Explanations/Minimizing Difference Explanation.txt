@@ -1,0 +1,156 @@
+Let us consider the sorted array. 
+
+The difference between the minimum and maximum element is initially (A[n] - A[1]).
+
+---
+
+In order to reduce this difference, we have to make some prefix of length i equal and some suffix of length j equal. 
+
+For example, suppose we want to make the difference = (A[j] - A[i]). 
+
+Then, we need to make the entire prefix = A[i]
+
+This takes (i*A[i] - Sum_till[i]) operations. 
+
+We, also want to make the suffix of length j = A[j]
+
+This takes (Sum_from[j] - (n - j + 1)*A[j])
+
+---
+
+Now, we have to somehow iterate over all possible values of the prefix = L and all possible values of the suffix = R, provided that the number of operations we use is <= K.
+
+Key Observation - If the prefix = L and the Suffix = R, then one of {L, R} will be from the array. 
+
+Proof -
+
+1. Suppose we have more elements in the prefix than in the suffix, then we can get [L - 1, R - 1], with the same (or lesser) number of operations. 
+We can also get [L - 2, R - 2] and so on till L or R (or both) becomes equal to some array element A[i]. 
+
+2. Suppose we have more elements in the suffix than in the prefix, then we can get [L + 1, R + 1], with the same (or lesser) number of operations. 
+Similarly, we can get [L + 2, R + 2] and so on till L or R becomes equal to some array element in A. 
+
+----
+
+Of course, we need to check if it is possible to make the entire array = x,
+
+If this is possible it is always better to make x from some element from the array. 
+
+----
+
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        if(i*A[i] - sum_till[i] + sum_from[i + 1] - (no_of_elements - i)*A[i] <= no_of_operations)
+        {
+            best_minimum = 0;
+            break;
+        }
+    }
+    
+-----
+
+This is a very important observation as it simplifies our job greatly. 
+
+Here, is what we will do. 
+
+1. Iterate i = 1 to n, and make the prefix = A[i]
+
+2. This will make us use (i*A[i] - Sum_till[i]) operations.  
+
+3. With our remaining operations, we need to find the best value of R (which may be from the array or not).
+
+4. The maximum value of R is A[n] and the minimum value of R is A[i]. 
+
+We will binary search for the best possible value of R. 
+
+Let us maintain the invariant that it is not possible to make the suffix of the array = L1 and it is always possible to make the suffix of the array = R1. 
+
+We will do binary search and get Mid = (L1 + R1)/2. 
+
+How many operations do we need to make the suffix of the array = Mid ? 
+
+Let A[k] be the first element in A that is >= Mid. 
+
+Then, the number of operations used is (Sum_from[k] - (n - k + 1)*Mid)
+
+----
+
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        long long operations_used_in_prefix = i*A[i] - sum_till[i];
+
+        if(operations_used_in_prefix > no_of_operations)
+        {
+            continue;
+        }
+
+        //Maintain the invariant that it is always possible to make the suffix of the array = Right
+        long long left = A[i], right = A[no_of_elements];
+        while(right - left > 1)
+        {
+            long long mid = (right + left)/2;
+
+            int pos = upper_bound(A.begin(), A.end(), mid - 1) - A.begin(); //Make suffix = mid
+
+            long long operations_used_in_suffix = sum_from[pos] - (no_of_elements - pos + 1)*mid;
+
+            if(operations_used_in_prefix + operations_used_in_suffix <= no_of_operations)
+            {
+                right = mid;
+            }
+            else
+            {
+                left = mid;
+            }
+        }
+
+        best_minimum = min(best_minimum, right - A[i]);
+    }
+    
+-----
+
+Now, this is not enough. 
+
+We have to do the same thing in the other direction as well. 
+
+1. Iterate from i = n to i = 1
+
+2. Make the entire suffix of the array = A[i]
+
+3. Then, binary search the best value of L such that some prefix of the array can be = L
+
+We will use a similar binary search idea as mentioned above. 
+
+---
+
+for(int i = no_of_elements; i >= 1; i--)
+    {
+        long long operations_used_in_suffix = sum_from[i] - (no_of_elements - i + 1)*A[i];
+
+        if(operations_used_in_suffix > no_of_operations)
+        {
+            continue;
+        }
+
+        //Maintain the invariant that it is always possible to make the prefix of array = Left
+        long long left = A[1], right = A[i];
+        while(right - left > 1)
+        {
+            long long mid = (left + right)/2;
+
+            int pos = upper_bound(A.begin(), A.end(), mid) - A.begin() - 1; //Make Prefix = Mid
+
+            long long operations_used_in_prefix = pos*mid - sum_till[pos];
+
+            if(operations_used_in_suffix + operations_used_in_prefix <= no_of_operations)
+            {
+                left = mid;
+            }
+            else
+            {
+                right = mid;
+            }
+        }
+
+        best_minimum = min(best_minimum, A[i] - left);
+    }
