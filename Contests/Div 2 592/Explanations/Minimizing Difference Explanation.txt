@@ -12,7 +12,7 @@ Then, we need to make the entire prefix of length i = A[i]
 
 This takes (i*A[i] - Sum_till[i]) operations. 
 
-We, also want to make the suffix of length j = A[j]
+We also want to make the suffix of length j = A[j]
 
 This takes (Sum_from[j] - (n - j + 1)*A[j])
 
