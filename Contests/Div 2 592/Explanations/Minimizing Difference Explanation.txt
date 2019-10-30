@@ -63,7 +63,10 @@ Here, is what we will do.
 
 We will binary search for the best possible value of R. 
 
-Let us maintain the invariant that it is not possible to make the suffix of the array = L1 and it is always possible to make the suffix of the array = R1. 
+-----
+
+Let us maintain the invariant that it is not possible to make the suffix of the array = L1 and 
+it is always possible to make the suffix of the array = R1. 
 
 We will do binary search and get Mid = (L1 + R1)/2. 
 
@@ -72,6 +75,12 @@ How many operations do we need to make the suffix of the array = Mid ?
 Let A[k] be the first element in A that is >= Mid. 
 
 Then, the number of operations used is (Sum_from[k] - (n - k + 1)*Mid)
+
+If these number of operations are allowed, then we will set R2 = Mid 
+If these number of operations are not allowed, then we will set L2 = Mid
+
+We will continue doing this till (R2 - L2) > 1
+When R2 - L2 = 1, then R2 is the number we want as it is the first integer such that we can make some suffix = R2
 
 ----
 
@@ -117,7 +126,7 @@ We have to do the same thing in the other direction as well.
 
 2. Make the entire suffix of the array = A[i]
 
-3. Then, binary search the best value of L such that some prefix of the array can be = L
+3. Then, binary search the best value of L such that some prefix of the array can be = L using the remaining operations.
 
 We will use a similar binary search idea as mentioned above. 
 
