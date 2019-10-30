@@ -1,3 +1,5 @@
+Quora Editorial - https://qr.ae/TWoHA1
+
 Let us consider the sorted array. 
 
 The difference between the minimum and maximum element is initially (A[n] - A[1]).
