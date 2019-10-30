@@ -8,7 +8,7 @@ In order to reduce this difference, we have to make some prefix of length i equa
 
 For example, suppose we want to make the difference = (A[j] - A[i]). 
 
-Then, we need to make the entire prefix = A[i]
+Then, we need to make the entire prefix of length i = A[i]
 
 This takes (i*A[i] - Sum_till[i]) operations. 
 
