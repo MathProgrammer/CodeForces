@@ -32,23 +32,6 @@ Similarly, we can get [L + 2, R + 2] and so on till L or R becomes equal to some
 
 ----
 
-Of course, we need to check if it is possible to make the entire array = x,
-
-If this is possible it is always better to make x from some element from the array. 
-
-----
-
-    for(int i = 1; i <= no_of_elements; i++)
-    {
-        if(i*A[i] - sum_till[i] + sum_from[i + 1] - (no_of_elements - i)*A[i] <= no_of_operations)
-        {
-            best_minimum = 0;
-            break;
-        }
-    }
-    
------
-
 This is a very important observation as it simplifies our job greatly. 
 
 Here, is what we will do. 
@@ -163,3 +146,22 @@ for(int i = no_of_elements; i >= 1; i--)
 
         best_minimum = min(best_minimum, A[i] - left);
     }
+    
+-----
+
+Of course, we need to check if it is possible to make the entire array = x,
+
+If this is possible it is always better to make x from some element from the array. 
+
+----
+
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        if(i*A[i] - sum_till[i] + sum_from[i + 1] - (no_of_elements - i)*A[i] <= no_of_operations)
+        {
+            best_minimum = 0;
+            break;
+        }
+    }
+    
+-----
