@@ -1,0 +1,103 @@
+Let us suppose that the number of wins, draws and losses is w, d and l and the number of points in each case is W, D and 0 respectively. 
+
+We know that, 
+
+w + d + l = N
+w.W + d.D = P
+
+----
+
+We have 2 equations. 
+
+From the second equation, we can iterate over the value of w and determine d and from w and d, we can determine l. 
+
+My first approach was to brute force w from 1 to 10^6 and then to brute force d from 1 to 10^6. 
+
+If it is not possible in either case, then declare it is never possible. 
+
+This limit 10^6 was arbitrarily chosen. 
+
+However, this solution was accepted. 
+
+---
+
+A couple of crucial observations - 
+
+w(D) = d(W)
+
+This observation is simple but extremely elegant and powerful. 
+
+If we win D matches, it is the same as drawing W matches. 
+
+---
+
+Second Observation - Wins and Draws are NOT symmetric. 
+
+D < W always
+
+----
+
+Suppose we have drawn more than W matches
+
+Then, we can reduce the number of draws by W and increase the number of wins by D. 
+
+The number of 'total matches drawn or won' changes by (D - W). 
+
+This is negative. 
+
+This reduces the number of matches. 
+
+----
+
+Since, we have a sum bound on w and d i.e. 
+
+w + d + l = N, 
+
+Let us try to minimise the sum of (w + d)
+
+If d >= W, then reduce d by W and increase w by D. 
+
+This reduces the total number of matches, keeping the points the same. 
+
+---
+
+This proves that if a solution is possible, then it is possible with the number of draws in [0, W - 1].
+
+---
+
+We will iterate over the number of draws in this range. 
+
+For each i in this range, we will check if a triplet is possible.
+
+---
+
+#include <iostream>
+
+using namespace std;
+
+int main()
+{
+    long long no_of_games, points, win_point, draw_point;
+    cin >> no_of_games >> points >> win_point >> draw_point;
+
+    int limit = win_point - 1;
+    for(int draws = 0; points >= draws*draw_point && draws <= limit; draws++)
+    {
+        if( (points - draws*draw_point)%win_point == 0)
+        {
+            long long wins = (points - draws*draw_point)/win_point;
+
+            long long losses = no_of_games - wins - draws;
+
+            if(losses >= 0)
+            {
+                cout << wins << " " << draws << " " << losses;
+
+                return 0;
+            }
+        }
+    }
+    cout << "-1\n";
+    return 0;
+}
+
