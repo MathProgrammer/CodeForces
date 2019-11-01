@@ -1,0 +1,28 @@
+We can calculate the number of pens and pencils required and see if it fits into the bag. 
+
+The number of pens is ceil(a/c) and the number of pencils is ceil(b/d). 
+
+---
+
+int ceil(int n, int d)
+{
+    return (n/d + (n%d != 0));
+}
+
+void solve()
+{
+    int lectures, practicals, pen_limit, pencil_limit, bag_capacity;
+    cin >> lectures >> practicals >> pen_limit >> pencil_limit >> bag_capacity;
+
+    int pens_required = ceil(lectures, pen_limit);
+    int pencils_required = ceil(practicals, pencil_limit);
+
+    if(pens_required + pencils_required <= bag_capacity)
+    {
+        cout << pens_required << " " << pencils_required << "\n";
+    }
+    else
+    {
+        cout << "-1\n";
+    }
+}
