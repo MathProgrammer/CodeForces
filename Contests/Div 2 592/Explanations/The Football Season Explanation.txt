@@ -71,6 +71,15 @@ For each i in this range, we will check if a triplet is possible.
 
 ---
 
+Suppose we reduce the number of wins by D and increase the number of draws by W. Then the number of matches increases by (W - D). Since W > D, this increases the number of matches. 
+Suppose we reduce the number of draws by W and increase the number of wins by D, then the number of matches decreases by (D - W). Since W > D, this decreases the number of matches. 
+
+We want to minimise the number of matches. So, we will always increase the wins by D and reduce the draws by W. If there is some solution, there will also be a solution where the number of draws is < W. This is the crucial insight. 
+
+After that, we just have to iterate over the number of draws in [0, W - 1]
+
+---
+
 #include <iostream>
 
 using namespace std;
