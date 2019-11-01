@@ -20,6 +20,8 @@ Otherwise there is some 2.
 
 Suppose there is some 2 at position k. We want to make this 0. So, we will have to make (k)th position 0, we will have to make increase some other position to it's left. (To maintain the invairant m >= n).
 
+If we have to remove a 2 from position k, we need to add another 3^k to this integer. This makes the next position 3^{k + 1} and increases it from either 0 to 1 or from 1 to 2. We do not want to make any 1 a 2. So we will continue this till we find a 0 and make it a 1. 
+
 We cannot increase any 1 to a 2. 
 
 So, we will increase some 0 a 1. 
