@@ -1,0 +1,25 @@
+If there is a 1, then we can switch over and travel all the rooms all over again. 
+
+It is 2*max(i, N - i + 1)
+
+We will choose the best ladder.
+
+---
+
+void solve()
+{
+    int length;
+    string S;
+    cin >> length >> S;
+
+    int no_of_rooms = length;
+    for(int i = 0; i < S.size(); i++)
+    {
+        if(S[i] == '1')
+        {
+            no_of_rooms = max(no_of_rooms, 2*max(i + 1, length - i));
+        }
+    }
+
+    cout << no_of_rooms << "\n";
+}
