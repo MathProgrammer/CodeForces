@@ -1,0 +1,21 @@
+Add everything that is smaller than 2048 and see if a sum larger than 2048 is possible. 
+
+-----
+
+void solve()
+{
+    int no_of_elements;
+    cin >> no_of_elements;
+
+    long long sum = 0;
+    while(no_of_elements--)
+    {
+        int element;
+        cin >> element;
+
+        if(element <= 2048)
+            sum += element;
+    }
+
+    cout << (sum >= 2048 ? "YES\n" : "NO\n");
+}

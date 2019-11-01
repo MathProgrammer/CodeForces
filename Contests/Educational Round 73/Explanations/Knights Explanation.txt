@@ -1,0 +1,29 @@
+The main invariant is that a knight can only attack squares on the other colour from it. 
+
+This is why we will paint the board like a chessboard. 
+
+---
+
+#include <iostream>
+
+using namespace std;
+
+int main()
+{
+    int n;
+    cin >> n;
+
+    for(int i = 1; i <= n; i++)
+    {
+        for(int j = 1; j <= n; j++)
+        {
+            char colour = ( (i+j)%2 == 0 ? 'B' : 'W');
+            
+            cout << colour;
+        }
+
+        cout << "\n";
+    }
+
+    return 0;
+}

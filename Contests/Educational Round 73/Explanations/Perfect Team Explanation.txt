@@ -1,0 +1,44 @@
+If there are more normal people than Mathematicians and Coders, than we can have as many teams as the minimum of (M, C) by putting 1 of each in each team. 
+
+Otherwise, we will make as many teams of (N, M, C) as possible. 
+
+At the end of this, we will have 0 Normal people. 
+
+Now, if M >= 2C or C >= 2M, then the number of teams we can make is C or M respectively. The reason is that there are 2 of the other kind for every one of one kind.
+
+Otherwise, the number of teams we can make is floor[(M + C)/3]. If 2*Min{M, C} > Max{M, C}, 
+
+Then at each step we will take 2 of the Maximum and 1 of the Minimum. The number of people reduces by 3 each time and we will be unable to make a choice only when the number of people is less than 3. 
+
+Hence, the answer is floor[(M + C)/3]. 
+
+---
+
+void solve()
+{
+    int mathematicians, coders, normal;
+    cin >> mathematicians >> coders >> normal;
+
+    int teams = 0;
+    if(normal >= min(mathematicians, coders))
+    {
+        teams = min(mathematicians, coders);
+    }
+    else
+    {
+        teams = normal;
+        mathematicians -= teams;
+        coders -= teams;
+
+        if(2*min(mathematicians, coders) <= max(mathematicians, coders))
+        {
+            teams += min(mathematicians, coders);
+        }
+        else
+        {
+            teams += (mathematicians + coders)/3;
+        }
+    }
+
+    cout << teams << "\n";
+}
