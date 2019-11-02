@@ -1,0 +1,119 @@
+We will do linear passes over the string. 
+
+Pass 1 - We will try to be greedy. 
+
+Whatever move is played, we will try to make the winning move. If not, we will mark it as 'X'. 
+
+For example, if the 5th move is 'Rocks', then we will try to play a 'Paper'. If we have no Paper, we will put 'X'. 
+
+
+This maximises the number of wins as every move has been made for a win. 
+
+-----
+
+Pass 2 - Now, we will fill up the 'X's with any available move. It doesn't really matter
+
+-----
+
+We need to check if the total number of wins is the number desired. 
+
+-----
+
+void solve()
+{
+    int total, papers, scissors, rocks;
+    cin >> total >> rocks >> papers >> scissors;
+
+    string moves;
+    cin >> moves;
+
+    int wins = 0;
+    string answer;
+
+    for(int i = 0; i < moves.size(); i++)
+    {
+        switch(moves[i])
+        {
+            case 'R':{
+                         if(papers > 0)
+                         {
+                             wins++;
+                             papers--;
+                             answer += 'P';
+                             break;
+                         }
+                         else
+                         {
+                             answer += 'X';
+                             break;
+                         }
+                     }
+            case 'P':{
+                        if(scissors > 0)
+                        {
+                            wins++;
+                            scissors--;
+                            answer += 'S';
+                            break;
+                        }
+                        else
+                        {
+                            answer += 'X';
+                            break;
+                        }
+                     }
+            case 'S':{
+                        if(rocks > 0)
+                        {
+                            wins++;
+                            rocks--;
+                            answer += 'R';
+                            break;
+                        }
+                        else
+                        {
+                            answer += 'X';
+                            break;
+                        }
+                     }
+        }
+    }
+
+    if(2*wins < total)
+    {
+        cout << "No\n";
+        return;
+    }
+
+    for(int i = 0; i < answer.size(); i++)
+    {
+        if(answer[i] != 'X')
+        {
+            continue;
+        }
+
+        if(rocks > 0)
+        {
+            answer[i] = 'R';
+            rocks--;
+            continue;
+        }
+
+        if(papers > 0)
+        {
+            answer[i] = 'P';
+            papers--;
+            continue;
+        }
+
+        if(scissors > 0)
+        {
+            answer[i] = 'S';
+            scissors--;
+            continue;
+        }
+    }
+
+    cout << "Yes\n";
+    cout << answer << "\n";
+}
