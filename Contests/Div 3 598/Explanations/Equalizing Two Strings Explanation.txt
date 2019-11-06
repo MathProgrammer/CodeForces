@@ -1,0 +1,21 @@
+Consider any segment T of a string S. 
+
+There are 3 types of inversions
+
+
+1. Both characters in S
+2. One in S and one in T
+3. Both characters in T
+
+
+only type 2 is affected by reversing a segment. 
+
+
+If the length of the segment is L and there re x inversions, the number of inversions becomes L(L &mdash; 1)/2 &mdash; x
+
+
+
+If the first term is even, the parity remains the same. 
+
+
+Otherwise, the parity flips.
