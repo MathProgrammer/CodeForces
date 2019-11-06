@@ -1,0 +1,57 @@
+My idea was to be greedy. 
+
+1. Use as many N's as you have or get as close as possible to the target T. 
+
+If we use all our N's, we will have reached (aN)
+
+The closest we can get to T, is (T/N). We can reach here only if a >= (T/N).
+
+----
+
+So, we will reach min{aN, (T/N)N}
+
+----
+
+The remaining values will have to be made by 1's. 
+
+So (T - nearest) >= b, for the construction to be possible. 
+
+----
+
+void solve()
+{
+    long long no_of_n, no_of_1, n, target;
+    cin >> no_of_n >> no_of_1 >> n >> target;
+
+    //Nx + y = B
+
+    long long nearest = min((target/n)*n, no_of_n*n);
+
+    cout << ((target - nearest <= no_of_1) ? "Yes\n" : "No\n");
+}
+
+----
+
+The editorial had a cleaner solution. 
+
+First of all, we need as many 1's as {T (mod N)}
+
+Then, we just need to check if (aN + b >= T). 
+
+If yes, we can always go till the nearest or last multiple of N and then use 1s.
+
+If we don't have the required number of 1s {T (mod N)}, then we can never reach T. 
+
+-----
+
+void solve()
+{
+    long long no_of_n, no_of_1, n, target;
+    cin >> no_of_n >> no_of_1 >> n >> target;
+
+    //Nx + y = B
+
+    long long nearest = min((target/n)*n, no_of_n*n);
+
+    cout << (no_of_1 >= (target%n) && (no_of_n&n + no_of_1 >= target) ? "Yes\n" : "No\n");
+}

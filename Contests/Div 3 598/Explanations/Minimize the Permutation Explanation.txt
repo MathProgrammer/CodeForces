@@ -1,0 +1,85 @@
+Let A[L, R] be the portion of the array we are allowed to do operaitions on. 
+
+1. Initially, we can do operations on A[1, N]. 
+ 
+First, we will search for 1, we will put it either in the first position or put it as left as we can. 
+
+Suppose 1 was originally at position - P. 
+
+2. Now, we can only do operations in A[P, N].
+
+We will look for the minimum element in A[P, N] and put the smallest integer in position P or else use all our operations and push it as much towards the left as we can. 
+
+---
+
+This works because at each step, we are taking the minimum element and pushing it as much to the left as possible. 
+
+In the first step, we will put 1 in the first position. Obviously, this is the best choice for the first position. If we put some element to the left of 1 (say X) at the first position, then we cannot bring 1 over till the first position. We can only put 1 at A[X] in the best case. 
+
+It is better to have 1 at A[1] then at A[X]. 
+
+Clearly, the first step is the best. 
+
+We maintain the invariant that A[L, R] has not been touched. 
+
+Now, when A[L, R] is the only segment we can touch, it is best to put the minimum element in A[L, R] at A[L]. Any other choice would lead to a larger string. 
+
+Hence, this algorithm is correct.
+
+---
+
+In general the algorithm is the following - 
+
+1. L = 1, R = N
+
+2. Look for the minimum element in A[L, R]
+
+3. Let it be at position P. 
+
+4. Use the swaps to bring A[P] to A[L]. 
+
+5. Set L = min{L + 1, P} and continue this process till either no operations are left or L = N
+
+---
+
+void solve()
+{
+    int n;
+    cin >> n;
+
+    vector <int> permutation(n + 1);
+    for(int i = 1; i <= n; i++)
+    {
+        cin >> permutation[i];
+    }
+
+    int last_operated = 0;
+    for(int no_of_operations = 0; no_of_operations <= n - 1 && last_operated < n - 1; )
+    {
+        int minimum = n + 1;
+        int p = last_operated + 1;
+        for(int i = last_operated + 1; i <= n; i++)
+        {
+            if(permutation[i] < minimum)
+            {
+                minimum = permutation[i];
+                p = i;
+            }
+        }
+
+        for(int i = p - 1; i > last_operated && no_of_operations <= n - 1; i--)
+        {
+            swap(permutation[i], permutation[i + 1]);
+            no_of_operations++;
+        }
+
+        last_operated = max(last_operated + 1, p - 1);
+    }
+
+    for(int i = 1; i <= n; i++)
+    {
+        cout << permutation[i] << " ";
+    }
+
+    cout << "\n";
+}
