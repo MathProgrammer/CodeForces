@@ -1,21 +1,139 @@
-Consider any segment T of a string S. 
+1. If S and T do not all have the same letters, then we cannot make them equal. 
 
-There are 3 types of inversions
+---
 
+2. Let us suppose S and T have the same letters and some letter occurs twice. 
 
-1. Both characters in S
-2. One in S and one in T
-3. Both characters in T
+S = A ... S .. S ... 
 
+T = ......X ... Y ... 
 
-only type 2 is affected by reversing a segment. 
+(Let us assume that the letter S occurs twice). 
 
-
-If the length of the segment is L and there re x inversions, the number of inversions becomes L(L &mdash; 1)/2 &mdash; x
-
+We will flip the segment of length such that [S, S] come together in S and do some arbitrary flip of the same length in T. 
 
 
-If the first term is even, the parity remains the same. 
+After this, we will swap adjacent elements in T to make it equal to S, and always choose the segment [SS] in S. 
 
+This makes sure that S does not change at any step and is the same as making T = S, given that we can swap adjacent elements in T and T has the same elements as S.
 
-Otherwise, the parity flips.
+---
+
+3. Now, let us suppose that each letter occurs only one time. 
+
+They are both permutations. 
+
+A very important quality of permutations is their parity. Let us observe what happens to permutations' inversions, when we flip their parity. 
+
+(Inversions is the number of pairs (i, j) such that A[i] > A[j] and (i < j). In other words, the number of pairs that are 'out of order'.)
+
+---
+
+Let us suppose that S' is a segment of S. 
+
+There are 3 types of inversions in S. 
+
+i. Both the characters lie in S
+ii. One Character lies in S and the other lies in S'
+iii. Both the characters lie in S'
+
+Type i and Type ii inversions are not affected by reversing S'
+
+Let us see how the Type iii inversions change. 
+
+Suppose there were originally X inversions in the segment S'. 
+
+Then, when we flip S', the number of inversions becomes C(|S'|,2) - X. 
+
+Suppose C(|S'|, 2) is even, then the parity of the number of inversions remains the same. 
+Suppose C(|S'|, 2) is odd, then it flips the parity of the number of inversions. 
+
+Amazingly, the parity of the inversions depends only on the length of the segment we reverse and not at all on the permutation itself !
+
+---
+
+At each flip, either the parity of both S and T are the same or the parity of both S and T get flipped. 
+
+This means that if their parities are initially not equal, they will remain so at each step. 
+
+We can check the parity in O(n^2) time since the length of a distinct string (permutation) can be at most 26.
+
+---
+
+Suppose the parities are equal, is it always possible to make S = T. 
+
+We can keep swapping a pair of adjacent elements an even number of times to make sure 1 string is not changed and keep flipping some adjacent pair of the other string too !
+
+---
+
+int parity(string &P)
+{
+    int inversions = 0;
+    for(int i = 0; i < P.size(); i++)
+    {
+        for(int j = i + 1; j < P.size(); j++)
+        {
+            if(P[i] > P[j])
+            {
+                inversions++;
+            }
+        }
+    }
+
+    return (inversions%2);
+}
+
+void solve()
+{
+    int length;
+    string S, T;
+    cin >> length >> S >> T;
+
+    const int NO_OF_ALPHABETS = 26;
+    vector <int> frequency_S(NO_OF_ALPHABETS, 0);
+    for(int i = 0; i < S.size(); i++)
+    {
+        frequency_S[S[i] - 'a']++;
+    }
+
+    vector <int> frequency_T(NO_OF_ALPHABETS, 0);
+    for(int i = 0; i < T.size(); i++)
+    {
+        frequency_T[T[i] - 'a']++;
+    }
+
+    int same_characters = true;
+    for(int i = 0; i < NO_OF_ALPHABETS; i++)
+    {
+        if(frequency_S[i] != frequency_T[i])
+        {
+            same_characters = false;
+        }
+    }
+
+    int duplicates_present = false;
+    for(int i = 0; i < NO_OF_ALPHABETS; i++)
+    {
+        if(frequency_S[i] > 1)
+        {
+            duplicates_present = true;
+        }
+    }
+
+    if(same_characters)
+    {
+        if(duplicates_present)
+        {
+            cout << "Yes\n";
+        }
+        else
+        {
+            cout << (parity(S) == parity(T) ? "Yes\n" : "No\n");
+        }
+    }
+    else
+    {
+        cout << "No\n";
+    }
+}
+
