@@ -1,0 +1,68 @@
+We want to minimize LCM(a + k, b + k) given a and b.
+
+LCM(a + k, b + k) = (a + k).(b + k)/gcd(a + k, b + k)
+
+= (a + k).(b + k)/gcd(b - a, b + k)
+
+Let us iterate over all divisors of (b - a)
+
+1. Suppose d is a divisor of (b - a). We will find the smallest k, such that d = gcd(b - a, b + k)
+d also needs to be the gcd(a + k, b + k). 
+So a = b (mod d) has to be satisfied
+
+2. Then, we will find the LCM.
+
+3. The key is iterating over the divisors of (b - a)
+
+-----
+
+There is a special case when a = b. 
+
+(b - a) will have no factors.
+
+k = 0 here
+
+-----
+
+int main()
+{
+    LL a, b;
+    cin >> a >> b;
+
+    vector <int> factors;
+    factorise(abs(b - a), factors);
+
+    const LL oo = 1e18;
+    LL minimum_lcm = (a == b ? a : oo), k = (a == b ? 0 : oo);
+
+    for(int i = 0; i < factors.size(); i++)
+    {
+        int f = factors[i];
+
+        if(a%f != b%f)
+            continue;
+
+        LL to_add = (a%f == 0 ? 0 : f - a%f);
+        LL lcm = ((a + to_add)*(b + to_add))/__gcd(a + to_add, b + to_add);
+
+        if(a%f == 0)
+        {
+            if(lcm <= minimum_lcm)
+            {
+                minimum_lcm = lcm;
+                k = to_add;
+            }
+        }
+        else
+        {
+            if(lcm < minimum_lcm)
+            {
+                minimum_lcm = lcm;
+                k = to_add;
+            }
+        }
+    }
+
+    cout << k;
+    return 0;
+}
