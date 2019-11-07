@@ -1,0 +1,17 @@
+Bezout's Identity tells us that there are always two integers (A, B) such that 
+
+Ax + By = gcd(x, y)
+
+We can reach any multiple of G as well. 
+
+To reach, KG, we need to multiply A and B by K. 
+
+---
+
+In general, if we are given a set S of integers - {A_1, A_2, ... , A_k}
+
+Then, we can reach any multiple of gcd(S)
+
+Whatever colour we choose for x, we have to choose the same colour for (x + G) too
+
+---
