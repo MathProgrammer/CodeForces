@@ -1,0 +1,123 @@
+Let us notice that although the signs alternate between the numbers, the type of pairs stay the same. 
+
+Either our sequence consists only of pairs (a, b) where (a < b)
+
+Or it consists only of pairs (a, b) where (a > b). 
+
+----
+
+1. We will store all pairs of 1 kind in a list. 
+
+2. We will sort it in such a way that we will get a valid ordering. 
+
+----
+
+Let us consider pairs of the type (a < b)
+
+We want to order them in such a way that if pairs (P, Q)  P comes before Q, then 
+
+(P.a < P.b) > (Q.a < Q.b)
+
+We can sort the pairs by (P.b > Q.a). However, this is an invalid way of ordering the pairs. It is possible for (P < Q) and for (Q < P) at the same time. This causes a run time error and it is not a valid way of comparing or ordering. 
+
+Instead, we can get around this by sorting in order of (P.b > Q.b)
+
+Then, (P.b > Q.b > Q.a) => P.b > Q.a
+
+---
+
+Similarly, we will sort the other pairs in (P.a < Q.a)
+
+We want 
+
+(P.a > P.b) < (Q.a < Q.b)
+
+(P.b < P.a < Q.a) => P.b < Q.a
+
+---
+
+We can just sort by (P.a < Q.a) and we will get a valid ordering. 
+
+The answer is just whichever pair occurs more times. 
+
+---
+
+struct pairs
+{
+    int a, b, index;
+
+    pairs()
+    {
+        a = 0; b = 0;
+    };
+
+    pairs(int A, int B, int I)
+    {
+        a = A, b = B, index = I;
+    }
+};
+
+// (p1 < p2) > (q1 < q2)
+int sort_increasing_pairs(pairs &P, pairs &Q)
+{
+    return (P.b > Q.b);
+}
+
+// (p1 > p2) < (q1 > q2)
+int sort_decreasing_pairs(pairs&P, pairs &Q)
+{
+    return (P.a < Q.a);
+}
+
+int main()
+{
+    int no_of_pairs;
+    cin >> no_of_pairs;
+
+    vector <pairs> increasing, decreasing;
+    for(int i = 1; i <= no_of_pairs; i++)
+    {
+        int x, y;
+        cin >> x >> y;
+
+        if(x < y)
+        {
+            increasing.push_back(pairs(x, y, i));
+        }
+        else
+        {
+            decreasing.push_back(pairs(x, y, i));
+        }
+    }
+
+    sort(all(increasing), sort_increasing_pairs);
+    sort(all(decreasing), sort_decreasing_pairs);
+
+    if(increasing.size() >= decreasing.size())
+    {
+        cout << increasing.size() << "\n";
+
+        for(int i = 0; i < increasing.size(); i++)
+        {
+            cout << increasing[i].index << " ";
+        }
+    }
+    else
+    {
+        cout << decreasing.size() << "\n";
+
+        for(int i = 0; i < decreasing.size(); i++)
+        {
+            cout << decreasing[i].index << " ";
+        }
+    }
+
+    return 0;
+}
+
+----
+
+Bonus - Suppose, we were not allowed to change the orders of the pairs. 
+
+Then, we would have stored the indices of all pairs of one type in their sorted order and then look for the Longest Increasing Subsequence
+
