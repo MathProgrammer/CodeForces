@@ -1,0 +1,62 @@
+I did this in O(n^2) time. 
+
+Suppose we want to check if it is possible to make a square of length L. Then, we need at least L planks of height >= L
+
+---
+
+void solve()
+{
+    int no_of_elements;
+    cin >> no_of_elements;
+
+    vector <int> A(no_of_elements + 1);
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        cin >> A[i];
+    }
+
+    int max_length = 0;
+    for(int l = 1; l <= no_of_elements; l++)
+    {
+        int planks = 0;
+        for(int i = 1; i <= no_of_elements; i++)
+        {
+            planks += (A[i] >= l);
+        }
+
+        if(planks >= l)
+            max_length = max(max_length, l);
+    }
+
+    cout << max_length << "\n";
+}
+
+---
+
+Now, we can also do this in O(N Log N) time. We can solve this by binary search. 
+
+If we can get a square of length L, then we can also get (L - 1). 
+
+If we can't get L, we can't get (L + 1). 
+
+This is a monotonic function and can be binary searched.
+
+---
+
+We can also do this in O(N Log N) time by sorting the list in descending order. 
+
+The answer is = min{A[i], i} at each step. 
+For the first i values, A[i] is the minimum so far. 
+
+If A[i] > i, then we can make a square of length i since all the planks so far are >= A[i] > i
+
+If i > A[i], then we can make a square of length A[i] since all the planks are height >= A[i] and we have already seen i > A[i] planks. So, a square of length A[i] is possible.
+
+We need the maximum of all these values. 
+
+for(int i = 1; i <= N; i++)
+{
+	answer = max(answer, min(A[i], i));
+}
+
+---
