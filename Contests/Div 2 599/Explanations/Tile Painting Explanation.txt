@@ -15,3 +15,57 @@ Then, we can reach any multiple of gcd(S)
 Whatever colour we choose for x, we have to choose the same colour for (x + G) too
 
 ---
+
+Now, coming to our specific question. 
+
+Let N = p1^a1 p2^a2 ... pk^ak
+
+Now, the gcd of any two primes is (p1, p2) = 1
+
+So, if N has at least 2 primes in it's prime factorisation, then we can reach every integer as (Ap1 + Bp2)
+
+Otherwise, N has only 1 prime factor p. 
+
+We can choose colours for [1, p] 
+
+(p + 1) has to be the same colour as 1, (p + 2) as 2 and so on
+
+So there are p colours totally. 
+
+We need to handle the special case of N = 1 seperately.
+
+---
+
+void factorise(long long n, vector <long long> &F)
+{
+    for(long long i = 2; i*i <= n; i++)
+    {
+        if(n%i == 0)
+        {
+            F.push_back(i);
+
+            while(n%i == 0)
+            {
+                n /= i;
+            }
+        }
+    }
+
+    if(n > 1)
+    {
+        F.push_back(n);
+    }
+}
+
+int main()
+{
+    long long n;
+    cin >> n;
+
+    vector <long long> prime_divisors;
+    factorise(n, prime_divisors);
+
+    cout << (prime_divisors.size() > 1 || n == 1 ? 1 : prime_divisors[0]) << "\n";
+
+    return 0;
+}
