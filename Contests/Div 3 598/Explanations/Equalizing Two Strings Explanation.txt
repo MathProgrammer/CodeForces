@@ -1,3 +1,5 @@
+https://qr.ae/TW4mma
+
 1. If S and T do not all have the same letters, then we cannot make them equal. 
 
 ---
