@@ -1,0 +1,60 @@
+We only need to keep track of the leftmost occurence of each element. 
+
+We will maintain two pointers - L and R to keep a sliding window. 
+
+When we increment R, we will check if the leftmost occurence of A[R] is < L, This would mean that A[R] is a distinct element in the current segment [L, R]. Otherwise, it would not. 
+
+Although there are 2 for loops, the time complexity is O(n) since each of the N elements is visited at most twice by each of the pointers. 
+
+We will find out the minimum number of distinct elements of all segments of length K.
+
+---
+
+using namespace std;
+
+void solve()
+{
+    int no_of_elements, no_of_distinct_elements, segment_length;
+    cin >> no_of_elements >> no_of_distinct_elements >> segment_length;
+
+    vector <int> A(no_of_elements + 1);
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        cin >> A[i];
+    }
+
+    int distinct_elements = 0;
+    map <int, int> last_occurence;
+    for(int i = 1; i <= segment_length; i++)
+    {
+        if(last_occurence[A[i]] == 0)
+        {
+            distinct_elements++; 
+        }
+
+        last_occurence[A[i]] = i;
+    }
+
+    int minimum_distinct_elements = distinct_elements;
+    for(int i = segment_length + 1; i <= no_of_elements; i++)
+    {
+        int left = i - segment_length, right = i;
+        int left_element = A[left], right_element = A[right];
+
+        if(last_occurence[left_element] == left)
+        {
+            distinct_elements--;
+        }
+
+        if(last_occurence[right_element] <= left)
+        {
+            distinct_elements++;
+        }
+
+        last_occurence[right_element] = i;
+
+        minimum_distinct_elements = min(minimum_distinct_elements, distinct_elements);
+    }
+
+    cout << minimum_distinct_elements << "\n";
+}
