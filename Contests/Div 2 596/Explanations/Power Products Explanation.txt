@@ -1,0 +1,77 @@
+Let us look at N in terms of it's prime factorisation. 
+
+Suppose N = p1^a1 p2^a2 ... pk^ak
+
+To make it a perfect power of M, all the exponents have to be a multiple of M. 
+
+Let us define the 'complement' of an integer N as an integer C such that N.C is a perfect power of M. 
+
+
+---
+
+For Example, 
+
+N = 2^3 3^2 5^1
+
+And we want to make it a perfect 3rd power, then the complement 
+
+C = 3 5^2
+
+---
+
+We will replace each exponent by it's remainder (mod M) as that is all that matters. 
+
+Suppose, we had N = 2^5 3^2 5^3, then we will replace N = 2^2 3
+
+---
+
+We will perform a scan through the array. 
+
+For each integer A[i], we will replace all it's exponent. 
+
+Then, we will add the frequency of it's complement to the left and add it to our answer.
+
+---
+
+int main()
+{
+    sieve();
+
+    int no_of_elements, power;
+    scanf("%d %d", &no_of_elements, &power);
+
+    vector <long long> A(no_of_elements + 1);
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        scanf("%I64d", &A[i]);
+
+        vector <pair <int, int> > factors;
+
+        get_factors(factors, A[i]);
+
+        for(int f = 0; f < factors.size(); f++)
+        {
+            int p = factors[f].first;
+            int exponent = (factors[f].second)%power;
+
+            for(int e = 1; e <= exponent; e++)
+            {
+                A[i] *= p;
+            }
+        }
+    }
+
+    long long answer = 0;
+    map <long long, int> frequency;
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        long long complement = get_complement(A[i], power);
+
+        answer += frequency[complement];
+
+        frequency[A[i]]++;
+    }
+
+    printf("%I64d\n", answer);
+    return 0;
+}
