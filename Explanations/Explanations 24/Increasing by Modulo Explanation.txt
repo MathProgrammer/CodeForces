@@ -1,0 +1,59 @@
+We can binary search the number of operations required to make the array non-decreasing. 
+
+We can make A[i] = (A[i], A[i] + x) (mod M). 
+
+These are the reachable values for A[i]. 
+
+We will choose the smallest value possible at each step for each A[i], while maintaining the condition that A[i] is not smaller than the prefix minimum. 
+
+If possible we will make A[i] = the prefix minimum. Otherwise, we will make the minimum = A[i]. 
+
+If A[i] can't be made >= minimum and is < minimum, then it is not possible in x moves. 
+
+---
+
+At each step, we are making the minimum as small as possible. It is never optimal to increase some previous element by more than what we have as that would increase the minimum.
+
+---
+
+int possible(int operations, int m, vector <int> &A)
+{
+    int minimum = 0;
+
+    for(int i = 1; i < A.size(); i++)
+    {
+        if( (A[i] <= minimum && A[i] + operations >= minimum) || (A[i] > minimum && A[i] + operations - m >= minimum) )
+            continue;
+
+        if(A[i] < minimum)
+            return false;
+
+        minimum = A[i];
+    }
+
+    return true;
+}
+
+int main()
+{
+    int no_of_elements, m;
+    cin >> no_of_elements >> m;
+
+    vector <int> A(no_of_elements + 1);
+    for(int i = 1; i <= no_of_elements; i++)
+        cin >> A[i];
+
+    int left = -1, right = m;
+    while(right - left > 1)
+    {
+        int mid = (left + right)/2;
+
+        if(possible(mid, m, A))
+            right = mid;
+        else
+            left = mid;
+    }
+
+    cout << right;
+    return 0;
+}
