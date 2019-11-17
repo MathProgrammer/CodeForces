@@ -1,0 +1,95 @@
+1. Let us look at each Connected Component seperately. 
+
+2. For each connected component, let us look at the minimum L and the maximum R. 
+
+3. Now, we have x segments - [L, R]. 
+
+4. We will sort these segments by their Left Borders and keep track of the right most point we have met so far. If L_i < R, then it means we need to make another connection. 
+
+5. We have to update R = max(R, R_i) at every step. 
+
+If R is the rightmost point we have had so far and L_i < R, then it means L_i should be reachable from wherever we were able to reach R. 
+
+This is the reason we will make 1 connection per component where L_i < R. Now the entire component [L_i, R_i] is reachable to the current segment. 
+
+------
+
+struct component
+{
+    int minimum, maximum;
+
+    component()
+    {
+        minimum = oo, maximum = 0;
+    };
+
+    component(int Min, int Max)
+    {
+        minimum = Min, maximum = Max;
+    }
+};
+
+void dfs(int v, component &C)
+{
+    if(visited[v])
+    {
+        return;
+    }
+
+    visited[v] = true;
+
+    C.minimum = min(C.minimum, v);
+    C.maximum = max(C.maximum, v);
+
+    for(int i = 0; i < graph[v].size(); i++)
+    {
+        int child = graph[v][i];
+
+        dfs(child, C);
+    }
+}
+
+int main()
+{
+    int no_of_vertices, no_of_edges;
+    cin >> no_of_vertices >> no_of_edges;
+
+    for(int i = 1; i <= no_of_edges; i++)
+    {
+        int u, v;
+        cin >> u >> v;
+
+        graph[u].push_back(v);
+        graph[v].push_back(u);
+    }
+
+    vector <component> components;
+    for(int i = 1; i <= no_of_vertices; i++)
+    {
+        if(!visited[i])
+        {
+            component this_component;
+
+            dfs(i, this_component);
+
+            components.push_back(this_component);
+        }
+    }
+
+    //Components are already sorted by their Lefts
+
+    int right_most_point = 0;
+    int no_of_connections = 0;
+    for(int i = 0; i < components.size(); i++)
+    {
+        if(components[i].minimum < right_most_point)
+        {
+            no_of_connections++;
+        }
+
+        right_most_point = max(right_most_point, components[i].maximum);
+    }
+
+    cout << no_of_connections << "\n";
+    return 0;
+}
