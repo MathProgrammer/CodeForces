@@ -1,0 +1,84 @@
+Now, let us notice one thing. 
+
+GCD[1, p] is the gcd of [1, p]
+
+GCD[1, v] is the gcd of [1, v] where p is the parent of v. 
+
+GCD[1, v] = gcd(GCD[1, P], A[v])
+
+This means that the GCD of the child must divide the GCD of the parent. 
+
+Although the value of A[i] is huge, this means that the distinct values of GCD in each vertex will not be many. 
+
+There can be at most log(10^12) ~ 40 different values of GCD at each node. 
+
+----
+
+1. For each node, we will keep track of the frequency of all it's GCDs
+
+2. We will get the answer by multiplying the value with the frequency. 
+
+3. Then, we will traverse to the child node. 
+
+-----
+
+void dfs(int v, map <long long, int> frequency)
+{
+    visited[v] = true;
+
+    map <long long, int> new_frequency;
+
+    for(map <long long, int> :: iterator it = frequency.begin(); it != frequency.end(); it++)
+    {
+        new_frequency[gcd(value[v], it->first)] += it->second;
+    }
+
+    new_frequency[value[v]]++;
+
+    for(map <long long, int> :: iterator it = new_frequency.begin(); it != new_frequency.end(); it++)
+    {
+        answer += (it->first)*(it->second);
+
+        answer %= MOD;
+    }
+
+    for(int i = 0; i < tree[v].size(); i++)
+    {
+        int child = tree[v][i];
+
+        if(visited[child])
+        {
+           continue;
+        }
+
+        dfs(child, new_frequency);
+    }
+}
+
+int main()
+{
+    int no_of_vertices;
+    cin >> no_of_vertices;
+
+    for(int i = 1; i <= no_of_vertices; i++)
+    {
+        cin >> value[i];
+    }
+
+    int no_of_edges = no_of_vertices - 1;
+    for(int i = 1; i <= no_of_edges; i++)
+    {
+        int u, v;
+        cin >> u >> v;
+
+        tree[u].push_back(v);
+        tree[v].push_back(u);
+    }
+
+    map <long long, int> frequency;
+    dfs(1, frequency);
+
+    cout << answer << "\n";
+
+    return 0;
+}
