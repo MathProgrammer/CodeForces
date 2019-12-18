@@ -1,0 +1,221 @@
+The crucial insight here is that the answer is always 4. 
+
+Let us see how. 
+
+Impossible Case - 
+
+The entire grid is P and so it can't be made A, regardless of what we do.
+
+-----
+
+Case 1 - The answer is 0 - 
+
+This is when the entire grid is A and there is nothing left for us to do.
+
+-----
+
+Case 2 - The answer is 1
+
+This happens if any corner row or corner column is all A. 
+
+We can simply make it propagate throughout the entire grid in 1 move. 
+
+-----
+
+Case 3 - The answer is 2
+
+This happens if any of the 4 corner squares are A 
+
+Or any non-corner edge is completely full. 
+
+If any square of the corner edge is full, then
+
+	a. Move 1 - Make the entire edge A
+	b. Move 2 - Reduces to Case 1
+
+If any non-corner edge is completely full, then 
+
+	a. Move 1 - Propagate it towards the right/up 
+	b. Move 2 - Propagate it towards the left/down 
+
+-----
+
+Case 4 - The answer is 3 
+
+This happens if any square of the corner edge is full. 
+
+	a. Move 1 - Make right/up of the corner edge full
+	b. Move 2 - Make left/down of the corner edge full
+	c. Move 3 - We have a complete corner edge. This is Case 1
+
+----
+
+Case 5 - The answer is 4
+
+If there is at least 1 A somewhere in the grid
+
+	a. Move 1 - Make right/up of the edge full 
+	b. Move 2 - Make left/down of the edge full 
+	c. Move 3 - Propagate the edge in right/up direction
+	d. Move 4 - Propagate the edge in left/down direction
+
+-----
+
+
+    
+    return true;
+}
+
+int all_p(int rows, int columns)
+{
+    for(int i = 0; i < rows; i++)
+    {
+        for(int j = 0; j < columns; j++)
+        {
+            if(grid[i][j] == 'A')
+            {
+                return false;
+            }
+        }
+    }
+    
+    return true;
+}
+
+int all_a(int rows, int columns)
+{
+    for(int i = 0; i < rows; i++)
+    {
+        for(int j = 0; j < columns; j++)
+        {
+            if(grid[i][j] == 'P')
+            {
+                return false;
+            }
+        }
+    }
+    
+    return true;
+}
+
+int corner_square(int rows, int columns)
+{
+    return (grid[0][0] == 'A' || grid[0][columns - 1] == 'A' ||
+            grid[rows - 1][0] == 'A' || grid[rows - 1][columns - 1] == 'A');
+}
+
+int corner_edge_square(int rows, int columns)
+{
+    for(int c = 0; c < columns; c++)
+    {
+        if(grid[0][c] == 'A' || grid[rows - 1][c] == 'A')
+        {
+            return true;
+        }
+    }
+    
+    for(int r = 0; r < rows; r++)
+    {
+        if(grid[r][0] == 'A' || grid[r][columns - 1] == 'A')
+        {
+            return true;
+        }
+    }
+    
+    return false;
+}
+
+int full_corner_edges(int rows, int columns)
+{
+    if(full_row_a(0, columns) || full_row_a(rows - 1, columns))
+    {
+        return true;
+    }
+    
+    if(full_column_a(rows, 0) || full_column_a(rows, columns - 1))
+    {
+        return true;
+    }
+    
+    return false;
+}
+
+int any_full_edge(int rows, int columns)
+{
+    for(int i = 0; i < rows; i++)
+    {
+        if(full_row_a(i, columns))
+        {
+            return true;
+        }
+    }
+    
+    for(int i = 0; i < columns; i++)
+    {
+        if(full_column_a(rows, i))
+        {
+            return true;
+        }
+    }
+    
+    return false;
+}
+
+void solve()
+{
+    int rows, columns;
+    cin >> rows >> columns;
+    
+    for(int i = 0; i < rows; i++)
+    {
+        cin >> grid[i];
+    }
+    
+    if(all_p(rows, columns))
+    {
+        cout << "MORTAL\n";
+        
+        return;
+    }
+    else if(all_a(rows, columns))
+    {
+        cout << "0\n";
+        
+        return;
+    }
+    else if(full_corner_edges(rows, columns))
+    {
+        cout << "1\n";
+        
+        return;
+    }
+    else if(corner_square(rows, columns) || any_full_edge(rows, columns))
+    {
+        cout << "2\n";
+        
+        return;
+    }
+    else if(corner_edge_square(rows, columns))
+    {
+        cout << "3\n";
+        
+        return;
+    }
+    else
+    {
+        cout << "4\n";
+    }
+}
+
+int main()
+{
+    int no_of_test_cases;
+    cin >> no_of_test_cases;
+    
+    while(no_of_test_cases--)
+        solve();
+    
+    return 0;
+}
+
+
