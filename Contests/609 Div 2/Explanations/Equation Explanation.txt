@@ -1,0 +1,25 @@
+There are many ways to solve it but the simplest will use the observation
+that if n is not composite then some multiple of n will be composite.
+
+n = (X + 1).n - X.n
+
+We just need two values where we are sure X.n is composite.
+
+X = 8 does that.
+
+n = 9n - 8n
+
+------
+
+#include <iostream>
+
+using namespace std;
+
+int main()
+{
+    int n;
+    cin >> n;
+
+    cout << 9*n << " " << 8*n << "\n";
+    return 0;
+}
