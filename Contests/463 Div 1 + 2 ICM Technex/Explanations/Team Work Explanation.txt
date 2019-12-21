@@ -1,0 +1,60 @@
+We want to find sum_{i = 1}^n C(n, i) i^k
+
+We know that (1 + x)^n = sum_{i = 0}^n C(n, i) x^i
+
+If we replace x = 1, then we get 2^n. How do we get the term i^k there ? 
+
+There is a well known technique in evaluating sums of this nature. 
+
+We will find the derivative of this function with x, and then multiply it with x
+
+n (1 + x)^{n - 1} = x sum_{i = 0}^n C(n, i) i x^{i - 1}
+                  = sum_{i = 0}^n C(n, i) i x^i
+
+We have succeeded in getting i inside the summation !
+
+If we repeat this step k times, we will get i^k inside and then we just need to 
+replace x = 1 in the LHS to get the value of the sum.
+
+The question is how do we do this through programming.
+
+------
+
+There is a very instructive technique. 
+
+Let f(k, b, c) denote the result of applying the 'differentiate-and-then-multiply' step 'k' times 
+on the polynomial x^b (1 + x)^c
+
+In one step, it becomes x[b.x^{b - 1} (1 + x)^c + c.x^b(1 + x)^{c - 1}]
+
+= b.x^b (1 + x)^c + c x^{b + 1} (1 + x)^{c - 1}
+
+= b.f(k - 1, b, c) + c.f(k - 1, b + 1, c - 1)
+
+------
+
+Another small, but important thing - Although it looks like it is O(n^3) space, it is O(n^2) space because b + c is invariant.
+We do not need to keep track of both states in space.
+
+------
+
+long long f(long long differentiations, long long b, long long c)
+{
+    if(no_of_ways[differentiations][b] != -1)
+    {
+        return no_of_ways[differentiations][b];
+    }
+    
+    //x^b(1 + x)^c becomes x[bx^{b - 1}(1 + x)^c + cx^b(1 + x)^{c - 1}]
+    //f(a, b, c) = b.f(a - 1, b, c) + c.f(a - 1, b + 1, c - 1)
+    
+    if(differentiations == 0)
+    {
+        return no_of_ways[differentiations][b] = power_mod(2, c);
+    }
+    
+    long long term_1 = b*f(differentiations - 1, b, c);
+    long long term_2 = (c == 0 ? 0 : c*f(differentiations - 1, b + 1, c - 1));
+    
+    return no_of_ways[differentiations][b] = (term_1 + term_2)%MOD;
+}
