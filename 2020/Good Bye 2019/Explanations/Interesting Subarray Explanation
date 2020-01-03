@@ -1,0 +1,47 @@
+Fact - If there is an interesting subarray, then there is an interesting subarray of length 2.
+
+Proof -
+
+Let us suppose that there are 2 consecutive elements A[i], A[i + 1] such that
+|A[i] - A[i + 1]| >= 2
+
+This satisfies our condition and there is at least one interesting subarray.
+
+------
+
+Now, let us suppose that there is no such subarray of length 2 in the array.
+
+This means that for every pair (i, i + 1), the difference is atmost 1.
+
+|A[i] - A[i + 1]| >= 1
+
+For any given subarray of length k, the difference in between the smallest and largest element < k
+
+So, there can be no interesting subarray in the array.
+
+------
+
+void solve()
+{
+    int no_of_elements;
+    cin >> no_of_elements;
+
+    vector <int> A(no_of_elements + 1);
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        cin >> A[i];
+    }
+
+    for(int i = 1; i < no_of_elements; i++)
+    {
+        if(abs(A[i + 1] - A[i]) >= 2)
+        {
+            cout << "YES\n";
+            cout << i << " " << i + 1 << "\n";
+
+            return;
+        }
+    }
+
+    cout << "NO\n";
+}
