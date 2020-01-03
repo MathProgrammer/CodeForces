@@ -1,0 +1,55 @@
+Let us look at the sum of the first N integers. 
+
+S = A1 + A2 + ... + An
+XOR = A1^A2^...^An
+
+As an attempt, let us try to make XOR = 0.
+
+Let us append a new element to the sequence, A(n + 1) = X
+
+S = S + X
+X = X^X = 0
+
+As we know, 0^x = x
+
+Now, let us append another element to the sequence, A(n + 2) = S + X
+
+S = S + X + (S + X) = 2(S + X)
+X = 0^(S + X) = (S + X)
+
+This fulfils the objective. 
+
+-----
+
+void solve()
+{
+    int no_of_elements;
+    cin >> no_of_elements;
+    
+    vector <int> A(no_of_elements + 1);
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        cin >> A[i];
+    }
+    
+    long long sum = 0, array_xor = 0;
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        sum += A[i];
+        
+        array_xor ^= A[i];
+    }
+    
+    if(array_xor == 0)
+    {
+        cout << "1\n";
+        cout << sum + array_xor << "\n";
+        return;
+    }
+    else
+    {
+        cout << "2\n";
+        cout << array_xor << " " << sum + array_xor << "\n";
+        return;
+    }
+}
