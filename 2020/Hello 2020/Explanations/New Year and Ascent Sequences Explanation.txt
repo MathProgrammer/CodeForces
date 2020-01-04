@@ -1,0 +1,128 @@
+Let us call a sequence an A sequence if 
+there is an ascent in the sequence. 
+
+Let us call a sequence a D sequence if there is no ascent and it is in 
+descending order.
+
+-----
+
+Now, there are 4 types of pairs - 
+
+1. A-A
+2. A-D
+3. D-A
+4. D-D
+
+Let us count each type of pairs individually. 
+
+----
+
+Let there be a A-sequences and d D-sequences
+
+----
+
+If a sequence has an ascent, then it can be appended with itself and it will be a good sequence. 
+
+It can also be appended to any other A-sequence and it will be good. 
+
+If there are a A-sequences, then the number of A-A pairs is 
+
+a + a(a - 1)
+
+---
+
+A-D pairs
+
+This count is a.d
+
+----
+
+D-A pairs 
+
+This count is d.a
+
+----
+
+All A-D and D-A pairs are good since there is guaranteed to be at least one asecnt in each pair. 
+
+----
+
+Now, let us suppose we only have D-sequences. 
+For every sequence, let us have the maximum and minimum element. 
+
+If the minimum element of sequence i, is m, then sequence i forms a good pair 
+with any sequence who's maximum element is > m. 
+
+We will keep track of the frequency of each maximum and the suffix sum of the frequency. 
+
+This way, we can get maximum_suffix_frequency[m + 1] can be gotten in O(1) time. 
+
+Please refer my code for further clarification. 
+
+-----
+
+int main()
+{
+    int no_of_sequences;
+    cin >> no_of_sequences;
+    
+    const int oo = 1e6;
+    vector <int> minimum, maximum;
+    
+    long long ascent_sequences = 0, non_ascent_sequences = 0;
+    for(int i = 1; i <= no_of_sequences; i++)
+    {
+        int length;
+        cin >> length;
+        
+        vector <int> A(length + 1);
+        for(int j = 1; j <= length; j++)
+        {
+            cin >> A[j];
+        }
+        
+        int has_ascent = false;
+        for(int j = 2; j <= length; j++)
+        {
+            if(A[j - 1] < A[j])
+            {
+                has_ascent = true;
+                break;
+            }
+        }
+        
+        if(has_ascent)
+        {
+            ascent_sequences++;
+        }
+        else
+        {
+            non_ascent_sequences++;
+            maximum.push_back(A[1]);
+            minimum.push_back(A[length]);
+        }
+    }
+    
+    vector <int> maximum_frequency(oo + 5, 0);
+    for(int i = 0; i < non_ascent_sequences; i++)
+    {
+        maximum_frequency[maximum[i]]++;
+    }
+    
+    vector <int> maximum_suffix_sum(oo + 5, 0);
+    for(int i = oo; i >= 0; i--)
+    {
+        maximum_suffix_sum[i] = maximum_frequency[i] + maximum_suffix_sum[i + 1];
+    }
+   
+    long long no_of_pairs = ascent_sequences +
+                            ascent_sequences*(ascent_sequences - 1) + 2*ascent_sequences*non_ascent_sequences;
+    
+    for(int i = 0; i < non_ascent_sequences; i++)
+    {
+        no_of_pairs += maximum_suffix_sum[minimum[i] + 1];
+    }
+    
+    cout << no_of_pairs << "\n";
+    return 0;
+}
