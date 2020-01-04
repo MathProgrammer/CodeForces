@@ -1,0 +1,34 @@
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+int main()
+{
+    int S_strings, T_strings;
+    cin >> S_strings >> T_strings;
+    
+    vector <string> S(S_strings);
+    for(int i = 0; i < S_strings; i++)
+    {
+        cin >> S[i];
+    }
+    
+    vector <string> T(T_strings);
+    for(int i = 0; i < T_strings; i++)
+    {
+        cin >> T[i];
+    }
+    
+    int no_of_queries;
+    cin >> no_of_queries;
+    
+    while(no_of_queries--)
+    {
+        int year;
+        cin >> year;
+        cout << S[(year - 1)%S_strings] << T[(year - 1)%T_strings] << "\n";
+    }
+    
+    return 0;
+}
