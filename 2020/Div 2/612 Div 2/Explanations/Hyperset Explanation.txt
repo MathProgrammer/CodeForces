@@ -1,0 +1,120 @@
+Let us notice something. 
+
+Suppose we fix 2 strings A and B. 
+
+There can only be 1 string C, such that (A, B, C) is a set. 
+
+For each of the K positions, if 
+
+A[i] = B[i], then C[i] also has to be = A[i]
+
+If A[i] != B[i], then C[i] must be the third character not equal to both (A[i], B[i]). 
+
+-----
+
+Let us iterate over every pair of strings. The third string C is only one.
+
+For every pair (A[i], A[j]), add the frequency of Complement(A[i], A[j]) to the answer. 
+
+The only observation is that every triplet (A, B, C) is counted three times. 
+
+1. When we fix (A, B)
+2. When we fix (B, C)
+3. When we fix (C, A)
+
+So, we will divide the number of triplets by 3. 
+
+----
+
+We need to notice something. What about identical triplets - when all three strings are the same - (A, A, A) ? 
+
+If we add it in the same way, then we will be counting such triplets 6 times. 
+
+When we fix (A, A) and add frequency of Complement(A, A) = A to the answer, the answer overcounts by 2. 
+
+Each such triplet is counted 3x2 = 6 times. 
+
+That is why, in my solution I count same triplets first, and then different triplets seperately. 
+
+----
+
+Note that we do not have to deal with the condition where A = B =/= C because of the definition of the triplet :)
+
+----
+
+char get_third(char a, char b)
+{
+    switch(a)
+    {
+        case 'S' : return (b == 'E' ? 'T' : 'E');
+        case 'E' : return (b == 'T' ? 'S' : 'T');
+        case 'T' : return (b == 'S' ? 'E' : 'S');
+    }
+    
+    return 0;
+}
+
+long  long choose_3(long long n)
+{
+    long long numerator = n*(n - 1)*(n - 2);
+    long long denominator = 3*2*1;
+    
+    return numerator/denominator;
+}
+
+int main()
+{
+    int no_of_cards, no_of_features;
+    cin >> no_of_cards >> no_of_features;
+    
+    vector <string> card(no_of_cards + 1);
+    map <string, int> frequency;
+    for(int i = 1; i <= no_of_cards; i++)
+    {
+        cin >> card[i];
+        
+        frequency[card[i]]++;
+    }
+    
+    long long same_triplets = 0;
+    for(auto it = frequency.begin(); it != frequency.end(); it++)
+    {
+        same_triplets += choose_3(it->second);
+    }
+    
+    long long different_triplets = 0;
+    for(int i = 1; i <= no_of_cards; i++)
+    {
+        for(int j = i + 1; j <= no_of_cards; j++)
+        {
+            if(card[i] == card[j])
+            {
+                continue;
+            }
+            
+            string complement;
+            
+            for(int k = 0; k < no_of_features; k++)
+            {
+                if(card[i][k] == card[j][k])
+                {
+                    complement += card[i][k];
+                }
+                else
+                {
+                    complement += get_third(card[i][k], card[j][k]);
+                }
+            }
+            
+            different_triplets += frequency[complement];
+        }
+    }
+    
+    different_triplets /= 3;
+    
+    long long no_of_triplets = same_triplets + different_triplets;
+    
+    cout << no_of_triplets << "\n";
+    return 0;
+}
+
