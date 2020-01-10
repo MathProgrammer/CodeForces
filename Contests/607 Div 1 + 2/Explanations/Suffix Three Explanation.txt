@@ -1,0 +1,16 @@
+We can just use a switch-case construct to answer this problem.
+
+-----
+
+void solve()
+{
+    string word;
+    cin >> word;
+
+    switch(word[word.size() - 1])
+    {
+        case 'o': cout << "FILIPINO\n"; return;
+        case 'u': cout << "JAPANESE\n"; return;
+        case 'a': cout << "KOREAN\n"; return;
+    }
+}
