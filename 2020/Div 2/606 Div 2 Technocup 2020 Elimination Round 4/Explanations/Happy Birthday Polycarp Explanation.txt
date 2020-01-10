@@ -1,0 +1,47 @@
+If the number has d digits, then all strings upto length (d - 1) are automatically good.
+
+So the answer is initially 9(d - 1).
+
+We will try all 9 D digit numbers and check how many of them are < n.
+
+-----
+
+int no_of_digits(int n)
+{
+    int digits = 0;
+
+    while(n > 0)
+    {
+        n /= 10;
+        digits++;
+    }
+
+    return digits;
+}
+
+void solve()
+{
+    int n;
+    cin >> n;
+
+    int answer = 9*(no_of_digits(n) - 1);
+
+    for(int i = 1, x = 0; i <= 9; i++)
+    {
+        x = 0;
+
+        for(int d = 1; d <= no_of_digits(n); d++)
+        {
+            x = x*10 + i;
+        }
+
+        if(x > n)
+        {
+            break;
+        }
+
+        answer++;
+    }
+
+    cout << answer << "\n";
+}
