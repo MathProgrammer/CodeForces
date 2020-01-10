@@ -1,3 +1,22 @@
+Let us make a few simple observations - 
+
+1. The first vertex is the root. 
+2. Leaves are the vertices which are never mentioned in the list. 
+3. If we have multiple leaves, then the leaf which has the greater number has their parent coming first. 
+4. If there is a situation where we must match a vertex to a leaf, we must choose the largest available leaf.
+5. The i-th edge will start from the i-th vertex on the list. 
+
+------
+
+When we are at vertex A[i], we know that cutting a wire from A[i] is more important than the wire from A[i + 1].
+Having said that all the vertices affected by cutting the wire from A[i + 1] will also be effected by cutting the wire from A[i] if we draw an edge between A[i] and A[i + 1]. 
+So, we will simply draw an edge between A[i] and A[i + 1] if we have not drawn an edge to A[i + 1] before. 
+
+If we have, then we will simply connect A[i] to the largest leaf available at the time. 
+
+-----
+
+
 int main()
 {
     int no_of_lamps;
