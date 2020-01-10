@@ -1,0 +1,119 @@
+Let us do this.
+
+Since we are given random permutations of every substring, we will collect a vector of length 26
+denoting the frequency of each of the alphabets instead of the actual string.
+
+We will first get all the substrings of length [1, n].
+
+We will then get all the substrings of length [2, n].
+
+We will store all the vectors of length 26 inside a multiset.
+We will delete all the vectors from [2, n] that are present.
+
+This leaves us with n substrings -
+
+[1, 1], [1, 2], [1, 3], ... , [1, n].
+
+----
+
+Notice that [1, 1] is the only letter.
+
+To get the second letter, we must search for which letter is there in [1, 2] but not in [1, 1].
+
+Similarly, we will repeat this process. To get the i-th alphabet, we will search for which letter
+is there in [1, i] but not there in [1, i - 1].
+
+-----
+
+int sort_by_frequency(vector <int> &A, vector <int> &B)
+{
+    const int NO_OF_ALPHABETS = 26;
+
+    int a_sum = 0, b_sum = 0;
+    for(int i = 0; i < NO_OF_ALPHABETS; i++)
+    {
+        a_sum += A[i];
+        b_sum += B[i];
+    }
+
+    return (b_sum > a_sum);
+}
+
+int main()
+{
+    int length;
+    cin >> length;
+
+    const int NO_OF_ALPHABETS = 26;
+    cout << "? 1 " << length << endl;
+
+    multiset <vector <int> >subarray;
+    for(int i = 1; i <= length; i++)
+    {
+        for(int j = i; j <= length; j++)
+        {
+            string S;
+            cin >> S;
+
+            if(length == 1)
+            {
+                cout << "! " << S << endl;
+
+                return 0;
+            }
+
+            vector <int> frequency(NO_OF_ALPHABETS, 0);
+            for(int k = 0; k < S.size(); k++)
+            {
+                frequency[S[k] - 'a']++;
+            }
+
+            subarray.insert(frequency);
+        }
+    }
+
+    cout << "? 2 " << length << endl;
+    for(int i = 2; i <= length; i++)
+    {
+        for(int j = i; j <= length; j++)
+        {
+            string S;
+            cin >> S;
+
+            vector <int> frequency(NO_OF_ALPHABETS, 0);
+            for(int k = 0; k < S.size(); k++)
+            {
+                frequency[S[k] - 'a']++;
+            }
+
+            subarray.erase(subarray.find((frequency)));
+        }
+    }
+
+    vector <vector <int> >subarrays_from_1;
+    for(auto it = subarray.begin(); it != subarray.end(); it++)
+    {
+        subarrays_from_1.push_back(*it);
+    }
+
+    sort(all(subarrays_from_1), sort_by_frequency);
+
+    string answer;
+
+    vector <int> current_frequency(NO_OF_ALPHABETS, 0);
+    for(int i = 0; i < length; i++)
+    {
+        for(int alpha = 0; alpha < NO_OF_ALPHABETS; alpha++)
+        {
+            if(subarrays_from_1[i][alpha] > current_frequency[alpha])
+            {
+                answer += (char)('a' + alpha);
+
+                current_frequency[alpha]++;
+            }
+        }
+    }
+
+    cout << "! " << answer << endl;
+    return 0;
+}
