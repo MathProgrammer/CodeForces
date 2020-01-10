@@ -1,0 +1,12 @@
+We will calculate the number of minutes left.
+
+void solve()
+{
+    int hours, minutes;
+    cin >> hours >> minutes;
+
+    const int MAX_HOUR = 23, MAX_MINUTE = 60;
+    int remaining_minutes = 60*(MAX_HOUR - hours) + (MAX_MINUTE - minutes);
+
+    cout << remaining_minutes << "\n";
+}

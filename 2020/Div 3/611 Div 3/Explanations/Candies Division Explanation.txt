@@ -1,0 +1,19 @@
+After giving everyone C/N number of candies,
+we will look at the remainder.
+
+We can only give (C/2) or (C mod N) candies - whichever is lesser.
+
+void solve()
+{
+    int no_of_candies, no_of_kids;
+    cin >> no_of_candies >> no_of_kids;
+
+    int candies_given_to_one_kid = no_of_candies/no_of_kids;
+
+    int candies_given = no_of_kids*candies_given_to_one_kid;
+    no_of_candies %= no_of_kids;
+
+    candies_given += min(no_of_candies, no_of_kids/2);
+
+    cout << candies_given << "\n";
+}

@@ -1,0 +1,111 @@
+Let us draw a graph to represent the permutation.
+Each vertex should have exactly 1 edge coming in and exactly 1 edge coming out.
+
+After we draw the graph, there will be some vertices which are isolated.
+
+If there are no isolated vertices, then we are good.
+If there is one isolated vertex, we will draw an edge from here to so me other vertex which does not have an incoming edge.
+(There have to be n incoming and n outgoing edges.
+If 1 vertex does not have an outgoing edge,
+it means some other vertex does not have an incoming edge.)
+
+If there are more than one isolated vertices, then we will create a cycle with them.
+
+After we are done, there will be some vertices which don't have an incoming edge and some vertices which don't have an outgoing edge, but not both.
+(As we already took care of the isolated vertices.)
+
+-----
+
+By our previous proof, they will be equal in number and we will just match them.
+
+-----
+
+int main()
+{
+    int no_of_friends;
+    cin >> no_of_friends;
+
+    vector <int> A(no_of_friends + 1);
+    for(int i = 1; i <= no_of_friends; i++)
+    {
+        cin >> A[i];
+    }
+
+    vector <int> indegree(no_of_friends + 1);
+    vector <int> outdegree(no_of_friends + 1);
+    for(int i = 1; i <= no_of_friends; i++)
+    {
+        if(A[i] != 0)
+        {
+            indegree[A[i]]++;
+            outdegree[i]++;
+        }
+    }
+
+    vector <int> isolated_vertices;
+    for(int i = 1; i <= no_of_friends; i++)
+    {
+        if(indegree[i] == 0 && outdegree[i] == 0)
+        {
+            isolated_vertices.push_back(i);
+        }
+    }
+
+    if(isolated_vertices.size() == 1)
+    {
+        int v = isolated_vertices[0];
+
+        for(int i = 1; i <= no_of_friends; i++)
+        {
+            if(indegree[i] == 0 && i != v)
+            {
+                A[v] = i;
+
+                indegree[i]++;
+                outdegree[v]++;
+
+                break;
+            }
+        }
+    }
+    else if(isolated_vertices.size() > 1)
+    {
+        for(int i = 0; i < isolated_vertices.size(); i++)
+        {
+            int u = isolated_vertices[i], v = isolated_vertices[(i + 1)%isolated_vertices.size()];
+
+            A[u] = v;
+            indegree[v]++;
+            outdegree[u]++;
+        }
+    }
+
+    vector <int> empty_in;
+    vector <int> empty_out;
+    for(int i = 1; i <= no_of_friends; i++)
+    {
+        if(indegree[i] == 0)
+        {
+            empty_in.push_back(i);
+        }
+        if(outdegree[i] == 0)
+        {
+            empty_out.push_back(i);
+        }
+    }
+
+    for(int i = 0; i < empty_out.size(); i++)
+    {
+        int u = empty_out[i], v = empty_in[i];
+
+        A[u] = v;
+    }
+
+    for(int i = 1; i <= no_of_friends; i++)
+    {
+        cout << A[i] << " ";
+    }
+    cout << "\n";
+
+    return 0;
+}

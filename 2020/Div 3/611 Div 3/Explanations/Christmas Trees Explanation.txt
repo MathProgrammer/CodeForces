@@ -1,0 +1,77 @@
+We will first look at all points which are at a distance 1 from a tree.
+Then, we will look at all points which are at a distance 2 from a tree.
+Then, we will look at all points which are at a distance 3 from a tree.
+
+This suggests BFS. We will insert all the Christmas trees as sources.
+After visiting a point, we will insert (x + 1) and (x - 1) into the queue if we have not already visited it.
+
+If we insert (x + 1) or (x - 1) after x, then
+
+d(x + 1) = d(x - 1) = d(x) + 1
+
+This is the minimum distance to either (x + 1) or (x - 1).
+The reason is that we are performing BFS.
+
+If we had another path to (x + 1) or (x - 1) from y, and d(y) < d(x),
+then we would have visited y before we had visited x.
+
+------
+
+int main()
+{
+    int no_of_trees, no_of_people;
+    cin >> no_of_trees >> no_of_people;
+
+    vector <int> X(no_of_trees);
+    for(int i = 0; i < no_of_trees; i++)
+    {
+        cin >> X[i];
+    }
+
+    map <int, int> distance;
+    queue <int> Q;
+    for(int i = 0; i < no_of_trees; i++)
+    {
+        Q.push(X[i]);
+
+        distance[X[i]] = 0;
+    }
+
+    long long total_distance = 0;
+    vector <int> people;
+    while(!Q.empty() && people.size() < no_of_people)
+    {
+        int current = Q.front();
+        Q.pop();
+
+        if(distance[current] != 0)
+        {
+            total_distance += distance[current];
+
+            people.push_back(current);
+        }
+
+        if(distance.count(current + 1) == 0)
+        {
+            distance[current + 1] = distance[current] + 1;
+
+            Q.push(current + 1);
+        }
+
+        if(distance.count(current - 1) == 0)
+        {
+            distance[current - 1] = distance[current] + 1;
+
+            Q.push(current - 1);
+        }
+    }
+
+    cout << total_distance << "\n";
+    for(int i = 0; i < no_of_people; i++)
+    {
+        cout << people[i] << " ";
+    }
+
+    cout << "\n";
+    return 0;
+}
