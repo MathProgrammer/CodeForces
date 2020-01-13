@@ -1,0 +1,67 @@
+Let us make a few observations. 
+
+We want to minimize the number of removals. This is the same as maximising the amount that we choose. 
+In the end, we will be left with some prefix and with some suffix. 
+
+Suppose we take (x1, y1) from the prefix and (x2, y2) from the suffix. 
+
+x1 + x2 = y1 + y2
+
+We can also write it as (x1 - y1) = (y2 - y1)
+
+We will maintain the prefix frequency of (x1 - y1) for each i. 
+We will also maintain the suffix frequency of (y2 - x2) and also the index at which it reaches the given value.
+
+For each i, we will check that if we take i elements from the prefix, how many elements of the suffix do we have to take ? 
+
+(It is possible that we will not get a good selection even if we select the entire suffix and we will deal with this case.)
+
+Please refer my code for more doubts.
+
+-----
+
+void solve()
+{
+    int no_of_jars;
+    cin >> no_of_jars;
+    
+    vector <long long> A(2*no_of_jars + 1);
+    for(int i = 1; i <= 2*no_of_jars; i++)
+    {
+        cin >> A[i];
+    }
+    
+    int suffix_1 = 0, suffix_2 = 0;
+    map <long long, int> suffix_point;
+    for(int i = 2*no_of_jars; i > no_of_jars; i--)
+    {
+        suffix_1 += (A[i] == 1);
+        suffix_2 += (A[i] == 2);
+    
+        suffix_point[suffix_1 - suffix_2] = i;
+    }
+    
+    int maximum_chosen = 0;
+    int prefix_1 = 0, prefix_2 = 0;
+    for(int i = 0; i <= no_of_jars; i++)
+    {
+        prefix_1 += (A[i] == 1);
+        prefix_2 += (A[i] == 2);
+        
+        if(prefix_1 == prefix_2)
+        {
+            maximum_chosen = max(maximum_chosen, i);
+        }
+        
+        if(suffix_point[prefix_2 - prefix_1] != 0)
+        {
+            int chosen_here = i  + (2*no_of_jars - (suffix_point[prefix_2 - prefix_1] - 1));
+            
+            maximum_chosen = max(maximum_chosen, chosen_here);
+        }
+    }
+    
+    int minimum_removals = 2*no_of_jars - maximum_chosen;
+    
+    cout << minimum_removals << "\n";
+}
