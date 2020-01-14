@@ -1,0 +1,23 @@
+Let us assume there are (a1, a2, a3) stones.
+And a1 < a2 < a3
+
+If a3 > a1 + a2 + 1, there have to be 2 consecutive flowers of a3.
+
+Otherwise, we will first place the a3 flowers.
+
+Then, we will put the flowers of type a1 in between the flowers from one end
+and flowers of type a2 in another end.
+ 
+-----
+
+void solve()
+{
+    long long red, green, blue;
+    cin >> red >> green >> blue;
+
+    long long total = red + green + blue;
+    long long maximum = max_3(red, green, blue);
+    long long remaining_sum = total - maximum;
+
+    cout << (maximum <= remaining_sum + 1 ? "Yes\n" : "No\n");
+}
