@@ -1,0 +1,52 @@
+Here is the optimal idea. 
+
+Every time we scan through the stack, we will place the gifts in such a way 
+that any future query that can be answered will be answered. 
+
+We will pick up the maximum index in A at each time. 
+
+Every time we go to B[j], we will check if the index of B[j] < maximum. 
+
+If yes, then it will be at the top of the stack when we have to pick it up. 
+
+Else, if the index k > maximum, then we will update the maximum and take (2k + 1) seconds for this.
+------
+
+void solve()
+{
+    int stack_presents, sent_presents;
+    cin >> stack_presents >> sent_presents;
+    
+    vector <int> A(stack_presents + 1);
+    vector <int> A_index(stack_presents + 1);
+    for(int i = 1; i <= stack_presents; i++)
+    {
+        cin >> A[i];
+        
+        A_index[A[i]] = i;
+    }
+    
+    vector <int> B(sent_presents + 1);
+    for(int i = 1; i <= sent_presents; i++)
+    {
+        cin >> B[i];
+    }
+    
+    int max_inserted = 0;
+    long long total_time = 0;
+    for(int i = 1; i <= sent_presents; i++)
+    {
+        int effective_index = A_index[B[i]] - (i - 1);
+        
+        if(max_inserted > A_index[B[i]])
+        {
+            effective_index = 1;
+        }
+        
+        total_time += 2*(effective_index - 1) + 1;
+        
+        max_inserted = max(max_inserted, A_index[B[i]]);
+    }
+    
+    cout << total_time << "\n";
+}
