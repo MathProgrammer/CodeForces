@@ -1,0 +1,27 @@
+a.b + a + b = 10^d a + b, where d is the number of digits of b
+
+a.b = a(10^d - 1)
+
+b = 10^d - 1
+
+b is a string of all 9s, and a can be any integer in the range
+
+-----
+
+void solve()
+{
+    int a, b;
+    cin >> a >> b;
+
+    //a.b + a + b = 10a + b => a.b = 9a => a.b = 9a => b = 9
+    //a.b + a + b = 100a + b => a.b = 99a => b = 99
+
+    long long no_of_pairs = 0;
+
+    for(long long i = 10; i - 1 <= b; i *= 10)
+    {
+        no_of_pairs += a;
+    }
+
+    cout << no_of_pairs << "\n";
+}

@@ -1,0 +1,35 @@
+It can be proven that the actual answer will be near square root(d).
+
+(We can check this by taking the derivative of the function and setting it to 0).
+
+I did a heuristic where I just checked the first 10^6 integers as it is guaranteed to be within the square root of d.
+
+-----
+
+void solve()
+{
+    int n, d;
+    cin >> n >> d;
+
+    if(d <= n)
+    {
+        cout << "YES\n";
+
+        return;
+    }
+
+    const int N = 2e6;
+    for(int x = 1; x <= min(n, N); x++)
+    {
+        int optimised_d = ceil(d, x + 1);
+        //cout << "d = " << optimised_d << " x = " << x << "\n";
+
+        if(optimised_d + x <= n)
+        {
+            cout << "YES\n";
+            return;
+        }
+    }
+
+    cout << "NO\n";
+}
