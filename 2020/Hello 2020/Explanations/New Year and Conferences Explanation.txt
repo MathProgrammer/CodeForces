@@ -1,0 +1,83 @@
+We can actually interpret this as a question about rectangles.
+
+Interpret the output as (x1, x2), (y1, y2).
+
+The question is now to check if there are 2 rectangles who's X intersects but Y does not.
+
+We will sort the rectangles by X.
+
+We will go through the rectangles in sorted order.
+We will look at the current Y.
+We have to check that the Y intersects with all the corresponding Y's that the X intersects with.
+
+We can do this by
+
+1. Maintaining a set of all Y's which the current X intersects with.
+2. Check if y1 >= smallest Y in the set
+3. Check if y2 <= largest Y in the set
+4. Also when we are at y2, we will remove it from the set
+5. When we are at y1, we will insert y into the set
+
+-----
+
+We will once check if any two rectangles have intersecting X's and not intersecting Y's
+Then, we will check if we have intersecting Y's and not intersecting X's
+
+-----
+
+int same_intersections(vector <int> start_a, vector <int> end_a, vector <int> start_b,  vector <int> end_b)
+{
+    multiset <int> starts, ends;
+
+    vector <event> events;
+    for(int i = 0; i < start_a.size(); i++)
+    {
+        events.push_back(event(start_a[i], start_b[i], end_b[i], true));
+        events.push_back(event(end_a[i] + 1, start_b[i], end_b[i], false));
+    }
+
+    sort(all(events));
+
+    for(int i = 0; i < events.size(); i++)
+    {
+        if(events[i].is_entry)
+        {
+            if(!starts.empty())
+            {
+                int last_start = *starts.rbegin();
+                int earliest_end = *ends.begin();
+
+                if(earliest_end < events[i].start || last_start > events[i].end)
+                {
+                    return false;
+                }
+
+                starts.insert(events[i].start);
+                ends.insert(events[i].end);
+            }
+        }
+        else
+        {
+            starts.erase(starts.find(events[i].start));
+            ends.erase(ends.find(events[i].end));
+        }
+    }
+
+    return true;
+}
+
+int main()
+{
+    int no_of_lectures;
+    cin >> no_of_lectures;
+
+    vector <int> start_a(no_of_lectures), start_b(no_of_lectures), end_a(no_of_lectures), end_b(no_of_lectures);
+    for(int i = 0; i < no_of_lectures; i++)
+    {
+        cin >> start_a[i] >> end_a[i] >> start_b[i] >> end_b[i];
+    }
+
+    cout << (same_intersections(start_a, end_a, start_b, end_b) && same_intersections(start_b, end_b, start_a, end_a) ? "YES\n" : "NO\n");
+
+    return 0;
+}
