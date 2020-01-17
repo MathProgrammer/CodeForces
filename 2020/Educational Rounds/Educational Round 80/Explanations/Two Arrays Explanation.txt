@@ -1,0 +1,23 @@
+https://qr.ae/TVI1Ht
+
+int main()
+{
+    precompute();
+
+    int n, length;
+    cin >> n >> length;
+
+    long long answer = 0;
+    for(int a_ending = 1; a_ending <= n; a_ending++)
+    {
+        for(int b_ending = a_ending; b_ending <= n; b_ending++)
+        {
+            answer += (count(1, a_ending, length)*count(b_ending, n, length))%MOD;
+
+            answer %= MOD;
+        }
+    }
+
+    cout << answer << "\n";
+    return 0;
+}

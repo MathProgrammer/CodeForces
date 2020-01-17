@@ -1,0 +1,14 @@
+https://qr.ae/TVI1Ht
+
+int main()
+{
+    precompute();
+
+    int n, length;
+    cin >> n >> length;
+
+    long long answer = combinations(n + 2*length - 1, 2*length);
+
+    cout << answer << "\n";
+    return 0;
+}
