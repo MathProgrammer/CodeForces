@@ -1,0 +1,30 @@
+The right label for each vertex is more than the number of children it has.
+Then, one by one we will start labelling the children backwards so that they all intersect.
+
+
+-----
+
+void dfs(int v, int parent_v)
+{   //cout << "At " << v << "\n";
+    int no_of_children = tree[v].size() - (parent_v == 0 ? 0 : 1);
+
+    available += no_of_children + 1;
+
+    right_label[v] = available;
+    //cout << "Size " << v << " = " << tree[v].size() << "\n";
+    for(int i = 0, child_no = 0; i < tree[v].size(); i++)
+    {
+        int child_v = tree[v][i];
+
+        if(child_v == parent_v)
+        {
+            continue;
+        }
+
+        child_no++;
+
+        left_label[child_v] = right_label[v] - child_no;
+
+        dfs(child_v, v);
+    }
+}
