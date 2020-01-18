@@ -1,0 +1,18 @@
+We can just print 9n and 8n.
+
+gcd(8, 9) = 1 and 9n - 8n = 1
+
+-----
+
+#include <iostream>
+
+using namespace std;
+
+int main()
+{
+    int n;
+    cin >> n;
+
+    cout << 9*n << " " << 8*n << "\n";
+    return 0;
+}
