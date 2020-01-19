@@ -1,0 +1,75 @@
+The first k characters determine the entire string.
+We will first set B[i] = B[i%k] for every i.
+
+If B >= A like this, then we are done.
+This is the smallest beautiful integer as it matches the longest prefix.
+
+Otherwise if B < A, then, we will look at the last digit which is not 9 in the prefix.
+We will increment it and make all the 9's from there till k = 0
+
+Now, B > A and has the longest matching prefix.
+
+-----
+
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+int main()
+{
+    int no_of_digits, k;
+    string S;
+    cin >> no_of_digits >> k >> S;
+
+    string answer = S;
+    for(int i = k; i < no_of_digits; i++)
+    {
+        answer[i] = answer[i%k];
+    }
+
+    int is_lesser = false;
+    for(int i = 0; i < no_of_digits; i++)
+    {
+        if(answer[i] > S[i])
+        {
+            break;
+        }
+
+        if(answer[i] < S[i])
+        {
+            is_lesser = true;
+            break;
+        }
+    }
+
+    if(!is_lesser)
+    {
+        cout << no_of_digits << "\n" << answer << "\n";
+        return 0;
+    }
+
+    int change_point = -1;
+    for(int i = k - 1; i >= 0; i--)
+    {
+        if(S[i] != '9')
+        {
+            change_point = i;
+            answer[i] = answer[i] + 1;
+            break;
+        }
+    }
+
+    for(int i = change_point + 1; change_point != -1 && i < k; i++)
+    {
+        answer[i] = '0';
+    }
+
+    for(int i = k; i < no_of_digits; i++)
+    {
+        answer[i] = answer[i%k];
+    }
+
+    cout << no_of_digits << "\n" << answer << "\n";
+    return 0;
+}
