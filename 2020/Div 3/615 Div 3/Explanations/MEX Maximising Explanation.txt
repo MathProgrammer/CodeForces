@@ -1,0 +1,50 @@
+1. We can only add or subtract x from A[i]. So A[i] (mod x) is invariant.
+
+2. We will 'spread' out the A[i]'s across each mod.
+Suppose A[i] = 1 (mod x). Suppose, we have already have (1, x + 1, 2x + 1).
+We will give A[i] the value = 3x + 1.
+
+
+We will greedily give A[i] the smallest untaken value.
+
+-----
+
+This ensures that we are maximising the Mex at each step because we are taking
+the smallest untaken number we can at each step.
+
+----
+
+To calculate the Mex, we can have another loop.
+Although it looks like it is O(N^2), it is not because the loops are independent.
+
+-----
+
+int main()
+{
+    long long no_of_operations, x;
+    cin >> no_of_operations >> x;
+
+    map <long long, int> is_present;
+    map <long long, int> last;
+
+    int mex = 0;
+    for(int i = 1; i <= no_of_operations; i++)
+    {
+        long long current;
+        cin >> current;
+
+        current %= x;
+
+        is_present[x*last[current] + current] = true;
+        last[current]++;
+
+        while(is_present[mex])
+        {
+            mex++;
+        }
+
+        cout << mex << "\n";
+    }
+
+    return 0;
+}
