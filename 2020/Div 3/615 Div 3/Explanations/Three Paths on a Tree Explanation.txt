@@ -1,0 +1,229 @@
+The problem is to find the triameter of a tree. 
+
+Here is what we will do. We will first find the diamter of the tree. 
+
+We can do this by the following way - 
+
+1. Start from the root and go as far as possible using DFS. Let the point with the furthest depth be a.
+2. Start from a and do another DFS and go as far as possible. Let the point with the furthest depth be b.
+
+a-b is the diamater of the tree. 
+
+-----
+
+Now, how to find the third point ? 
+
+For every vertex in the graph, we have to calculate the distance to the diameter. 
+
+To do this, we will first store all the vertices of the diameter in a Queue. 
+
+Then, we will perform multi source BFS. 
+
+This will help us in calculating the distance from the diameter to every vertex in the tree.
+
+-----
+
+#include <iostream>
+#include <vector>
+#include <queue>
+
+using namespace std;
+
+const int MAX_L = 23, MAX_N = 2e5 + 5, oo = 1e9;
+vector <int> tree[MAX_N];
+int parent[MAX_N][MAX_L], depth[MAX_N];
+vector <int> lies_on_diameter(MAX_N, false);
+
+int is_bit_set(long long n, int bit)
+{
+    return ( (n&(1LL << bit)) != 0) ;
+}
+
+void dfs(int v, int parent_v)
+{
+    depth[v] = depth[parent_v] + 1;
+    
+    parent[v][0] = parent_v;
+    
+    for(int i = 0; i < tree[v].size(); i++)
+    {
+        int child_v = tree[v][i];
+        
+        if(child_v == parent_v)
+        {
+            continue;
+        }
+        
+        dfs(child_v, v);
+    }
+}
+
+int dfs_diameter(int v, int parent_v, int destination)
+{
+    if(v == destination)
+    {
+        lies_on_diameter[v] = true;
+        return true;
+    }
+    
+    for(int i = 0; i < tree[v].size(); i++)
+    {
+        int child = tree[v][i];
+        
+        if(child == parent_v)
+        {
+            continue;
+        }
+        
+        if(dfs_diameter(child, v, destination))
+        {
+            lies_on_diameter[v] = true;
+            return true;
+        }
+    }
+    
+    return false;
+}
+
+void precompute_parents(int no_of_vertices)
+{
+    for(int l = 1; l < MAX_L; l++)
+    {
+        for(int i = 1; i <= no_of_vertices; i++)
+        {
+            int ancestor = parent[i][l - 1];
+            
+            parent[i][l] = parent[ancestor][l - 1];
+        }
+    }
+}
+
+int LCA(int u, int v)
+{
+    if(depth[v] < depth[u])
+    {
+        swap(u, v);
+    }
+    
+    int difference = depth[v] - depth[u];
+    
+    for(int i = MAX_L - 1; i >= 0; i--)
+    {
+        if(is_bit_set(difference, i))
+        {
+            v = parent[v][i];
+        }
+    }
+    
+    if(u == v)
+    {
+        return u;
+    }
+    
+    for(int i = MAX_L - 1; i >= 0; i--)
+    {
+        if(parent[u][i] != parent[v][i])
+        {
+            u = parent[u][i];
+            v = parent[v][i];
+        }
+    }
+    
+    return parent[u][0];
+}
+
+int tree_distance(int u, int v)
+{
+    return (depth[u] + depth[v] - 2*depth[LCA(u, v)]);
+}
+
+int main()
+{
+    int no_of_vertices;
+    cin >> no_of_vertices;
+    
+    int no_of_edges = no_of_vertices - 1;
+    for(int i = 1; i <= no_of_edges; i++)
+    {
+        int u, v;
+        cin >> u >> v;
+        
+        tree[u].push_back(v);
+        tree[v].push_back(u);
+    }
+    
+    depth[0] = 0;
+    dfs(1, 0);
+    
+    precompute_parents(no_of_vertices);
+    
+    int max_depth = 0;
+    int a = 1, b = 1, c = 1;
+    for(int v = 1; v <= no_of_vertices; v++)
+    {
+        if(depth[v] > max_depth)
+        {
+            max_depth = depth[v];
+            b = v;
+        }
+    }
+    
+    int edges_covered = 0;
+    for(int i = 1; i <= no_of_vertices; i++)
+    {
+        if(tree_distance(i, b) > edges_covered)
+        {
+            edges_covered = tree_distance(i, b);
+            a = i;
+            //cout << "a = " << a << " and distance = " << edges_covered << "\n";
+        }
+    }
+    
+    dfs_diameter(a, 0, b);
+    
+    queue <int> Q;
+    vector <int> distance(no_of_vertices + 1, 0);
+    for(int i = 1; i <= no_of_vertices; i++)
+    {
+        if(lies_on_diameter[i])
+        {
+            Q.push(i);
+            distance[i] = 0;
+        }
+        else
+        {
+            distance[i] = oo;
+        }
+    }
+    
+    int new_edges = -1;
+    while(!Q.empty())
+    {
+        int v = Q.front();
+        Q.pop();
+        
+        if(distance[v] > new_edges && v != a && v != b)
+        {
+            new_edges = distance[v];
+            c = v;
+        }
+        
+        for(int i = 0; i < tree[v].size(); i++)
+        {
+            int child = tree[v][i];
+            
+            if(distance[child] > distance[v] + 1)
+            {
+                distance[child] = distance[v] + 1;
+                
+                Q.push(child);
+            }
+        }
+    }
+    
+    edges_covered += new_edges;
+    
+    cout << edges_covered << "\n";
+    cout << a << " " << b << " " << c << "\n";
+    return 0;
+}
