@@ -1,0 +1,154 @@
+The number of free ants = Number of ants which divide every element in the range.
+
+This is equal to the frequency of the GCD of the segment.
+
+The only problem with this is about how we will combine 2 segments.
+
+Suppose, we are combining L and R.
+
+If gcd(L.gcd, R.gcd) = L.gcd,
+
+Then we can take the frequency of L. Otherwise we can take the frequency of R.
+
+What if gcd(L.gcd, R.gcd) < min(L.gcd, R.gcd)
+
+Then, we can take it as 0 for this segment.
+
+-----
+
+The GCD is always the minimum element of the segment.
+
+So, if gcd(A, B) < gcd(A) and gcd(B),
+
+Then, it means that gcd(A, B) is not present in either A or B and the frequency is 0
+
+------
+
+We will create a segment tree that keeps track of the GCD and the GCD Frequency for each segments
+
+While answering a query, we will notice that GCD_Frequency elements will be free and have to give the count of the remaining elements.
+
+------
+
+Here is the merge function
+
+struct node
+{
+    int gcd, gcd_frequency;
+
+    node(){}
+
+    node(int G, int F)
+    {
+        gcd = G; gcd_frequency = F;
+    }
+};
+
+node merge(node &A, node &B)
+{
+    node C;
+
+    C.gcd = gcd(A.gcd, B.gcd);
+
+    if(A.gcd == B.gcd)
+    {
+        C.gcd_frequency = A.gcd_frequency + B.gcd_frequency;
+    }
+    else if(C.gcd < min(A.gcd, B.gcd))
+    {
+        C.gcd_frequency = 0;
+    }
+    else if(C.gcd == A.gcd)
+    {
+        C.gcd_frequency = A.gcd_frequency;
+    }
+    else if(C.gcd == B.gcd)
+    {
+        C.gcd_frequency = B.gcd_frequency;
+    }
+
+    return C;
+}
+
+------
+
+Here is the build function
+
+void build(int n, int left, int right)
+{
+    if(left == right)
+    {
+        tree[n] = node(A[left], 1);
+        return;
+    }
+
+    int mid = (left + right)/2;
+
+    build(LEFT(n), left, mid);
+    build(RIGHT(n), mid + 1, right);
+
+    tree[n] = merge(tree[LEFT(n)], tree[RIGHT(n)]);
+}
+
+------
+
+Here is the Query Function
+
+node query(int n, int left, int right, int query_left, int query_right)
+{
+    if(query_right < left || right < query_left || right < left)
+    {
+        return node(0, 0);
+    }
+
+    if(query_left <= left && right <= query_right)
+    {
+        return tree[n];
+    }
+
+    int mid = (left + right)/2;
+
+    node left_answer = query(LEFT(n), left, mid, query_left, query_right);
+    node right_answer = query(RIGHT(n), mid + 1, right, query_left, query_right);
+
+    //cout << " At " << left << "," << right << " LEFT answer(" << left << "," << mid <<") = " << left_answer.gcd << " RIGHT answer(" << mid + 1 << "," << right << ") = " << right_answer.gcd << "\n";
+    return merge(left_answer, right_answer);
+}
+
+
+------
+
+Here is how we will answer each query
+
+
+int main()
+{
+    int no_of_elements;
+    cin >> no_of_elements;
+
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        cin >> A[i];
+    }
+
+    build(1, 1, no_of_elements);
+
+    int no_of_queries;
+    cin >> no_of_queries;
+
+    while(no_of_queries--)
+    {
+        int left, right;
+        cin >> left >> right;
+
+        node answer = query(1, 1, no_of_elements, left, right);
+
+        int free = answer.gcd_frequency;
+
+        int remaining = right - (left - 1) - free;
+
+        cout << remaining << "\n";
+    }
+
+    return 0;
+}
