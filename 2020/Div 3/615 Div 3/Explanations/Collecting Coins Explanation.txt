@@ -1,0 +1,14 @@
+The total number of coins is (a + b + c + n).
+
+At the end, every group must have T/3 coins.
+
+We must ensure that T is divisible by 3 and then that each group has less than T/3 coins.
+
+void solve()
+{
+    int a, b, c, n;
+    cin >> a >> b >> c >> n;
+
+    int total = (a + b + c) + n;
+    cout << (total%3 == 0 && a <= total/3 && b <= total/3 && c <= total/3 ? "YES\n" : "NO\n");
+}

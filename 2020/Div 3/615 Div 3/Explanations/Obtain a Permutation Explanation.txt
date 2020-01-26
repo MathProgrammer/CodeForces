@@ -1,0 +1,114 @@
+The column of any element is invariant across all operations.
+Every element will stay in it's column.
+
+-----
+
+Let us find the number of moves for each column seperately.
+
+Now, how do we find out the minimum number of moves for a given column ?
+
+Let us calculate the number of moves for each rotation from 1 to N.
+
+We will then select the rotation that minimises the number of moves.
+
+A given column i, will have all elements = i (mod M)
+
+-----
+
+Now we will see how to count the number of moves for i rotations.
+
+We will do i moves - Rotations
+
+We just have to count the number of Changing moves.
+
+We can do it like this -
+
+for(int r = 0; r < rows; r++)
+{
+    operations[r] = r;
+
+    for(int i = 1; i <= rows; i++)
+    {
+        int expected = (i - 1)*columns + columns;
+
+        int actual = A[ (i + r)mod rows + 1][j];
+
+        if(expected != actual)
+            operations[r]++
+    }
+}
+
+Basically, what we are doing is counting the number of operations for each rotation.
+
+But, this is O(MN) for each column.
+
+We can make a beautiful observation to make it O(M) for each iteration !
+
+-----
+
+Now, here is what we will observe.
+A[i][j] will be correct only for at most ONE rotation.
+
+This is because the element at spot (i, j) is fixed.
+A[i][j] will fall into the correct spot in only one spot !
+
+So, we will initially assume, rotation r will cost (r + N).
+
+Then, we will go through all N elements and
+decrement the cost only on it's best rotation.
+
+The code is given below
+
+-----
+
+long long ceil(long long n, long long d)
+{
+    return (n/d + (n%d != 0));
+}
+
+long long calculate_best_cost(int column_no)
+{
+    vector <long long> rotation_cost(rows + 1, 0);
+    for(int rotations = 0; rotations < rows; rotations++)
+    {
+        rotation_cost[rotations] = rotations + rows;
+        //cout << "Cost " << rotations << " = " << rotation_cost[rotations] << "\n";
+    }
+
+    for(int i = 1; i <= rows; i++)
+    {
+        if(A[i][column_no]%columns != column_no%columns)
+        {
+            continue;
+        }
+
+        int best_place = ceil(A[i][column_no], columns);
+
+        if(best_place > rows)
+        {
+            continue;
+        }
+
+        int best_rotation;
+
+        if(best_place <= i)
+        {
+            best_rotation = (i - best_place);
+        }
+        else
+        {
+            best_rotation = (i - 1) + (rows - best_place + 1);
+        }
+        //cout << i << " " << column_no << " Best place = " << best_place << " " << best_rotation << "\n";
+        rotation_cost[best_rotation]--;
+        //cout << "Cost of " << best_rotation << " = " << rotation_cost[best_rotation] << "\n";
+    }
+
+    long long best_cost = rotation_cost[0];
+    for(int rotations = 1; rotations < rows; rotations++)
+    {
+        best_cost = min(best_cost, rotation_cost[rotations]);
+    }
+    //cout << "Column " << column_no  << " = " << best_cost << "\n";
+    return best_cost;
+}
