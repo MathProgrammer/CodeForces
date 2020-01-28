@@ -1,0 +1,51 @@
+Observation - X is a submask of Y
+
+Whenever X has a bit set, Y also has a bit set.
+
+If X has some bits set that Y does not, we can make X[i] = 0 and Y[i] = 1
+
+And the sum and XOR would not change.
+
+Y = X + (Bits where only Y has a bit)
+
+But, we can get this value easily from the xor !
+
+X^Y = (Bits where only Y has a bit) = B
+
+So, Y = X + B
+
+A = X + Y = X + (X + B) = 2X + B
+
+X = (A - B)/2
+
+We have to check that A and B are non negative, (A - B) is even and X^Y = B
+
+Use unsigned long long instead of long long to avoid overflow
+------
+
+int main()
+{
+    unsigned long long A, B;
+    cin >> A >> B;
+
+    //Y = X + B, A = 2X + B
+    if(A < B || (A - B)%2 != 0)
+    {
+        cout << "-1\n";
+
+        return 0;
+    }
+
+    unsigned long long X = (A - B)/2, Y = A - X;
+    //cout << X + Y << " " << (X^Y) << "\n";
+    if(X + Y != A || (X^Y) != B)
+    {
+        cout << "-1\n";
+
+        return 0;
+    }
+
+    cout << X << " " << Y << "\n";
+
+    return 0;
+}
