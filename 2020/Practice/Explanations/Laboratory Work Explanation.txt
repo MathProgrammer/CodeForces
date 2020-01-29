@@ -1,0 +1,75 @@
+If the Average (X) = Average (Y), then they must have the same sum.
+
+Let us solve the problem on (0, 1, 2) and then map it to the range asked.
+
+We can use the operation 1 + 1 = 0 + 2 to make the sum invariant
+
+The number of operations is either min(f[0], f[2]) or f[1]/2, whichever is larger.
+
+There is another condition that min(Y) = min(X) and max(Y) = max(X)
+
+So, if f[0] = 0 or f[2] = 0, we cannot change (1, 1) to (0, 2)
+
+-----
+
+int main()
+{
+    int no_of_points;
+    cin >> no_of_points;
+
+    vector <int> X(no_of_points);
+    for(int i = 0; i < no_of_points; i++)
+    {
+        cin >> X[i];
+    }
+
+    sort(all(X));
+
+    int minimum = X[0];
+
+    const int MAX_TYPES = 3;
+    vector <int> frequency(MAX_TYPES, 0);
+    for(int i = 0; i < no_of_points; i++)
+    {
+        frequency[X[i] - minimum]++;
+    }
+
+    vector <int> new_frequency(MAX_TYPES, 0);
+    for(int t = 0; t < MAX_TYPES; t++)
+    {
+        new_frequency[t] = frequency[t];
+    }
+
+    if(frequency[1]/2 > min(frequency[0], frequency[2]) && frequency[2] > 0 && frequency[0] > 0)
+    {
+        new_frequency[0] = frequency[0] + frequency[1]/2;
+        new_frequency[1] = frequency[1]%2;
+        new_frequency[2] = frequency[2] + frequency[1]/2;
+    }
+    else if(frequency[1]/2 <= min(frequency[0], frequency[2]))
+    {
+        new_frequency[0] = frequency[0] - min(frequency[0], frequency[2]);
+        new_frequency[1] = frequency[1] + 2*min(frequency[0], frequency[2]);
+        new_frequency[2] = frequency[2] - min(frequency[0], frequency[2]);
+    }
+
+    int equal_elements = 0;
+    for(int t = 0; t < MAX_TYPES; t++)
+    {
+        equal_elements += min(frequency[t], new_frequency[t]);
+    }
+
+    cout << equal_elements << "\n";
+
+    for(int t = 0; t < MAX_TYPES; t++)
+    {
+        for(int i = 0; i < new_frequency[t]; i++)
+        {
+            cout << minimum + t << " ";
+        }
+    }
+
+    cout << "\n";
+
+    return 0;
+}
