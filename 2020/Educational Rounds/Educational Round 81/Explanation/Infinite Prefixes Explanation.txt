@@ -1,0 +1,65 @@
+Let balance [i] denote the balance of the first i characters.
+
+Let us now check if there is some point at which the balance x can be arrived at the i-th characters
+
+This means that the entire string will be concatenated some number of times (possibly 0) and then the i-th character will be added.
+
+What we are essentially checking is if there is a non-negative integer q such that
+
+q(balance[n]) + balance[i] = x
+
+------
+
+We will go through the string and for each character S[i], check if it is possible to end at i with balance x after some concatenations.
+
+-----
+
+When are there an infinite number of answers ?
+
+This happens when balance[n] = 0 and at some point balance[i] = x
+
+This will ensure that every concatenation will result in balance[i] = x as the balance becomes 0 at the end each time
+
+------
+
+void solve()
+{
+    int length, balance;
+    cin >> length >> balance;
+
+    string S;
+    cin >> S;
+
+    vector <int> frequency(2, 0);
+    for(int i = 0; i < length; i++)
+    {
+        frequency[S[i] - '0']++;
+    }
+
+    int whole_balance = frequency[0] - frequency[1];
+
+    int no_of_prefixes = (balance == 0 ? 1 : 0);
+
+    frequency[0] = 0; frequency[1] = 0;
+
+    for(int i = 0; i < length; i++)
+    {
+        frequency[S[i] - '0']++;
+
+        int prefix_balance = frequency[0] - frequency[1];
+
+        if(whole_balance != 0 && ((balance - prefix_balance)%whole_balance == 0 && (balance - prefix_balance)/whole_balance >= 0))
+        {
+            no_of_prefixes++;
+        }
+
+        if(whole_balance == 0 && prefix_balance == balance)
+        {
+            cout << "-1\n";
+
+            return;
+        }
+    }
+
+    cout << no_of_prefixes << "\n";
+}
