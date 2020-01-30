@@ -1,0 +1,52 @@
+We will be greedy in constructing the string.
+
+1. Initially we have matches 0 characters
+2. We will then look for the earliest location of T[0]
+3. Then, we will look for the earliest location in [0, n] in S for T[0]. Let this position be p.
+4. Then, we will look for the earliest location in [p, n] in S for T[1]
+5. If T[1] is not present in [p, n] but is in [0, p - 1], we will go back and start another subsequence.
+
+-----
+
+void solve()
+{
+    string S, T;
+    cin >> S >> T;
+
+    const int NO_OF_ALPHABETS = 26;
+
+    vector <vector <int> > locations(NO_OF_ALPHABETS);
+    for(int i = 0; i < S.size(); i++)
+    {
+        locations[S[i] - 'a'].push_back(i);
+    }
+
+    int operations = 1, last_matched = -1;
+
+    for(int i = 0; i < T.size(); i++)
+    {
+        if(locations[T[i] - 'a'].size() == 0)
+        {
+            cout << "-1\n";
+
+            return;
+        }
+
+        auto it = upper_bound(locations[T[i] - 'a'].begin(), locations[T[i] - 'a'].end(), last_matched);
+
+        //cout << "At "<< T[i] << "\n";
+
+        if(it == locations[T[i] - 'a'].end())
+        {
+            operations++;
+
+            last_matched = locations[T[i] - 'a'][0];
+        }
+        else
+        {
+            last_matched = *it;
+        }
+    }
+
+    cout << operations << "\n";
+}
