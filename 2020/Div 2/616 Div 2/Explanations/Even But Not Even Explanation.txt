@@ -1,0 +1,39 @@
+The sum of 2 odd numbers is even.
+
+If there are at least 2 odd numbers, we will print them in order
+
+Otherwise, it is not possible.
+
+-----
+
+void solve()
+{
+    int length;
+    string S;
+
+    cin >> length >> S;
+
+    int odd_count = 0;
+    for(int i = 0; i < length; i++)
+    {
+        odd_count += (S[i] - '0')%2;
+    }
+
+    if(odd_count < 2)
+    {
+        cout << "-1\n";
+
+        return;
+    }
+
+    string answer;
+    for(int i = 0; i < length && answer.size() < 2; i++)
+    {
+        if( (S[i] - '0')%2 == 1)
+        {
+            answer += S[i];
+        }
+    }
+
+    cout << answer << "\n";
+}
