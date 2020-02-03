@@ -1,0 +1,50 @@
+1. Suppose there are (k - 1) people in front of you. 
+Ultimately, we will have p elements taken from the prefix and s elements taken from the suffix where (p + x = k - 1)
+
+2. Suppose we can control C people. 
+Out of these C people, we will make some of them take the prefix and some of them take the suffix. 
+Out of the U people we can't control, u people will take the prefix and (U - u) will take the suffix.
+
+3. Let us say we make c people out of C take the prefix. 
+The U people we can't control will make their choice so as to minimise our sum. 
+
+4. We will iterate over all possibilities. We will first fix that we will choose c people to take the prefix and (C - c) to take the suffix. 
+The U people we can't control will make their choice in such a way as to minimise our sum. 
+
+5. We will choose the value of (c, u) that gives us our maximum sum.
+
+-----
+
+void solve()
+{
+    int no_of_elements, position, controlled;
+    cin >> no_of_elements >> position >> controlled;
+    
+    vector <int> A(no_of_elements + 1);
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        cin >> A[i];
+    }
+    
+    controlled = min(controlled, position - 1);
+    int uncontrolled = (position - 1) - controlled;
+    
+    int best_answer = 0;
+    for(int c = 0; c <= controlled; c++)
+    {
+        int best_answer_for_c = 1e9 + 5;
+        
+        for(int i = 0; i <= uncontrolled; i++)
+        {
+            int prefix = c + i, suffix = no_of_elements - (controlled - c) - (uncontrolled - i) + 1;//Last element is n, not (n - 1) so add +1
+            
+            int answer_here = max(A[prefix + 1], A[suffix - 1]);
+           
+            best_answer_for_c = min(answer_here, best_answer_for_c);
+        }
+        
+        best_answer = max(best_answer, best_answer_for_c);
+    }
+    
+    cout << best_answer << "\n";
+}
