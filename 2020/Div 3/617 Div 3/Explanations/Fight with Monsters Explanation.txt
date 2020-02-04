@@ -1,0 +1,73 @@
+1. We will let the moves go as they are intended. 
+2. Subtract H[i] by a, then subtract H[i] by b. Then again by a, then by b and so on.
+3. If the last move was done by a, then we don't need to do anything. 
+If the last move was done by b, then we can use a's in the intended
+
+------
+
+We can deal with H[i] mod(a + b)
+
+1. We will write H[i] = H[i] mod (a + b)
+2. If H[i] = 0 mod(a + b), then we will write H[i] = (a + b)
+3. We will subtract a from H[i]
+
+If H[i] > 0, then we will calculate the number of moves required for a to make this 0
+
+We will calculate the number of moves required for each element. 
+
+------
+
+We know the number of steps required for each of the N elements. 
+
+We have an array S
+
+We must maximise the number of elements chosen such that the sum is <= k
+
+We can do this by sorting S and then taking the smallest elements.
+
+------
+
+int main()
+{
+    int no_of_elements, attack, opponent_attack, secrets;
+    cin >> no_of_elements >> attack >> opponent_attack >> secrets;
+    
+    vector <int> H(no_of_elements + 1);
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        cin >> H[i];
+    }
+    
+    vector <int> skips_required(no_of_elements + 1, 0);
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        H[i] %= (attack + opponent_attack);
+        
+        if(H[i] == 0)
+        {
+            H[i] = (attack + opponent_attack);
+        }
+        
+        H[i] = max(H[i] - attack, 0);
+        
+        skips_required[i] = ceil(H[i], attack);
+    }
+    
+    sort(skips_required.begin(), skips_required.end());
+    
+    long long total_skips = 0, points = 0;
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        if(total_skips + skips_required[i] > secrets)
+        {
+            break;
+        }
+        
+        total_skips += skips_required[i];
+        
+        points++;
+    }
+    
+    cout << points << "\n";
+    return 0;
+}
