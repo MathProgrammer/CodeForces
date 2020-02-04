@@ -1,0 +1,25 @@
+If there are an odd number of odd numbers, then the sum is odd
+
+If there are an even number of odd numbers and there is at least one even number,
+we can make the even number odd and get an odd sum
+
+If there are no odd numbers, the sum will always be even
+
+-----
+
+void solve()
+{
+    int no_of_elements;
+    cin >> no_of_elements;
+
+    int odd_count = 0;
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        int x;
+        cin >> x;
+
+        odd_count += (x%2 == 1);
+    }
+
+    cout << ((odd_count%2 == 1) || (odd_count > 0 && odd_count%2 == 0 && odd_count != no_of_elements) ? "YES\n" : "NO\n");
+}

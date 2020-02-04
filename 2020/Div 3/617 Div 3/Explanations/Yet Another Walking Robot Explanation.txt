@@ -1,0 +1,56 @@
+We will keep track of (x, y) at every stage.
+
+Suppose we have done i steps and are at (x, y) and we were at (x, y) at step p too.
+
+Then, [p + 1, i] is a substring we can remove.
+
+For every i, we will check which was the last point at which we were at (x, y)
+
+Accordingly, we will check the size of the segment [L, R] and check if it is the smallest segment we have encountered so far
+
+-----
+
+void solve()
+{
+    int length;
+    string S;
+    cin >> length >> S;
+
+    map <pair <int, int>, int> position;
+    int minimum_distance = length + 1, left = 0, right = length + 1;
+
+    position[make_pair(0, 0)] = -1;
+    for(int x = 0, y = 0, i = 0; i < length; i++)
+    {
+        switch(S[i])
+        {
+            case 'L' : x++; break;
+            case 'R' : x--; break;
+            case 'U' : y++; break;
+            case 'D' : y--; break;
+        }
+
+        if(position.count(make_pair(x, y)) != 0)
+        {
+            int last_i = position[make_pair(x, y)] + 1;
+
+            int distance = (i) - (last_i - 1);
+
+            if(distance < minimum_distance)
+            {
+                minimum_distance = distance;
+                left = last_i ; right = i;
+            }
+        }
+
+        position[make_pair(x, y)] = i;
+    }
+
+    if(minimum_distance > length)
+    {
+        cout << "-1\n";
+        return;
+    }
+
+    cout << left + 1 << " " << right + 1 << "\n";
+}

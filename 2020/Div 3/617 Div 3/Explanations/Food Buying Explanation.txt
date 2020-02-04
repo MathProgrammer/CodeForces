@@ -1,0 +1,27 @@
+We can just be greedy and simulate the problem.
+
+We will use 10(X/10) coins. We will get (X/10) extra coins
+
+We will repeat the same with the (X/10) coins that we have now and keep doing this until we have at least 10 coins
+
+
+-----
+
+void solve()
+{
+    int budget;
+    cin >> budget;
+
+    long long no_of_moves = 0;
+    while(budget >= 10)
+    {
+        long long move = budget/10;
+
+        budget = budget - 10*move + move;
+
+        no_of_moves += 10*move;
+    }
+
+    no_of_moves += budget;
+    cout << no_of_moves << "\n";
+}
