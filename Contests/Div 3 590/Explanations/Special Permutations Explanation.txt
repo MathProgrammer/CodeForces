@@ -1,0 +1,100 @@
+We can interpret the array X as a set of segments on the permutation. 
+
+We can calculate answer[1] naively. 
+
+After that we can use answer[1] to build answer[i] for all 2 <= i <= n
+
+Let us see how each of the segments are affected when we are calculating answer[i]
+
+1. If X[j] and X[i=j + 1] contains the point i, then it reduces by 1
+
+2. If X[j] = 1 or X[j + 1] = 1, then the answer reduces by 
+    a. -abs(X[j] - X[j + 1]) + abs(1 - X[j + 1]), if X[j + 1] > i
+    2. -abs(X[j] - X[j + 1]) + abs(1 - X[j + 1] - 1), if X[j + 1] < i
+
+------
+
+We need 2 pieces of information to update answer[i]
+
+1. The number of segments covering i
+2. The pairs adjacent to i
+
+-----
+
+Let us see how we will calculate the number of segments covering i
+
+We will put a +1 when a segment starts and a -1 when a segment ends. 
+
+A segment [L, R] covers all the points [L + 1, R - 1] and we will exclude the borders 
+
+The reason is we are handling the case when i is a border separately
+
+-----
+
+    vector <int> segments_starting_at(n + 1, 0);
+    vector <int> segments_ending_at(n + 1, 0);
+    for(int i = 1; i < no_of_elements; i++)
+    {
+        if(abs(X[i] - X[i + 1]) >= 2)
+        {
+            segments_starting_at[min(X[i], X[i + 1]) + 1]++;
+            segments_ending_at[max(X[i], X[i + 1]) - 1]++;
+        }
+    }
+    
+    vector <long long> segments_covering(n + 1, 0);
+    for(int i = 1; i <= n; i++)
+    {
+        segments_covering[i] = segments_covering[i - 1] + segments_starting_at[i] - segments_ending_at[i - 1];
+        
+    }
+
+-----
+
+We will collect all pairs like this - 
+
+-----
+
+    vector <vector <int> > pairs(n + 1);
+    
+    for(int i = 1; i < no_of_elements; i++)
+    {    
+        pairs[X[i]].push_back(X[i + 1]);
+        pairs[X[i + 1]].push_back(X[i]);
+    }
+
+-----
+
+After that, we will calculate the contribution to each pair like this
+
+Every element in [1, i - 1] would have shifted 1 position to the right and 
+every element in [i + 1, N] would have shifted 1 position to the left 
+
+Of course (i - i) = 0 so we do not need to change it
+
+-----
+
+    for(int i = 2; i <= n; i++)
+    {
+        answer[i] = answer[1] - segments_covering[i];
+        
+        for(int j = 0; j < pairs[i].size(); j++)
+        {
+            int d = pairs[i][j];
+            
+            if(d == i)
+            {
+                continue;
+            }
+            
+            if(d < i)
+            {
+                answer[i] += abs(d + 1 - 1) - abs(d - i);
+            }
+            
+            if(d > i)
+            {
+                answer[i] += abs(d - 1) - abs(d - i);
+            }
+        }
+    }
