@@ -1,0 +1,78 @@
+Let us notice that if we can finish it in x days, then we can also finish it in (x + 1) days
+
+If we cannot finish it in x days, then we cannot finish it in (x - 1) days
+
+This enables us to use binary search !
+
+------
+
+For a given x, we will check if it is possible to finish !
+
+int possible(long long x, long long n, long long g, long long b)
+{
+   long long half = ceil(n, 2);
+
+    long long no_of_cycles = x/(g + b);
+
+    long long extra = x - no_of_cycles*(g + b);
+    long long extra_good = 0, extra_bad = 0;
+
+    if(extra > 0)
+    {
+        extra_good = min(g, extra);
+
+        extra -= extra_good;
+    }
+
+    if(extra > 0)
+    {
+        extra_bad = min(b, extra);
+
+        extra -= extra_bad;
+    }
+
+    long long total_good = no_of_cycles*g + extra_good;
+    long long total_bad = no_of_cycles*b + extra_bad;
+
+    if(total_good < half|| total_good + total_bad < n)
+    {
+        return false;
+    }
+
+    return true;
+}
+
+-----
+
+We will do binary search over x and find the best possible x
+
+We will maintain the invariant that it is not possible in <= L days and
+always possible in >= R days
+
+When (R - L = 1), it is possible
+
+-----
+
+void solve()
+{
+    long long no_of_days, good_days, bad_days;
+    cin >> no_of_days >> good_days >> bad_days;
+
+    const long long oo = 1e18;
+    long long left = 0, right = oo;
+    while(right - left > 1)
+    {
+        long long mid = (left + right)/2;
+
+        if(possible(mid, no_of_days, good_days, bad_days))
+        {
+            right = mid;
+        }
+        else
+        {
+            left = mid;
+        }
+    }
+
+    cout << right << "\n";
+}
