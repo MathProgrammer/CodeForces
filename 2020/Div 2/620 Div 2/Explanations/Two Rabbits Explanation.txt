@@ -1,0 +1,18 @@
+There are two rabbits.
+The distance between them reduces by (a + b)
+in 1 second.
+The total distance to be covered is (x - y).
+
+The rabbits will meet if (x - y) is a multiple of (a + b).
+Otherwise, they will never complement
+
+-----
+
+void solve()
+{
+    long long position_1, position_2, distance_1, distance_2;
+    cin >> position_1 >> position_2 >> distance_1 >> distance_2;
+
+    long long time = ((position_2 - position_1)%(distance_1 + distance_2) == 0 ? (position_2 - position_1)/(distance_1 + distance_2) : -1);
+    cout << time << "\n";
+}
