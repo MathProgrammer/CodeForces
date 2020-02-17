@@ -51,10 +51,10 @@ int same_intersections(vector <int> start_a, vector <int> end_a, vector <int> st
                 {
                     return false;
                 }
-
-                starts.insert(events[i].start);
-                ends.insert(events[i].end);
             }
+                
+            starts.insert(events[i].start);
+            ends.insert(events[i].end);
         }
         else
         {
