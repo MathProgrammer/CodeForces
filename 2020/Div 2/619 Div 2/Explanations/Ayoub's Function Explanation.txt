@@ -1,0 +1,77 @@
+We need to maximise the number of substrings containing at least 1 one.
+This is the same as minimizing the number of substrings containing only 0s.
+
+Let us see how to do this with an example.
+
+If we want to minimize the number of 0s,
+it is best to make each group of 0s as small as possible.
+(2 groups of length 1 is smaller than 1 group of length 2)
+
+0, 0 has 2 substrings
+00 has 3 substrings
+
+Suppose we have 10 0s and 5 1s
+
+00 | 00 | 00 | 00 | 0 | 0
+
+The best way to distribute them is like this
+If there are d 1s, then we divide the 0s into (D + 1) parts.
+
+----
+
+First, we will divide them equally
+
+0 | 0 | 0 | 0 | 0 | 0
+
+-----
+
+We will have some remainder.
+
+In this case 10 (mod 6) = 4
+
+So, we will add the 4 extra 0s to different parts to keep the sum of 0s minimum
+
+So 4 segments, will have an extra 0
+
+-----
+
+How to calculate this ?
+
+1. Find out the length of each 0 segment. The number of 0 substrings will be
+l(l - 1)/2 + l
+2. When we add a 0 to a segment of length z, we will be create (z + 1) new 0-substrings
+Each remainder contributes (z + 1) to the answer, where z is the length of a 0-substring
+
+----
+
+long long count_substrings(long long n)
+{
+    return (n*(n + 1))/2;
+}
+
+void solve()
+{
+    long long length, no_of_1s;
+    cin >> length >> no_of_1s;
+
+    long long no_of_0s = (length - no_of_1s);
+
+    long long total_substrings = count_substrings(length);
+
+    long long dividers = (no_of_1s + 1);
+
+    long long full_zero_islands_size = (no_of_0s/dividers);
+
+    long long zero_substrings = dividers*count_substrings(full_zero_islands_size);
+
+    if(no_of_0s%dividers != 0)
+    {
+        long long remaining_zeroes = no_of_0s - dividers*(full_zero_islands_size);
+
+        zero_substrings += remaining_zeroes*(full_zero_islands_size + 1);
+    }
+
+    long long one_substrings = total_substrings - zero_substrings;
+
+    cout << one_substrings << "\n";
+}

@@ -1,0 +1,70 @@
+Let us look at the elements which -1 is adjacent to.
+
+Let them be {F1, F2, ... , Fm}
+
+The maximum value of |k - Fi| for some Fi in this set will be either
+with the smallest or largest element.
+
+So, the best choice for k is (F1 + Fm)/2 as this is the optimal distance between both
+
+After we replace all k's with (F1 + Fm)/2, we will calculate the value of max|A[i] - A[i - 1]|
+-----
+
+void solve()
+{
+    int no_of_elements;
+    cin >> no_of_elements;
+
+    vector <long long> A(no_of_elements + 1);
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        cin >> A[i];
+    }
+
+    vector <long long> fixed;
+
+    for(int i = 2; i <= no_of_elements; i++)
+    {
+        if(A[i - 1] == -1 && A[i] != -1)
+        {
+            fixed.push_back(A[i]);
+        }
+    }
+
+    for(int i = 1; i < no_of_elements; i++)
+    {
+        if(A[i + 1] == -1 && A[i] != -1)
+        {
+            fixed.push_back(A[i]);
+        }
+    }
+
+    sort(all(fixed));
+
+    long long mid;
+
+    if(fixed.size() == 0)
+    {
+        mid = 0;
+    }
+    else
+    {
+        mid = (fixed[0] + fixed.back())/2;
+    }
+
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        if(A[i] == -1)
+        {
+            A[i] = mid;
+        }
+    }
+
+    long long m = 0;
+    for(int i = 2; i <= no_of_elements; i++)
+    {
+        m = max(m, abs(A[i] - A[i - 1]));
+    }
+
+    cout << m << " " << mid << "\n";
+}
