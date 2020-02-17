@@ -1,0 +1,82 @@
+There is a crucial insight that we can make here.
+We can make a 'waiting' move.
+
+After we travel from a -> b, we can keep going back and forth on the same edge.
+b-> c -> b
+
+We can keep going back and forth to one of the neighbours of b.
+This way, we can make an unlimited number of moves !
+
+----
+
+Suppose we have a path of length L.
+There is a path of length (L + 2X) for every integer X.
+
+----
+
+Now, there are 3 Simple Paths from (a, b)
+
+1. a -> b
+2. a -> x -> y -> b
+3. a -> y -> x -> b
+
+----
+
+If any of these path lengths <= k and have the same parity as k,
+then we can use the required number of waiting moves to go from (a, b) and
+use exactly k moves.
+
+----
+
+We can use LCA to calculate the distance between 2 vertices.
+We can do O(N Log N) precompute and answer each query in O(Log N) time.
+
+-----
+
+int main()
+{
+    int no_of_vertices;
+    cin >> no_of_vertices;
+
+    int no_of_edges = no_of_vertices - 1;
+    for(int i = 1; i <= no_of_edges; i++)
+    {
+        int u, v;
+        cin >> u >> v;
+
+        tree[u].push_back(v);
+        tree[v].push_back(u);
+    }
+
+    depth[0] = 0;
+
+    dfs(1, 0);
+
+    precompute_parents(no_of_vertices);
+
+    int no_of_queries;
+    cin >> no_of_queries;
+
+    for(int i = 1; i <= no_of_queries; i++)
+    {
+        int x, y, a, b, k;
+        cin >> x >> y >> a >> b >> k;
+
+        int path_1 = distance(a, b);
+        int path_2 = distance(a, x) + distance(b, y) + 1;
+        int path_3 = distance(a, y) + distance(b, x) + 1;
+
+        if( (path_1 <= k && path_1%2 == k%2) ||
+            (path_2 <= k && path_2%2 == k%2) ||
+            (path_3 <= k && path_3%2 == k%2) )
+        {
+            cout << "YES\n";
+        }
+        else
+        {
+            cout << "NO\n";
+        }
+    }
+
+    return 0;
+}

@@ -1,0 +1,88 @@
+We can interpret this problem geometrically and it would help greatly.
+
+Let us visualise the time on the y-axis and the temperature on the x axis.
+We are given a set of segments and we must determine if it is possible to draw
+a line that passes through each of them.
+
+Instead of keeping track of a line, we will keep track of the possible range of the line.
+Let the line always lie between [A, B] on the x axis.
+
+In the time between two events, the minimum can reduce by at most (T[i] - T[i - 1])
+and the maximum can reduce by at most (T[i] - T[i - 1])
+
+However, we have to be careful of one thing.
+
+The minimum range of the line cannot be lesser than the Left boundary of any event.
+The maximum range of the line cannot be greater than the Right boundary of any event.
+
+So at every point, we just have to update the minimum and maximum range of the line.
+We are keeping the range as large as possible at every step.
+If a line exists, it has to do so within this range.
+
+The beauty of this approach is that we don't have to find the actual line. Just knowing it's range is enough. :)
+
+-----
+
+struct customer
+{
+    int time, left, right;
+
+    customer(){}
+
+    customer(int T, int L, int R)
+    {
+        time = T; left = L; right = R;
+    }
+};
+
+int sort_by_time(customer &A, customer &B)
+{
+    if(A.time == B.time)
+    {
+        return (A.left < B.left);
+    }
+
+    return (A.time < B.time);
+}
+
+void solve()
+{
+    int no_of_customers, starting;
+    cin >> no_of_customers >> starting;
+
+    vector <customer> C(no_of_customers, customer(0, 0, 0));
+    for(int i = 0; i < no_of_customers; i++)
+    {
+        cin >> C[i].time >> C[i].left >> C[i].right;
+    }
+
+    sort(all(C), sort_by_time);
+
+    int minimum = starting, maximum = starting;
+    int possible = true;
+
+    for(int i = 0; i < no_of_customers && possible; i++)
+    {
+        if(i == 0)
+        {
+            minimum = starting - C[i].time;
+            maximum = starting + C[i].time;
+        }
+        else
+        {
+            minimum = minimum - (C[i].time - C[i - 1].time);
+            maximum = maximum + (C[i].time - C[i - 1].time);
+        }
+
+        if(minimum > C[i].right || maximum < C[i].left)
+        {
+            possible = false;
+            break;
+        }
+
+        minimum = max(minimum, C[i].left);
+        maximum = min(maximum, C[i].right);
+    }
+
+    cout << (possible ? "YES\n" : "NO\n");
+}
