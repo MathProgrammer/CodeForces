@@ -1,0 +1,27 @@
+For each position i, 
+
+We must swap either (A[i], C[i]) or (B[i], C[i])
+
+This means that either (B[i] = C[i]) or (A[i] = C[i]) respectively
+
+-----
+
+void solve()
+{
+    string A, B, C;
+    cin >> A >> B >> C;
+    
+    for(int i = 0; i < A.size(); i++)
+    {
+        if(A[i] == C[i] || B[i] == C[i])
+        {
+            continue;
+        }
+        
+        cout << "NO\n";
+        
+        return;
+    }
+    
+    cout << "YES\n";
+}
