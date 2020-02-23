@@ -1,0 +1,63 @@
+Observation - The number of good strings will be equal to the number of pairs
+and single letters.
+
+Proof -
+
+It is clear that every single letter is good.
+
+Every good string of length > 1, has 2 letters at the beginning
+
+So, there is a bijection in between the starting pair of any good string and the rest of the string.
+
+Why cannot the same argument be used to reduce 2 -> 1 ?
+
+It is because of the property of arithmetic series.
+
+The difference has to form an arithmetic progression so the first pair uniquely determine the rest of the string.
+
+Whereas, when we look at pairs, they do not correspond to single digits because a single digit by itself
+does not have any series and can be added to any digit through the entire array.
+
+-----
+
+int main()
+{
+    string S;
+    cin >> S;
+
+    const int NO_OF_ALPHABETS = 26;
+    vector <long long> frequency(NO_OF_ALPHABETS, 0);
+    map <string, long long> pair_frequency;
+
+    for(int i = S.size() - 1; i >= 0; i--)
+    {
+        for(int alpha = 0; alpha < NO_OF_ALPHABETS; alpha++)
+        {
+            char second_letter = (char)('a' + alpha);
+
+            string current_pair;
+
+            current_pair += S[i];
+
+            current_pair += second_letter;
+
+            pair_frequency[current_pair] += frequency[alpha];
+        }
+
+        frequency[S[i] - 'a']++;
+    }
+
+    long long answer = 0;
+    for(auto it = pair_frequency.begin(); it != pair_frequency.end(); it++)
+    {
+        answer = max(answer, it->second);
+    }
+
+    for(int alpha = 0; alpha < NO_OF_ALPHABETS; alpha++)
+    {
+        answer = max(answer, frequency[alpha]);
+    }
+
+    cout << answer << "\n";
+    return 0;
+}

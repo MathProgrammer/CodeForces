@@ -1,0 +1,51 @@
+First of all, if x exists in the original array, then the answer is 1.
+
+If there is at least one element A[i] such that is 2A[i]>= x,
+then we can reach in 2 moves by making a triangle.
+
+If even the greatest element x 2 < x, then we will keep on making linear steps
+of length A[i] till x is within A[i]'s range.
+
+Then if x = A[i], we will take a linear step.
+
+Otherwise, we will make a triangle.
+
+It is important to check if x [0, 2A[i]] as 2A[i] is the furthest we can get using A[i]
+
+-----
+
+void solve()
+{
+    int no_of_elements;
+    long long distance;
+    cin >> no_of_elements >> distance;
+
+    vector <long long> A(no_of_elements);
+    for(int i = 0; i < no_of_elements; i++)
+    {
+        cin >> A[i];
+    }
+
+    sort(all(A));
+
+    if(binary_search(all(A), distance))
+    {
+        cout << "1\n";
+
+        return;
+    }
+
+    for(int i = 0; i < no_of_elements; i++)
+    {
+        if(A[i] + A[i] >= distance)
+        {
+            cout << "2\n";
+
+            return;
+        }
+    }
+
+    long long steps = distance/A[no_of_elements - 1] + (distance%A[no_of_elements - 1] != 0);
+
+    cout << steps << "\n";
+}

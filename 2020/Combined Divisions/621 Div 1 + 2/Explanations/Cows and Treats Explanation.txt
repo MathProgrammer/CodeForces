@@ -1,0 +1,152 @@
+1. At most 2 cows can come and at most 1 from each side, one from the left, one from the right.
+
+2. Suppose I know that cows {1, 3, 5} are there in the left set.
+They can only be placed in 1 combination and cannot be changed. Because once one of the cows come, they will block the other cows.
+
+3. We need to iterate over all possibilities. We can do this by iterating on the grass where the left border ends. This will enable us to do the counting. We will see for each sweetness, the possible endings of cows of that sweetness both on the left and right side
+
+-----
+
+We will count the number of cows that can go inside the left border.
+Let it be L
+
+We will count the number of cows that can go inside the right border.
+Let it be R.
+
+Then the number of pairs will be L*R - min(L, R)
+
+The reason is that the same cow cannot go both on the left and on the right.
+
+So, whichever is minimum among (L, R), those are cows which go on both sides and they can only go in one.
+
+-----
+
+int main()
+{
+    int no_of_grass, no_of_cows;
+    cin >> no_of_grass >> no_of_cows;
+
+    vector <int> sweetness(no_of_grass + 1);
+    for(int i = 1; i <= no_of_grass; i++)
+    {
+        cin >> sweetness[i];
+    }
+
+    vector <vector <int> > cows(no_of_grass + 1);
+    for(int i = 1; i <= no_of_cows; i++)
+    {
+        int sweet, hunger;
+        cin >> sweet >> hunger;
+
+        cows[sweet].push_back(hunger);
+    }
+
+    for(int i = 1; i <= no_of_grass; i++)
+    {
+        sort(cows[i].begin(), cows[i].end());
+    }
+
+    const int MOD = 1e9 + 7;
+    int happy_cows = 0;
+    long long no_of_ways = 1;
+
+    for(int cut = 0; cut <= no_of_grass; cut++)
+    {
+        vector <int> left(no_of_grass + 1, 0);
+        vector <int> right(no_of_grass + 1, 0);
+        for(int i = 1; i <= cut; i++)
+        {
+            left[sweetness[i]]++;
+        }
+
+        for(int i = cut + 1; i <= no_of_grass; i++)
+        {
+            right[sweetness[i]]++;
+        }
+
+        int left_ending = (cut == 0 ? -1 : sweetness[cut]);
+
+        int happy_cows_here = 0;
+        long long no_of_ways_here = 1;
+
+        for(int i = 1; i <= no_of_grass; i++)
+        {
+            if(i == left_ending)
+            {
+                if(binary_search(cows[i].begin(), cows[i].end(), left[i]))
+                {
+                    happy_cows_here++;
+                }
+                else
+                {
+                    happy_cows_here = 0;
+                    break;
+                }
+
+                int right_choices = 0;
+
+                for(int j = 0; j < cows[i].size(); j++)
+                {
+                    if(cows[i][j] != left[i] && cows[i][j] <= right[i])
+                    {
+                        right_choices++;
+                    }
+                }
+
+                if(right_choices >= 1)
+                {
+                    happy_cows_here++;
+                    no_of_ways_here *= right_choices;
+                }
+            }
+            else
+            {
+                int left_choices = 0, right_choices = 0;
+
+                for(int j = 0; j < cows[i].size(); j++)
+                {
+                    if(cows[i][j] <= left[i])
+                    {
+                        left_choices++;
+                    }
+                    if(cows[i][j] <= right[i])
+                    {
+                        right_choices++;
+                    }
+                }
+
+                int no_of_pairs = (left_choices*right_choices) - min(left_choices, right_choices);
+
+                if(no_of_pairs > 0)
+                {
+                    happy_cows_here += 2;
+
+                    no_of_ways_here *= no_of_pairs;
+                }
+                else if(left_choices > 0 || right_choices > 0)
+                {
+                    happy_cows_here++;
+
+                    no_of_ways_here *= (left_choices + right_choices);
+                }
+            }
+
+            no_of_ways_here %= MOD;
+        }
+
+        if(happy_cows_here > happy_cows)
+        {
+            happy_cows = happy_cows_here;
+            no_of_ways = no_of_ways_here;
+        }
+        else if(happy_cows_here == happy_cows && happy_cows_here > 0)
+        {
+            no_of_ways += no_of_ways_here;
+
+            no_of_ways %= MOD;
+        }
+    }
+
+    cout << happy_cows << " " << no_of_ways << "\n";
+    return 0;
+}
