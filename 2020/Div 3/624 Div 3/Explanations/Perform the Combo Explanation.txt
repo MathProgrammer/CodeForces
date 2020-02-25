@@ -1,0 +1,68 @@
+Whenever there is a mistake at position i, we will add the frequency[a] in [1, i] to answer[a]
+
+We will add the frequency of every alphabet to it's answer at the end as well
+
+-----
+
+1. We will sort P
+
+2. We will keep track of the frequency of each letter
+as we go from left to right.
+
+3. If i is a position where there is a mistake,
+then we will add the frequency[1, P] of every alphabet to the total number of times the alphabet is no_of_hit
+
+-----
+
+void solve()
+{
+    int length, no_of_tries;
+    cin >> length >> no_of_tries;
+
+    string S;
+    cin >> S;
+
+    vector <int> P(no_of_tries + 1);
+    for(int i = 1; i <= no_of_tries; i++)
+    {
+        cin >> P[i];
+    }
+
+    const int NO_OF_ALPHABETS = 26;
+    vector <long long> no_of_hits(NO_OF_ALPHABETS, 0);
+    vector <long long> frequency(NO_OF_ALPHABETS, 0);
+
+    sort(all(P));
+    vector <long long> no_of_mistakes_here(length + 1, 0);
+    for(int i = 1; i <= no_of_tries; i++)
+    {
+        no_of_mistakes_here[P[i] - 1]++;
+    }
+    no_of_mistakes_here[length - 1] = 1;
+
+    for(int i = 0, j = 1; i < length; i++)
+    {
+        frequency[S[i] - 'a']++;
+
+        if( (j <= no_of_tries && i + 1 == P[j]) || i + 1 == length)
+        {
+            for(int alpha = 0; alpha < NO_OF_ALPHABETS; alpha++)
+            {
+                no_of_hits[alpha] += no_of_mistakes_here[i]*frequency[alpha];
+                //cout << "F" << alpha << " = " << no_of_hits[alpha] << "\n";
+            }
+
+            while(j <= no_of_tries && i + 1 == P[j])
+            {
+                j++;
+            }
+        }
+    }
+
+    for(int alpha = 0; alpha < NO_OF_ALPHABETS; alpha++)
+    {
+        cout << no_of_hits[alpha] << " ";
+    }
+
+    cout << "\n";
+}

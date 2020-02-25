@@ -1,0 +1,50 @@
+Let us fix some value of a.
+
+We will iterate over the multiples of a to choose b
+
+And then, we will iterate over the multiples of b to choose c
+
+I set the limit as 4 x 10^4
+
+It is enough to make the limit 2 x 10^4
+
+The reason is that we never need to fix a for any value greater than 2a.
+
+Suppose there is some triplet (a', b', c') where a' > 2a, then we can replace it by
+(1, b', c') and that satisfies the same condition with a lower number of moves.
+
+-----
+
+void solve()
+{
+    const int oo = 1e9, LIMIT = 4e4;
+
+    int a, b, c;
+    cin >> a >> b >> c;
+
+    int best_moves = oo;
+    int x = a, y = b, z = c;
+
+    for(int i = 1; i <= LIMIT; i++)
+    {
+        for(int j = i; j <= LIMIT; j += i)
+        {
+            for(int k = j; k <= LIMIT; k += j)
+            {
+                int moves_here = abs(i - a) + abs(j - b) + abs(k - c);
+
+                if(moves_here < best_moves)
+                {
+                    best_moves = moves_here;
+
+                    x = i;
+                    y = j;
+                    z = k;
+                }
+            }
+        }
+    }
+
+    cout << best_moves << "\n";
+    cout << x << " " << y << " " << z << "\n";
+}

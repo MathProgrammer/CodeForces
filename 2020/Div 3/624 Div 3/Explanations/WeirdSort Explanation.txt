@@ -1,0 +1,72 @@
+There are some segments inside which we can conduct swaps.
+Elements can never go outside these segments.
+
+We will sort each of these segments and then check if the entire array is sorted.
+
+-----
+
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+#define all(v) (v).begin(), (v).end()
+using namespace std;
+
+void solve()
+{
+    int no_of_elements, m;
+    cin >> no_of_elements >> m;
+
+    vector <int> A(no_of_elements + 1);
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        cin >> A[i];
+    }
+
+    vector <int> is_allowed(no_of_elements + 1, false);
+    vector <int> P(m + 1);
+    for(int i = 1; i <= m; i++)
+    {
+        cin >> P[i];
+
+        is_allowed[P[i]] = true;
+    }
+
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        if(!is_allowed[i])
+        {
+            continue;
+        }
+
+        int j = i;
+        while(j <= no_of_elements && is_allowed[j])
+        {
+            j++;
+        }
+
+        sort(A.begin() + i, A.begin() + j + 1);
+    }
+
+    int is_possible_to_sort = true;
+    for(int i = 1; i < no_of_elements; i++)
+    {
+        if(A[i] > A[i + 1])
+        {
+            is_possible_to_sort = false;
+        }
+    }
+
+    cout << (is_possible_to_sort ? "YES\n" : "NO\n");
+}
+
+int main()
+{
+    int no_of_test_cases;
+    cin >> no_of_test_cases;
+
+    while(no_of_test_cases--)
+        solve();
+
+    return 0;
+}
