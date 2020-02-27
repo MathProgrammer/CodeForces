@@ -1,0 +1,68 @@
+We will be greedy.
+
+We will keep a set of all integers not used so far.
+
+For each B[i], we will take the smallest integer > B[i] which is available
+and place it in A[2i]
+
+If there is no such element, then we will declare it is not possible.
+
+We have to erase the element after we use it
+
+-----
+
+void solve()
+{
+    int no_of_elements;
+    cin >> no_of_elements;
+
+    vector <int> B(no_of_elements + 1);
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        cin >> B[i];
+    }
+
+    set <int> available;
+    for(int i = 1; i <= 2*no_of_elements; i++)
+    {
+        available.insert(i);
+    }
+
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        available.erase(B[i]);
+    }
+
+    int possible = true;
+
+    vector <int> A(2*no_of_elements + 1);
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        auto it = available.lower_bound(B[i]);
+
+        if(it == available.end())
+        {
+            possible = false;
+            break;
+        }
+
+        A[2*i - 1] = B[i];
+        A[2*i] = *(it);
+
+        available.erase(it);
+    }
+
+    if(!possible)
+    {
+        cout << "-1\n";
+
+        return;
+    }
+
+    for(int i = 1; i <= 2*no_of_elements; i++)
+    {
+        cout << A[i] << " ";
+    }
+
+    cout << "\n";
+}
