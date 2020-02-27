@@ -1,0 +1,39 @@
+This is a tricky problem because of the condition that we will not
+need to go anywhere from the last station.
+
+We will scan the array from right to left.
+
+Whenever we encounter a change in segments, we will see if the price range is in our budget.
+
+If no, then we need to reach the (i + 1)-th spot by foot
+
+-----
+
+void solve()
+{
+    int bus, tram, budget;
+    cin >> bus >> tram >> budget;
+
+    string city;
+    cin >> city;
+
+    int index = 0, money_so_far = 0;
+    for(int i = city.size() - 2; i >= 0; i--)
+    {
+        if(i == city.size() - 2 || (city[i] != city[i + 1]))
+        {
+            int money_here = (city[i] == 'A' ? bus : tram);
+
+            //cout << "Money at " << i + 1 << " = " << money_here << " T = " << money_so_far + money_here << "\n";
+            if(money_so_far + money_here > budget)
+            {
+                index = (i + 1);
+                break;
+            }
+
+            money_so_far += money_here;
+        }
+    }
+
+    cout << index + 1 << "\n";
+}
