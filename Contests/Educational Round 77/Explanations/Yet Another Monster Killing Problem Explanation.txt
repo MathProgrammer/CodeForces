@@ -1,0 +1,86 @@
+We will sort the heroes by their endurance. 
+
+We want to know for the endurance level E, what is the maximum power we have
+For this, we need to have a suffix maximum
+
+Then, we will start going through the monster array. 
+We will try to take as large a step as possible. 
+We can use binary search to see if we can take a step of size x. 
+If we take a step of size x, then we have to take the maximum of the monsters [i, i + x]
+We also have to find out whether the maximum power of any hero with endurance >= x is greater than the power in that range.
+
+-----
+
+void solve()
+{
+    int no_of_elements;
+    cin >> no_of_elements;
+
+    for(int i = 1; i <= no_of_elements; i++)
+        cin >> A[i];
+    
+    build(1, 1, no_of_elements);
+
+    int no_of_heroes;
+    cin >> no_of_heroes;
+
+    vector <hero> heroes(no_of_heroes + 1);
+    for(int i = 1; i <= no_of_heroes; i++)
+    {
+        cin >> heroes[i].power >> heroes[i].endurance;
+    }
+
+    sort(all(heroes), sort_by_endurance);
+    
+    vector <int> max_power_for_endurance(no_of_elements + 5, 0);
+    for(int i = 1; i <= no_of_heroes; i++)
+    {
+        max_power_for_endurance[heroes[i].endurance] = max(max_power_for_endurance[heroes[i].endurance], heroes[i].power);
+    }
+    
+    for(int i = no_of_elements; i >= 1; i--)
+    {
+        max_power_for_endurance[i] = max(max_power_for_endurance[i + 1], max_power_for_endurance[i]);
+        
+        //cout << "Max Till " << i << " = " << max_power_for_endurance[i] << "\n";
+    }
+    
+    int days = 0;
+    for(int i = 1; i <= no_of_elements; days++)
+    {
+        if(max_power_for_endurance[no_of_elements - i + 1] >= get_max(1, 1, no_of_elements, i, no_of_elements))
+        {
+            days++;
+            break;
+        }
+        
+        int left = 0, right = no_of_elements - i + 1;
+        
+        while(right - left > 1)
+        {   //cout << "L = " << left << " R = " << right << "\n";
+            int mid = (left + right)/2;
+            
+            //cout << "Mid = " << mid << " Segment Max = [" << i <<
+            //"," << i + mid - 1 << "] = " <<get_max(1, 1, no_of_elements, i, i + mid - 1) << " Endurance Max = " << max_power_for_endurance[mid] << "\n";
+            if(max_power_for_endurance[mid] >= get_max(1, 1, no_of_elements, i, i + mid - 1))
+            {
+                left = mid;
+            }
+            else
+            {
+                right = mid;
+            }
+        }
+        
+        if(left == 0)
+        {
+            cout << "-1\n";
+            
+            return;
+        }
+        
+        i = i + left; //cout << "i = " << i << "\n";
+    }
+    
+    cout << days << "\n";
+}
