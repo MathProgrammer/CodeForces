@@ -1,0 +1,41 @@
+We are told that if we move from i to j, then 
+
+j - i = A[j] - A[i]
+
+A[i] - i = A[j] - j
+
+This insight is easier to come upon if we think of the problem geometrically 
+and think of the indices as X-axis and the values as Y-axis 
+
+The value of (A[i] - i) is invariant for a subsequence. 
+
+So, we will find out the total sum of all possible (A[i] - i) and then give the maximum
+
+------
+
+int main()
+{
+    int no_of_elements;
+    cin >> no_of_elements;
+    
+    vector <int> beauty(no_of_elements + 1);
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        cin >> beauty[i];
+    }
+    
+    map <int, long long> answer_for;
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        answer_for[i - beauty[i]] += beauty[i];
+    }
+    
+    long long answer = 0;
+    for(auto it = answer_for.begin(); it != answer_for.end(); it++)
+    {
+        answer = max(answer, it->second);
+    }
+    
+    cout << answer << "\n";
+    return 0;
+}
