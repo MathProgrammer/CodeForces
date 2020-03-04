@@ -1,0 +1,54 @@
+If there are two integers A[i] and A[j] such that (A[i] = A[j] (mod m))
+
+Then (A[i] - A[j] = 0) (mod m)
+
+There are only m possible remainders mod m = {0, 1, ... , m - 1}
+
+By the Pigeonhole Principle, if there are more than m integers, at least 2 will have the same remainder.
+
+This means, the answer will be 0 as 1 term (A[i] - A[j]) = 0 (mod m)
+
+-----
+
+If there are less than m terms, then there are less than 1000 terms and we can
+find the answer in O(n^2) time
+
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+#define all(v) (v).begin(), (v).end()
+using namespace std;
+
+int main()
+{
+    int no_of_elements, modulo;
+    cin >> no_of_elements >> modulo;
+
+    vector <long long> A(no_of_elements + 1);
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        cin >> A[i];
+    }
+
+    if(no_of_elements > modulo)
+    {
+        cout << "0\n";
+
+        return 0;
+    }
+
+    long long product = 1;
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        for(int j = i + 1; j <= no_of_elements; j++)
+        {
+            product *= abs(A[i] - A[j]);
+
+            product %= modulo;
+        }
+    }
+
+    cout << product << "\n";
+    return 0;
+}
