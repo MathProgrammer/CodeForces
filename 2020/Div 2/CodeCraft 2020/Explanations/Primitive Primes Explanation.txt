@@ -1,0 +1,79 @@
+Let A[i] be the first coefficient of A that is not a multiple of p
+
+Let B[j] be the first coefficient of B that is not a multiple of p
+
+Then, our claim is that the coefficient of degree (i + j) of A.B 
+is not a multiple of p
+
+-----
+
+How do we calculate the coefficient of degree k of polynomial A.B
+
+Coefficient [k] = Sum(A[i] B[i - k])
+
+-----
+
+Now, let us look at coefficient of (i + j)
+
+A[0]B[i + j] + A[1]B[i + j - 1] + .... + A[i - 1]B[i + j - (i - 1)] +
+A[i]B[j] + 
+A[i + 1]B[j - 1] + A[i + 2]B[j - 2] + ... + A[i + j]B[0]
+
+Since A[i] is the first coefficient of A that is not a multiple of p, 
+All of A[0, ... , i - 1] is a multiple of p 
+
+Similarly all of B[0, .... , j - 1] is a multiple of p
+
+So, this means that all the terms in the first and third line are a multiple of p 
+because at least one of the terms of each product is a multiple of p
+
+This means coefficient (i + j) = A[i]B[j] (mod p) 
+
+This cannot be = 0 (mod p)
+
+Hence, (i + j) is the answer
+
+------
+
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+int main()
+{
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+    
+    int no_of_terms_A, no_of_terms_B, p;
+    cin >> no_of_terms_A >> no_of_terms_B >> p;
+    
+    vector <int> A(no_of_terms_A + 1);
+    for(int i = 0; i < no_of_terms_A; i++)
+    {
+        cin >> A[i];
+    }
+    
+    vector <int> B(no_of_terms_B + 1);
+    for(int i = 0; i < no_of_terms_B; i++)
+    {
+        cin >> B[i];
+    }
+    
+    int first_A = 0;
+    while(A[first_A]%p == 0)
+    {
+        first_A++;
+    }
+    
+    int first_B = 0;
+    while(B[first_B]%p == 0)
+    {
+        first_B++;
+    }
+    
+    int answer = first_A + first_B;
+    cout << answer << "\n";
+    
+    return 0;
+}
