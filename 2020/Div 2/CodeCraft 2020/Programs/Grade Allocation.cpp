@@ -1,0 +1,37 @@
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+void solve()
+{
+    int no_of_students, highest_score;
+    cin >> no_of_students >> highest_score;
+    
+    vector <int> score(no_of_students + 1);
+    for(int i = 1; i <= no_of_students; i++)
+    {
+        cin >> score[i];
+    }
+    
+    int remaining_sum = 0;
+    for(int i = 2; i <= no_of_students; i++)
+    {
+        remaining_sum += score[i];
+    }
+    
+    score[1] = min(highest_score, score[1] + remaining_sum);
+    
+    cout << score[1] << "\n";
+}
+
+int main()
+{
+    int no_of_test_cases;
+    cin >> no_of_test_cases;
+    
+    while(no_of_test_cases--)
+        solve();
+    
+    return 0;
+}
