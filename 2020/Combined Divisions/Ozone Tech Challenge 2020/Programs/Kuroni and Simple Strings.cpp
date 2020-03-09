@@ -1,0 +1,93 @@
+#include <iostream>
+#include <string>
+#include <vector>
+#include <algorithm>
+
+#define all(v) (v).begin(), (v).end()
+using namespace std;
+
+int main()
+{
+    string S;
+    cin >> S;
+    
+    vector <vector <int> >indices;
+    vector <int> available(S.size() + 1, true);
+    for(int attempts = 1; attempts <= S.size(); attempts++)
+    {
+        vector <int> indices_here;
+        
+        for(int front = 0, back = S.size() - 1; front < back;)
+        {
+            while(true)
+            {
+                if(front >= back)
+                {
+                    break;
+                }
+                
+                if(!available[front] || S[front] != '(')
+                {
+                    front++;
+                    continue;
+                }
+                
+                break;
+            }
+            
+            if(front >= back || S[front] != '(')
+            {
+                break;
+            }
+            
+            while(true)
+            {
+                if(back <= front)
+                {
+                    break;
+                }
+                
+                if(!available[back] || S[back] != ')')
+                {
+                    back--;
+                    continue;
+                }
+                
+                break;
+            }
+            
+            if(back <= front || S[back] != ')')
+            {
+                break;
+            }
+            
+            available[front] = false;
+            available[back] = false;
+            
+            indices_here.push_back(front + 1);
+            indices_here.push_back(back + 1);
+        }
+        
+        if(indices_here.size() > 0)
+        {
+            indices.push_back(indices_here);
+        }
+    }
+    
+    cout << indices.size() << "\n";
+    for(int i = 0; i < indices.size(); i++)
+    {
+        cout << indices[i].size() << "\n";
+        
+        sort(all(indices[i]));
+        
+        for(int j = 0; j < indices[i].size(); j++)
+        {
+            cout << indices[i][j] << " ";
+        }
+        
+        cout << "\n";
+    }
+    
+    return 0;
+}
