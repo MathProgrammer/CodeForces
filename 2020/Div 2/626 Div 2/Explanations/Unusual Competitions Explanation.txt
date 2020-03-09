@@ -1,0 +1,51 @@
+Let us replace the '(' by +1  and the ')' by -1
+
+We will keep track of the prefix sum
+
+If at some point, the sum goes below 0, then we will start our segment from there
+We will close the segment as soon as the sum reaches 0
+
+This greedy solution works because we ensure each segment is as small as possible
+
+-----
+
+int main()
+{
+    int length;
+    string S;
+    cin >> length >> S;
+
+    int sum = 0;
+    int answer = 0;
+    for(int left = -1, right = 0; right < length; right++)
+    {
+        sum += (S[right] == '(' ? 1 : -1);
+
+        if(sum == -1 && left == -1)
+        {
+            left = right;
+            continue;
+        }
+
+        if(sum == 0)
+        {
+            if(left != -1)
+            {
+                answer += (right - (left - 1));
+
+                left = -1;
+
+                continue;
+            }
+        }
+    }
+
+    if(sum != 0)
+    {
+        answer = -1;
+    }
+
+    cout << answer << "\n";
+
+    return 0;
+}
