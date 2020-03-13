@@ -1,0 +1,111 @@
+Firstly, we will write +1 in the white vertices and -1 in the black vertices. 
+
+Now, the problem is reduced to finding the maximum sum of any subtree containing v for all v.
+
+-----
+
+1. We will find the maximum sum for the subtree rooted at v, for every vertex v
+
+We will do this using a DFS function. We will add sum_from[child] to sum_from[v] only if sum_from[child] > 0
+
+void dfs(int v, int parent_v)
+{
+    sum_from[v] = (colour[v] == WHITE ? 1 : -1);
+    
+    for(int i = 0; i < tree[v].size(); i++)
+    {
+        int child_v = tree[v][i];
+        
+        if(child_v == parent_v)
+        {
+            continue;
+        }
+        
+        dfs(child_v, v);
+        
+        sum_from[v] += max(sum_from[child_v], 0);
+    }
+}
+
+------
+
+2. Now, a subtree containing v might also contain some of it's parents.
+
+Once again, we will start from the root and go downwards. 
+
+For every vertex v, we will find out the value of sum_from[parent] without sum_from[v]
+
+(If Sum_from[v] > 0, then subtract sum_from[v] from sum_from[parent]. 
+If Sum_from[v] < 0, then no need to subtract as it was never added to sum_from[parent].)
+
+If sum_from[parent] without sum_from[v] is > 0, then we will add it to sum_from[v] 
+
+The important invariant here is that we are going downwards from the arbitrary root we decided. 
+
+In the first DFS, we found out the maximum sum at subtree rooted at v 'downwards'
+In the second DFS, we check if we can add some subtree of the parent as well 'upwards'
+
+When we have come to v, we have already found out the maximum sum at it's parent 
+so we can be assured that it is the final answer for v
+
+-----
+
+void dfs_adjust(int v, int parent_v)
+{
+    for(int i = 0; i < tree[v].size(); i++)
+    {
+        int child_v = tree[v][i];
+        
+        if(child_v == parent_v)
+        {
+            continue;
+        }
+        
+        int parent_sum = sum_from[v];
+        
+        if(sum_from[child_v] > 0)
+        {
+            parent_sum -= sum_from[child_v];
+        }
+        
+        if(parent_sum > 0)
+        {
+            sum_from[child_v] += parent_sum;
+        }
+        
+        dfs_adjust(child_v, v);
+    }
+}
+
+int main()
+{
+    int no_of_vertices;
+    cin >> no_of_vertices;
+    
+    for(int i = 1; i <= no_of_vertices; i++)
+    {
+        cin >> colour[i];
+    }
+    
+    int no_of_edges = no_of_vertices - 1;
+    for(int i = 1; i <= no_of_edges; i++)
+    {
+        int u, v;
+        cin >> u >> v;
+        
+        tree[u].push_back(v);
+        tree[v].push_back(u);
+    }
+    
+    dfs(1, 0);
+    dfs_adjust(1, 0);
+    
+    for(int i = 1; i <= no_of_vertices; i++)
+    {
+        cout << sum_from[i] << " ";
+    }
+    
+    cout << "\n";
+    
+    return 0;
+}
