@@ -1,0 +1,30 @@
+It is always best to only jump to the 'R'
+
+If we jump from (i to j) to a L and then jump somewhere to k,
+
+we could have have gone directly from (i to k) with a smaller step size.
+
+The best path is to jump across the R's.
+
+The answer is the largest distance between R's or the longest substring of L's
+
+-----
+
+void solve()
+{
+    string S;
+    cin >> S;
+
+    int answer = 0, last_r = -1;
+    for(int i = 0; i <= S.size(); i++)
+    {
+        if(i == S.size() || S[i] == 'R')
+        {
+            answer = max(answer, i - last_r);
+
+            last_r = i;
+        }
+    }
+
+    cout << answer << "\n";
+}

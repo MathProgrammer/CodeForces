@@ -1,0 +1,83 @@
+1. If (A[i] + A[j] > B[i] + B[j]), we will re-write the sum to write
+each term as a function of index
+
+A[i] - B[i] > B[j] - A[j]
+
+A[i] - B[i] > -(A[j] - B[j])
+
+-----
+
+2. We will make another array V[i] = A[i] - B[i]
+
+Now, it is just like counting inversions so we can do this with a segment tree.
+
+The range of the elements is too big so we will assign a 'rank' to each V[i] and -V[i]
+
+-----
+
+3. We will process elements 1 by 1 from i = 1 to N
+
+While inserting V[i], we will count the number of elements already processed from [-V[i] + 1, N]
+
+Then, we will add 1 to the position [V[i]], indicating we have processed it
+
+-----
+
+int main()
+{
+    int no_of_topics;
+    cin >> no_of_topics;
+
+    vector <int> A(no_of_topics + 1);
+    for(int i = 1; i <= no_of_topics; i++)
+    {
+        cin >> A[i];
+    }
+
+    vector <int> B(no_of_topics + 1);
+    for(int i = 1; i <= no_of_topics; i++)
+    {
+        cin >> B[i];
+    }
+
+    vector <long long> value(no_of_topics + 1);
+    vector <long long> sorted_value;
+    for(int i = 1; i <= no_of_topics; i++)
+    {
+        value[i] = A[i] - B[i];
+
+        sorted_value.push_back(value[i]);
+
+        sorted_value.push_back(-value[i]);
+    }
+
+    sort(all(sorted_value));
+
+    map <long long, int> effective_index;
+    for(int i = 0; i < sorted_value.size(); i++)
+    {
+        if(i == 0)
+        {
+            effective_index[sorted_value[i]] = 1;
+        }
+        else if(sorted_value[i] != sorted_value[i - 1])
+        {
+            effective_index[sorted_value[i]] = effective_index[sorted_value[i - 1]] + 1;
+        }
+    }
+
+    long long no_of_good_pairs = 0;
+
+    memset(sum_tree, 0, sizeof(sum_tree));
+
+    for(int i = 1; i <= no_of_topics; i++)
+    {
+        no_of_good_pairs += get_sum(1, 1, 2*no_of_topics, effective_index[-value[i]] + 1, 2*no_of_topics);
+
+        update(1, 1, 2*no_of_topics, effective_index[value[i]], 1);
+    }
+
+    cout << no_of_good_pairs << "\n";
+
+    return 0;
+}

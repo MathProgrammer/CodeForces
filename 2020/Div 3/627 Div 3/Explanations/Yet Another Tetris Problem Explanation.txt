@@ -1,0 +1,37 @@
+1. Firstly, adding 2 does not do anything to the parity
+
+2. When we subtract 1 from every integer.
+If there are x odd integers and (n - x) even integers, there will be
+x even integers and (n - x) odd integers.
+
+3. Ultimately, 0 is an even integer so we need N even integers.
+This is not possible if there are both even and odd integers in the beginning
+
+-----
+
+Conversely, it is always possible when all the integers have the same parity
+
+In every addition step, we will try to make all other integers equal to the maximum integer
+
+As the process goes on till at least one A[i] > 0, we will always try to make the other columns = maximum column
+
+-----
+
+void solve()
+{
+    int no_of_columns;
+    cin >> no_of_columns;
+
+    const int MAX_HEIGHT = 105;
+    vector <int> frequency(2, 0);
+    vector <int> height(no_of_columns + 1);
+    for(int i = 1; i <= no_of_columns; i++)
+    {
+        cin >> height[i];
+
+        frequency[height[i]%2]++;
+    }
+
+    cout << (frequency[0] == 0 || frequency[1] == 0 ? "YES\n" : "NO\n");
+
+}
