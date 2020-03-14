@@ -1,0 +1,14 @@
+The inscribed polygon must also be a regular polygon so that means
+it's vertices must be equally spaced
+
+This means that m must evenly divide n
+
+-----
+
+void solve()
+{
+    int original_vertices, new_vertices;
+    cin >> original_vertices >> new_vertices;
+
+    cout << (original_vertices%new_vertices == 0 ? "YES\n" : "NO\n");
+}
