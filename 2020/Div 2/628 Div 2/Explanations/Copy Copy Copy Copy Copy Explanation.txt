@@ -1,0 +1,29 @@
+We concatenate the array N times with itself
+
+We can pick all the distinct elements of the array and that will be the longest increasing subsequence
+
+The length of the Longest increasing subsequence cannot be more than the number of distinct elements
+
+As there is no element greater than the maximum element
+
+-----
+
+void solve()
+{
+    int no_of_elements;
+    cin >> no_of_elements;
+
+    vector <int> A(no_of_elements + 1);
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        cin >> A[i];
+    }
+
+    set <int> distinct;
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        distinct.insert(A[i]);
+    }
+
+    cout << distinct.size() << "\n";
+}
