@@ -1,0 +1,29 @@
+We will sort A in descending order
+
+For any (i < j), (A[i] >= A[j])
+
+So, A[i] - i != A[j] - j
+
+-----
+
+void solve()
+{
+    int no_of_elements;
+    cin >> no_of_elements;
+
+    vector <int> A(no_of_elements + 1);
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        cin >> A[i];
+    }
+
+    sort(all(A));
+    reverse(all(A));
+
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        cout << A[i] << " ";
+    }
+
+    cout << "\n";
+}
