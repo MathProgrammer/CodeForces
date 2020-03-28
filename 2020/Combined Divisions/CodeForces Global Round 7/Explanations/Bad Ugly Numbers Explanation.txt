@@ -1,0 +1,41 @@
+Let us think of the divisibility rules of each number.
+
+A number is divisible by 5 only if the last digit if 5 or 0
+
+So, we can make every digit except the last = 5
+
+What do we put as the last digit ?
+
+We will put 4, as a number is divisible by 4 if it's last 2 digits are a multiple of 4
+and 54 is not a multiple of 4
+
+-----
+
+Another solution is that we can have a string of (n - 1) 3s and 1 2.
+
+Just avoid putting 2 in the last position
+
+This way the integer will not be even and the sum of digits = 2 (mod 3) so it will
+not be a multiple of 3
+
+-----
+
+void solve()
+{
+    int n;
+    cin >> n;
+
+    if(n == 1)
+    {
+        cout << "-1\n";
+
+        return;
+    }
+
+    for(int i = 1; i <= n - 1; i++)
+    {
+        cout << "5";
+    }
+
+    cout << "4\n";
+}
