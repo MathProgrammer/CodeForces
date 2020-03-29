@@ -1,0 +1,18 @@
+We will always try to make a = the next multiple of b
+
+We just have to add enough to make a = 0 (mod b)
+
+If a = 0 (mod b) already, then we do not need to add anything
+
+-----
+
+void solve()
+{
+    int a, b;
+    cin >> a >> b;
+
+    a %= b;
+
+    int answer = (a == 0 ? 0 : b - a);
+    cout << answer << "\n";
+}
