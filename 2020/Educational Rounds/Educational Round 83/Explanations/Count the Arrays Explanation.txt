@@ -1,0 +1,39 @@
+First, of all we should choose (n - 1) distinct integers from m integers.
+
+This can be done in C(m, n - 1)
+
+Secondly, we should choose one element which occurs 2 times.
+This cannot be the maximum integer but can be any of the other integers.
+So there are (n - 2) ways of doing this
+
+Now, each of the integers, except the maximum and the 2 duplicates can either
+coming in the ascending part or the descending part.
+So, there are 2^{n - 3} ways of doing this
+
+1. We select integers -> C(m, n - 1)
+2. We choose the duplicates -> (n - 2)
+3. We choose which side each of the (n - 3) integers are -> 2^{n - 3}
+
+-----
+
+int main()
+{
+    precompute_factorials();
+
+    long long no_of_elements, m;
+    cin >> no_of_elements >> m;
+
+    if(no_of_elements == 2)
+    {
+        cout << "0\n";
+
+        return 0;
+    }
+
+    long long answer = (choose(m, no_of_elements - 1)*(no_of_elements - 2))%MOD;
+    answer *= power(2, no_of_elements - 3);
+    answer %= MOD;
+
+    cout << answer << "\n";
+    return 0;
+}
