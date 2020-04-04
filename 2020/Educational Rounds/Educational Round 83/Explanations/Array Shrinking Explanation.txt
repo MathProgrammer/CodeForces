@@ -1,0 +1,79 @@
+Let final(L, R) be the final element in [L, R] if it is possible
+to reduce [L, R] to a single element and - 1 otherwise.
+
+We can build this recursively.
+
+It is possible to reduce [L, R] to a single element if there exists an i such that
+[L, i] is reducible and [i + 1, R] is reducible and
+final[L, i] = final[i + 1, R]
+
+-----
+
+We will build up final(L, R) for all (L, R) pairs in O(n^3) time
+
+Now let Answer(i) be the minimum number of parts we can divide the first i
+elements into
+
+A segment [L, R] is said to be a part if it can be reduced to 1 number
+
+f(i) = min(1 + f(j - 1)), for all j such that [j, i] is reducible to 1 number
+
+-----
+
+The answer is f(n)
+
+------
+
+int main()
+{
+    int no_of_elements;
+    cin >> no_of_elements;
+
+    vector <int> A(no_of_elements + 1);
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        cin >> A[i];
+    }
+
+    const int NOT_REDUCIBLE = -1, oo = 1e9;
+    vector <vector <int> > final_element(no_of_elements + 1, vector <int> (no_of_elements + 1));
+    for(int length = 1; length <= no_of_elements; length++)
+    {
+        for(int left = 1, right = left + length - 1; right <= no_of_elements; left++, right++)
+        {
+            final_element[left][right] = NOT_REDUCIBLE;
+
+            if(length == 1)
+            {
+                final_element[left][right] = A[left];
+                continue;
+            }
+
+            for(int i = left; i < right; i++)
+            {
+                if(final_element[left][i] != NOT_REDUCIBLE && final_element[left][i] == final_element[i + 1][right])
+                {
+                    final_element[left][right] = final_element[left][i] + 1;
+                }
+            }
+        }
+    }
+
+    vector <int> minimum_parts(no_of_elements + 1, oo);
+    minimum_parts[0] = 0;
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        for(int j = 1; j <= i; j++)
+        {
+            if(final_element[j][i] == NOT_REDUCIBLE)
+            {
+                continue;
+            }
+
+            minimum_parts[i] = min(minimum_parts[i], minimum_parts[j - 1] + 1);
+        }
+    }
+
+    cout << minimum_parts[no_of_elements] << "\n";
+    return 0;
+}
