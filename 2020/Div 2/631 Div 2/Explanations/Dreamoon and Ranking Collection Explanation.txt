@@ -1,0 +1,45 @@
+The question is basically this
+
+Add x elements to the array and give the greatest integer v such that
+all integers from [1, v] are there in this array of length (n + x)
+
+We will maintain a boolean array of which elements are already there in the array.
+We will go from 1 to as large an integer as we can and fill up the first x 'empty' spots.
+
+------
+
+void solve()
+{
+    int no_of_elements, x;
+    cin >> no_of_elements >> x;
+
+    const int MAX = 1e5;
+    vector <int> used(MAX, false);
+    vector <int> A(no_of_elements + 1);
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        cin >> A[i];
+
+        used[A[i]] = true;
+    }
+
+    int answer = 0;
+    for(int i = 1; i < MAX; i++)
+    {
+        if(!used[i])
+        {
+            if(x == 0)
+            {
+                answer = i - 1;
+                break;
+            }
+            else
+            {
+                x--;
+                used[i] = true;
+            }
+        }
+    }
+
+    cout << answer << "\n";
+}
