@@ -1,0 +1,123 @@
+Fact - Two consecutive integers in the sequence cannot have the same MSB
+
+Suppose, we have 2 elements A[i] and A[i + 1] that have the same MSB - b
+
+Then, the prefix XOR (i + 1) will not have the b-th bit set.
+
+This means that A[i] > B[i + 1], which should not happen.
+
+-----
+
+The integers must be in ascending order.
+
+Let b(i) be the number of integers with MSB = i
+
+Then, the number of sequences of length 3 for example is
+
+b(1) b(2) b(3)
+b(1) b(2) b(4)
+b(1) b(2) b(5)
+.
+.
+and so on till
+
+b(28) b(29) b(30)
+
+-----
+
+We can compute the number of sequences of length i with a DP
+
+Let f(i, last) be the number of sequences of length i having b(last) in the i-th position
+
+This is = sum{b(last)*f(i - 1, second_last)},
+
+For all seecond_last < last
+
+-----
+
+The only thing left to do is to calculate B(i)
+
+if i = MSB, then b(i) = n - (2^i) + 1
+
+For example, if n = 1001001,
+Then all integers in [1 000000, 1 001001] should count, which is why
+
+B(6) = n - 2^6 + 1
+
+If i < MSB, then b(i) = 2^i, as every combination of the last (i - 1) bits is allowed
+
+----
+
+void solve()
+{
+    int d, mod;
+    cin >> d >> mod;
+
+    const int MAX_BITS = 31;
+    vector < vector <long long> > no_of_ways(MAX_BITS + 1,
+                                             vector <long long> (MAX_BITS + 1, 0));
+
+    vector <long long> frequency(MAX_BITS + 1, 0);
+    for(int msb = false, bit = MAX_BITS; bit >= 0; bit--)
+    {
+        if(msb)
+        {
+            frequency[bit] = (1LL << bit);
+
+            //cout << "Frequency " << bit << " = " << frequency[bit] << "\n";
+
+            continue;
+        }
+
+        if(is_bit_set(d, bit))
+        {
+            if(!msb)
+            {
+                msb = true;
+
+                frequency[bit] = d - (1 << bit) + 1;
+
+                //cout << "Frequency " << bit << " = " << frequency[bit] << "\n";
+            }
+
+            continue;
+        }
+    }
+
+    for(int length = 1; length <= min(d, MAX_BITS); length++)
+    {
+        for(int last = 0; last <= MAX_BITS; last++)
+        {
+            if(length == 1)
+            {
+                no_of_ways[length][last] = frequency[last];
+
+                //cout << "F(" << length << "," << last << ") = " << no_of_ways[length][last] << "\n";
+
+                continue;
+            }
+
+            for(int second_last = 0; second_last <= last - 1; second_last++)
+            {
+                no_of_ways[length][last] += (frequency[last]*no_of_ways[length - 1][second_last])%mod;
+
+                no_of_ways[length][last] %= mod;
+            }
+
+            //cout << "F(" << length << "," << last << ") = " << no_of_ways[length][last] << "\n";
+        }
+    }
+
+    long long answer = 0;
+    for(int length = 1; length <= MAX_BITS; length++)
+    {
+        for(int bit = 0; bit <= MAX_BITS; bit++)
+        {
+            answer += no_of_ways[length][bit];
+
+            answer %= mod;
+        }
+    }
+
+    cout << answer << "\n";
+}
