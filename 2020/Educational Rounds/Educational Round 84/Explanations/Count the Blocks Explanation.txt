@@ -1,0 +1,77 @@
+Let us suppose we are dealing with blocks of length i
+
+1. How many ways are there of making this particular block ?
+
+10
+
+2. How many ways are there to choose it's neighbour ?
+
+The neighbour must be a different digit.
+
+If i = n, then there is no neighbour
+
+Otherwise, if the block is at the beginning or the end, there is 1 neighbour
+If the block is in the middle, there are 2 neighbours
+
+We will deal with both cases separately.
+Each neighbour can take on any of 9 choices
+
+3. Where are the positions where we can place the block ?
+
+If the block is in the beginning, it can be placed in 2 ways.
+
+If the block is in the middle, then it can be placed in (n - i - 1) ways.
+It can't be placed in any of the last (n - i) places as there isn't enough room
+It can't be placed in the beginning too.
+That's why it is (n - i - 1)
+
+------
+
+The remaining digits can be filled in any order apart from the block and it's neighbour
+
+------
+
+i = n, then 10 ways
+End = 2.10.9.10^(n - i - 1)
+Middle = (n - i - 2).10.9^2.10^(n - i - 2)
+
+----
+
+Please note that we do not have to worry about overcounting because if a block
+occurs 2 times in the same number, then the block should be counted twice
+
+-----
+
+int main()
+{
+    int length;
+    cin >> length;
+
+    const int MOD = 998244353;
+    for(int i = 1; i <= length; i++)
+    {
+        if(i == length)
+        {
+            cout << "10\n";
+
+            break;
+        }
+
+        long long no_of_spots = 2, ways_for_block = 10, neighbour = 9;
+        long long remaining = power(10, length - i - 1, MOD);
+
+        long long corners = (no_of_spots*ways_for_block)*neighbour;
+        corners = (corners*remaining)%MOD;
+
+        no_of_spots = length - i - 1, ways_for_block = 10, neighbour = 9*9;
+        remaining = power(10, length - i - 2, MOD);
+
+        long long middle = (no_of_spots*ways_for_block)*neighbour;
+        middle = (middle*remaining)%MOD;
+
+        long long blocks_here = (corners + middle)%MOD;
+        cout << blocks_here << " ";
+    }
+
+    return 0;
+}
