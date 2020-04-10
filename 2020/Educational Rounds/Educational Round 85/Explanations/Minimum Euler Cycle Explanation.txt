@@ -1,0 +1,106 @@
+For n = 7, the optimal strategy looks like this  
+
+1 2 1 3 1 4 1 5 1 6 1 7 
+2 3 2 4 2 5 2 6 2 7
+3 4 3 5 3 6 3 7
+4 5 4 6 4 7
+5 6 5 7
+6 7 
+1
+
+Let us call each of these steps a 'segment' 
+
+Segment 1 - 1 2 1 3 1 4 1 5 1 6 1 7 
+Segment 2 - 2 3 2 4 2 5 2 6 2 7 
+Segment 3 - 3 4 3 5 3 6 3 7
+Segment 4 - 4 5 4 6 4 7
+Segment 5 - 5 6 5 7 
+Segment 6 - 6 7 
+Segment 7 - 1
+
+Apart from the last segment, segment i has 2(7 - i) elements 
+
+-----
+
+We can utilise this pattern to print all the integers from i = L to i = R
+
+First, we will find out which 'segment' L is in 
+The point inside the segment where L is will be called the in_point. 
+For convenience, in_point will always point to the even position 
+(The odd positions in a segment will always be the segment number)
+
+-----
+
+void solve()
+{
+    int n;
+    long long left, right;
+    scanf("%d %I64d %I64d",&n, &left, &right);
+    
+    long long segment = 0, in_point = 0;
+    for(long long i = 1, sum = 0; i <= n; i++)
+    {
+        long long new_sum = sum + 2*(n - i);
+        
+        if(i == n)
+        {
+            new_sum++;
+        }
+        
+        if(new_sum >= left)
+        {
+            segment = i;
+            
+            in_point = (left - sum)/2 + i + (left - sum)%2;
+            
+            break;
+        }
+        
+        sum = new_sum;
+    }
+    
+    for(long long i = left; i <= right; )
+    {
+        if(segment == n)
+        {
+            printf("1 ");
+            
+            break;
+        }
+        
+        if(i%2 == 0)
+        {
+            printf("%I64d ", in_point);
+            
+            in_point++;
+            
+            i++;
+        }
+        else
+        {
+            printf("%I64d ", segment);
+            
+            i++;
+            
+            if(i > right)
+            {
+                break;
+            }
+            
+            printf("%I64d ", in_point);
+            
+            in_point++;
+            
+            i++;
+        }
+        
+        if(in_point == n + 1)
+        {
+            segment++;
+            
+            in_point = segment + 1;
+        }
+    }
+    
+    printf("\n");
+}
