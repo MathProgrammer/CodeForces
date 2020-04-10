@@ -1,0 +1,49 @@
+Observation - For any given monster, if it's neighbour is killed before it,
+the number of bullets can only be reduced.
+
+It cannot increase.
+
+-----
+
+Step 1 - We will count the total cost when every monster has his neighbour
+killed first
+
+long long total = 0;
+    for(int i = 1; i <= no_of_monsters; i++)
+    {
+        if(i == 1)
+        {
+            total += (B[no_of_monsters] >= A[1] ? 0 : A[1] - B[no_of_monsters]);
+
+            continue;
+        }
+
+        total += (B[i - 1] >= A[i] ? 0 : A[i] - B[i - 1]);
+    }
+
+-----
+
+Step 2 - Only 1 element should be killed without it's neighbour being killed first
+
+There is only 1 element at most which should be killed 'alone'
+
+If the i-th element is killed first, then we will be spending A[i] on it
+
+We have counted that we will be spending (B[i - 1] - A[i]) bullets on A[i]
+
+If i-th element is first, the total increases by [A[i] - (B[i - 1] - A[i])]
+
+We will choose the element which causes the total to increase the least
+
+-----
+
+    long long effective_hit = max(A[1] - B[no_of_monsters], 0LL);
+    long long best_first = A[1] - effective_hit;
+    for(int i = 2; i <= no_of_monsters; i++)
+    {
+        effective_hit = max(A[i] - B[i - 1], 0LL);
+
+        best_first = min(best_first, A[i] - effective_hit);
+    }
+
+    total += best_first;

@@ -1,0 +1,49 @@
+Let us sort the elements in descending order
+
+A[1] >= A[2] >= A[3] >= .... >= A[N]
+
+If we apply the operation on [1, i], then A[1] = A[2] = ... = A[i] = Sum/i
+
+This means, that it is possible to make the first i people >= x
+
+If Sum[1, i] >= i*x
+
+We will check the length of the maximum such prefix we can make >= x
+
+-----
+
+This is the optimal way.
+If we replace any of the elements by a smaller element, the segment average
+can only decrease
+
+-----
+
+void solve()
+{
+    long long no_of_elements, x;
+    cin >> no_of_elements >> x;
+
+    vector <long long> A(no_of_elements + 1);
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        cin >> A[i];
+    }
+
+    sort(all(A));
+
+    long long sum = 0;
+    int answer = 0;
+    for(int i = no_of_elements; i >= 1; i--)
+    {
+        sum += A[i];
+
+        if(sum < (answer + 1)*x)
+        {
+            break;
+        }
+
+        answer++;
+    }
+
+    cout << answer << "\n";
+}
