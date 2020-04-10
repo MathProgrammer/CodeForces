@@ -1,0 +1,60 @@
+The important constraint here is that the condition (j < i) is maintained
+
+So, we will start transforming A from the last element to the first
+
+While at i, we will check if (A[i] < B[i]), and see if there is a +1 in the prefix_sum
+
+And if (A[i] > B[i]), we will check if there is a -1 in the prefix
+
+We will go through the array and check if these conditions are maintained
+
+-----
+
+void solve()
+{
+    int no_of_elements;
+    cin >> no_of_elements;
+
+    vector <int> A(no_of_elements + 1), B(no_of_elements + 1);
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        cin >> A[i];
+    }
+
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        cin >> B[i];
+    }
+
+    int positive = false, negative = false, possible = true;;
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        if(A[i] < B[i])
+        {
+            if(!positive)
+            {
+                possible = false;
+            }
+        }
+
+        if(A[i] > B[i])
+        {
+            if(!negative)
+            {
+                possible = false;
+            }
+        }
+
+        if(A[i] == 1)
+        {
+            positive = true;
+        }
+
+        if(A[i] == -1)
+        {
+            negative = true;
+        }
+    }
+
+    cout << (possible ? "YES\n" : "NO\n");
+}

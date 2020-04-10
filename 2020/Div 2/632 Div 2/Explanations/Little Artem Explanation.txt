@@ -1,0 +1,67 @@
+Case 1 - Suppose M, N are both odd
+
+We will colour the board like a chessboard with the first square being black
+The number of squares is odd so there is 1 more black cell than white cell.
+
+So, B = W + 1 is satisfied
+
+-----
+
+Case 2 - One of M, N is even
+
+The square at the [M][N] is white and the number of black and white cells are
+equal.
+
+We will just back the last cell [M][N] = 'B'
+
+This will reduce the number of good white cells by 1 and keep
+the number of good black cells constant so B = W + 1 is maintained
+
+-----
+
+Case 3 - Both M, N are even
+
+Now [M][N] = B anyway so we will make cell [M][1] = B
+
+This reduces the number of good white cells by 1 and the number of black cells constant
+
+B = W + 1 is maintained
+
+This satisfies all the cases
+
+----
+
+void solve()
+{
+    int rows, columns;
+    cin >> rows >> columns;
+
+    for(int i = 1; i <= rows; i++)
+    {
+        for(int j = 1; j <= columns; j++)
+        {
+            switch((i + j)%2)
+            {
+                case 0 : grid[i][j] = 'B'; break;
+                case 1 : grid[i][j] = 'W'; break;
+            }
+        }
+    }
+
+    grid[rows][columns] = 'B';
+
+    if(rows%2 == 0 && columns%2 == 0)
+    {
+        grid[rows][1] = 'B';
+    }
+
+    for(int i = 1; i <= rows; i++)
+    {
+        for(int j = 1; j <= columns; j++)
+        {
+            cout << grid[i][j];
+        }
+
+        cout << "\n";
+    }
+}

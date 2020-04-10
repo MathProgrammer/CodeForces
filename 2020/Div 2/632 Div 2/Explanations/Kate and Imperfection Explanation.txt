@@ -1,0 +1,62 @@
+Here is the optimal approach
+
+1. We will use all the prime numbers first. The imperfection remains 1
+
+2. Once we are done, we must use a composite integer. And the imperfection will increase
+
+We will put 4 next, and then we will put in 6 so that the gcd becomes 3
+
+If we put 8, the gcd becomes 4
+
+3. The editorial has a very nice proof.
+
+Suppose we have k integers in our set - {A1, A2, ... , Ak}, then
+for every integer Ai, all it's divisors are also there.
+
+Let us suppose for some Ai, there is a divisor of Ai = x that is not in the set
+We can remove Ai from the set and put in x
+
+The gcd will not increase and the answer will remain the same
+
+So, we can use the following constructive idea
+
+An integer will be added to the set after all it's divisors have been added
+
+-----
+
+How do we do this ?
+
+We can use a sieve to find out the greatest divisor of all the integers
+
+Then, we will sort them by their greatest divisor
+
+For the answer for k, we will choose the first k elements
+
+The gcd will be equal to the greatest divisor of A[k] since it's divisor is already in the set
+
+-----
+
+int main()
+{
+    int n;
+    cin >> n;
+
+    vector <int> largest_divisor(n + 1, 1);
+    for(int i = 1; i <= n; i++)
+    {
+        for(int multiple = 2*i; multiple <= n; multiple += i)
+        {
+            largest_divisor[multiple] = i;
+        }
+    }
+
+    sort(largest_divisor.begin(), largest_divisor.end());
+    for(int i = 2; i <= n; i++)
+    {
+        cout << largest_divisor[i] << " ";
+    }
+
+    cout << "\n";
+
+    return 0;
+}
