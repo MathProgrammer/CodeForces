@@ -1,0 +1,74 @@
+Let us treat each left and right border as an 'event'.
+
+An event has
+
+1. X
+2. Cost
+3. Duration
+4. Is_left -> Indicating if it's left or right
+
+-----
+
+We will sort the events by their x-point and keep a map
+
+minimum_cost(d) indicates the minimum_cost with duration d
+
+-----
+
+1. When we enter into a left segment, we will check the minimum_cost(d - A[i].duration)
+
+2. When we enter into a right segment, we will update the value of
+minimum_cost(A[i].duration)
+
+This maintains the invariant that minimum_cost(d) only holds the cost of those
+events who's right border we have already crossed, ensuring there is no intersection
+
+-----
+
+int main()
+{
+    int no_of_segments, total;
+    cin >> no_of_segments >> total;
+
+    vector <Point> A;
+    for(int i = 1; i <= no_of_segments; i++)
+    {
+        int left, right, x;
+        cin >> left >> right >> x;
+
+        A.push_back(Point(left, x, right - left + 1, true));
+        A.push_back(Point(right, x, right - left + 1, false));
+    }
+
+    sort(A.begin(), A.end(), sort_by_point);
+
+    map <int, int> minimum_cost;
+    const int oo = 2e9 + 7;
+    int answer = oo;
+
+    for(int i = 0; i < 2*no_of_segments; i++)
+    {
+        if(A[i].is_left)
+        {
+            if(minimum_cost.find(total - A[i].duration) != minimum_cost.end())
+            {
+                answer = min(answer, minimum_cost[total - A[i].duration] + A[i].cost);
+            }
+        }
+        else
+        {
+            if(minimum_cost.find(A[i].duration) != minimum_cost.end())
+            {
+                minimum_cost[A[i].duration] = min(minimum_cost[A[i].duration], A[i].cost);
+            }
+            else
+            {
+                minimum_cost[A[i].duration] = A[i].cost;
+            }
+        }
+    }
+
+    cout << (answer >= oo ? -1 : answer) << "\n";
+
+    return 0;
+}
