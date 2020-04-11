@@ -1,0 +1,113 @@
+Let N = p1^a1 p2^a2 ... pk^ak
+
+Instead of trying to find out the product of all divisors, let
+us try to find out the exponent of each prime number in the final product
+
+Suppose N = 2^3 3^2 5
+
+Let us look at how many times each exponent of 2 is counted
+
+2.(3) 2.(3.5) 2.(3^2) 2.(3^2 . 5)
+
+2^2.(3) 2^2.(3.5) 2^2.(3^2) 2^2.(3^2 . 5)
+
+2^3.(3) 2^3.(3.5) 2^3.(3^2) 2^3.(3^2 . 5)
+
+----
+
+Each exponent of 2 is paired with - Number of factors of (3^2 5)
+
+We know that the number of factors of p1^a1 p2^a2 ... pk^ak  is
+
+(a1 + 1) (a2 + 1) ... (ak + 1)
+
+How many times is each exponent of p1 counted ?
+
+(a2 + 1) (a3 + 1) ... (ak + 1)
+
+The number of divisors without p1
+
+-----
+
+So, the net contribution of p1 is
+
+{a1(a1 + 1)/2} (a2 + 1) (a3 + 1) ... (ak + 1)
+
+-----
+
+This is the same for all prime factors.
+
+It is easy to do this in 2 linear passes but how do we do this in 1 linear pass ?
+
+We need to use our creativity to find a beautiful solution in 1 pass through The
+prime factors
+
+-----
+
+Let us remember Fermat's Little Theorem,
+
+a^{m - 1} = 1 (mod m)
+
+if m is prime
+
+-----
+
+Let P represent the product of all divisors and d represent the number of divisors
+
+When we encounter the first prime factor, P = p1^{a1.(a1 + 1)/2}
+d = (a1 + 1)
+
+Later, when we go to p2,
+
+We will make P = power(P, (a2 + 1)). power(p2^{a2.(a2 + 1)/2}, d)
+d = d.(a2 + 1)
+
+----
+
+In general when we arrive at the i-th prime,
+
+We
+
+1. Raise the product so far of the first (i - 1) factors to the power (ai + 1)
+2. Raise pi^{ai.(ai + 1)/2} to the power d
+3. Update d
+
+This ensures that each prime is raised to the product of all factors excluding itself
+
+-----
+
+int main()
+{
+    const int MOD = 1e9 + 7;
+    long long product = 1LL;
+
+    int no_of_primes;
+    cin >>  no_of_primes;
+
+    map <int, long long> exponent;
+
+    for(int i = 1; i <= no_of_primes; i++)
+    {
+        int prime_i;
+        scanf("%d", &prime_i);
+
+        exponent[prime_i]++;
+    }
+
+    long long no_of_divisors = 1;
+    for(map <int, long long> :: iterator it = exponent.begin(); it != exponent.end(); it++)
+    {
+        int p = it->first;
+        long long exp = it->second;
+
+        long long divisor_product_here = power_mod(p, (exp*(exp + 1))/2, MOD);
+        product = power_mod(product, exp + 1, MOD)*power_mod(divisor_product_here, no_of_divisors, MOD);
+        product %= MOD;
+
+        no_of_divisors *= (exp + 1);
+        no_of_divisors %= (MOD - 1);
+    }
+
+    cout << product << "\n";
+    return 0;
+}
