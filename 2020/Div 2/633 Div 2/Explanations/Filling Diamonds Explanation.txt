@@ -1,0 +1,19 @@
+It is difficult to explain this without drawing a diagram. 
+
+The main idea is that if we place a diamond vertically, the rest of the positions are forced. 
+
+In a diagram of (4n - 2) triangles, there are n positions where we can place a vertical diamond
+
+The arrangement before and after the vertical triangle are fixed
+
+So, the answer is always n
+
+-----
+
+void solve()
+{
+    long long n;
+    cin >> n;
+    
+    cout << n << "\n";
+}
