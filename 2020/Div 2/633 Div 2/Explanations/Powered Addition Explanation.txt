@@ -1,0 +1,38 @@
+1. We will keep track of the Prefix Maximum as we go from i = 1 to N
+
+2. At every i, we will check if A[i] < prefix_max
+
+3. If yes, we will add just enough to make A[i] = prefix_max
+The time taken = msb(prefix_max - A[i])
+
+-----
+
+void solve()
+{
+    int no_of_elements;
+    cin >> no_of_elements;
+
+    vector <long long> A(no_of_elements + 1);
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        cin >> A[i];
+    }
+
+    int time_required = 0;
+    long long max_so_far = A[1];
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        if(A[i] >= max_so_far)
+        {
+            max_so_far = A[i];
+            continue;
+        }
+
+        long long required = max_so_far - A[i];
+        time_required = max(time_required, msb(required) + 1);
+
+        max_so_far = A[i] + required;
+    }
+
+    cout << time_required << "\n";
+}

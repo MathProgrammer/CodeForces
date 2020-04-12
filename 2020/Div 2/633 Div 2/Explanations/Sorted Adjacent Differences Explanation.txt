@@ -1,0 +1,58 @@
+What is the biggest difference ? A[1] - A[n]
+
+If we replace, A[1] by any other element, it will get smaller and if we replace A[n] by any other element, it will get smaller
+This means, the array ends with (A[1], A[n])
+
+Now, what should be the third last element ? It should be the second largest difference. This means that A[1] should be paired with A[n - 1].
+
+If we exchange A[n - 1] with something else, the difference will get smaller
+
+-----
+
+After sorting the array,
+
+We will make the array like this
+
+A[1] A[n]
+
+A[n - 1] A[1] A[n]
+
+A[2] A[n - 1] A[1] A[n]
+
+and so on
+
+-----
+
+void solve()
+{
+    int no_of_elements;
+    cin >> no_of_elements;
+
+    vector <int> A(no_of_elements + 1);
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        cin >> A[i];
+    }
+
+    sort(A.begin() + 1, A.end());
+
+    vector <int> answer(no_of_elements + 1);
+    for(int i = no_of_elements, front = 1, back = no_of_elements; i >= 1; i--)
+    {
+        if(i%2 == no_of_elements%2)
+        {
+            answer[i] = A[back--];
+        }
+        else
+        {
+            answer[i] = A[front++];
+        }
+    }
+
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        cout << answer[i] << " ";
+    }
+
+    cout << "\n";
+}
