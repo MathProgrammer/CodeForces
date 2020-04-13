@@ -1,0 +1,44 @@
+We will place blocks of length A
+
+The block with have (b - 1) distinct letters followed by (a - b) occurences of b
+
+For example here is a block with 5 distinct characters of length 9
+
+abcdeeeee
+
+We will simply place blocks like this next to each other.
+
+When we slide the window, if the right pointer adds a new distinct character,
+the left pointer removes a new distinct character.
+
+This ensures every window of length A has B distinct characters
+
+-----
+
+void solve()
+{
+    int length, substring, distinct;
+    cin >> length >> substring >> distinct;
+
+    string S;
+    for(int i = 0; i < length; i++)
+    {
+        if(i < substring)
+        {
+            if(i < distinct)
+            {
+                S += (char)('a' + i);
+            }
+            else
+            {
+                S += S.back();
+            }
+        }
+        else
+        {
+            S += S[i - substring];
+        }
+    }
+
+    cout << S << "\n";
+}

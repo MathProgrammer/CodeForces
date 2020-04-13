@@ -1,0 +1,16 @@
+a lies in [n/2, n - 1] and b lies in [n/2, 1]
+
+When n is even, then we cannot use n/2. So, answer is (n/2 - 1)
+
+Otherwise answer is (n/2)
+
+----
+
+void solve()
+{
+    long long n;
+    cin >> n;
+
+    long long no_of_ways = (n/2) - (n%2 == 0 ? 1 : 0);
+    cout << no_of_ways << "\n";
+}
