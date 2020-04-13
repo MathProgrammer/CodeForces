@@ -1,0 +1,60 @@
+The X and Y axes are independent of each other.
+
+The optimal solution is to use a 'waiting' move.
+
+Keep going [L, R] till there is only one path left and then follow it
+
+It has to be within [X1, X2] and [Y1, Y2]
+
+We have to check the case where (X1 = X2) or (Y1 = Y2) seperately as it is not possible to make even 1 move
+
+-----
+
+void solve()
+{
+    long long up, down, left, right;
+    cin >> left >> right >> down >> up;
+
+    long long x, y, x1, y1, x2, y2;
+    cin >> x >> y >> x1 >> y1 >> x2 >> y2;
+
+    if(x1 == x2)
+    {
+        if(left + right > 0)
+        {
+            cout << "NO\n";
+            return;
+        }
+    }
+    else
+    {
+        long long end = x - left + right;
+
+        if(end < x1 || x2 < end)
+        {
+            cout << "NO\n";
+            return;
+        }
+    }
+
+    if(y1 == y2)
+    {
+        if(up + down > 0)
+        {
+            cout << "NO\n";
+            return;
+        }
+    }
+    else
+    {
+        long long end = y - down + up;
+
+        if(end < y1 || y2 < end)
+        {
+            cout << "NO\n";
+            return;
+        }
+    }
+
+    cout << "Yes\n";
+}
