@@ -1,0 +1,114 @@
+This is the same as the Easy Version
+
+For every A[i], we will calculate the total height if this were the peak.
+
+Here, is what we will do if A[i] is the peak
+
+We will make all A[j] = A[i], where j < i and A[j] >= A[i]
+till we find a j such that A[j] < A[i]
+
+We will do the same in both the left and right directions.
+
+-----
+
+For every A[i], we need to find the first j, such that A[j] < A[i]
+
+We can do this with a Stack in O(1) time
+
+1. Initially Stack is empty
+2. When we reach A[i], we will pop all elements from the stack
+as long as A[stack.top()] >= A[i]
+3. Then, stack.top() will be the nearest element < A[i]
+And we will put A[i] in the stack after this
+
+This is optimal for the future steps as well.
+
+-----
+
+int main()
+{
+    int no_of_plots;
+    cin >> no_of_plots;
+
+    vector <long long> max_height(no_of_plots + 5);
+    for(int i = 1; i <= no_of_plots; i++)
+    {
+        cin >> max_height[i];
+    }
+
+    stack <long long> greater_than;
+    greater_than.push(0);
+
+    vector <long long> left_contribution(no_of_plots + 1);
+    for(int i = 1; i <= no_of_plots; i++)
+    {
+        while(max_height[greater_than.top()] > max_height[i])
+        {
+            greater_than.pop();
+        }
+
+        left_contribution[i] = max_height[i]*(i - greater_than.top()) + left_contribution[greater_than.top()];
+
+        //cout << "Left " << i << " = " << left_contribution[i] << "\n";
+
+        greater_than.push(i);
+    }
+
+    greater_than.pop();
+
+    greater_than.push(no_of_plots + 1);
+    vector <long long> right_contribution(no_of_plots + 5);
+    for(int i = no_of_plots; i >= 1; i--)
+    {
+        while(max_height[greater_than.top()] > max_height[i])
+        {
+            greater_than.pop();
+        }
+
+        right_contribution[i] = max_height[i]*(greater_than.top() - i) + right_contribution[greater_than.top()];
+
+        greater_than.push(i);
+
+        //cout << "Right " << i << " = " << right_contribution[i] << "\n";
+    }
+
+    long long answer = 0;
+    for(int i = 1; i <= no_of_plots; i++)
+    {
+        answer = max(answer, left_contribution[i] + right_contribution[i] - max_height[i]);
+    }
+
+    //cout << answer << "\n";
+    int peak = 0;
+    for(int i = 1; i <= no_of_plots; i++)
+    {
+        if(answer == left_contribution[i] + right_contribution[i] - max_height[i])
+        {
+            peak = i;
+            break;
+        }
+    }
+
+    vector <long long> height(no_of_plots + 1);
+
+    height[peak] = max_height[peak];
+
+    for(int i = peak - 1; i >= 1; i--)
+    {
+        height[i] = min(max_height[i], height[i + 1]);
+    }
+
+    for(int i = peak + 1;i <= no_of_plots; i++)
+    {
+        height[i] = min(max_height[i], height[i - 1]);
+    }
+
+    for(int i = 1; i <= no_of_plots; i++)
+    {
+        cout << height[i] << " ";
+    }
+
+    cout <<"\n";
+
+    return 0;
+}
