@@ -1,0 +1,58 @@
+We will iterate over all elements and check the cost if this element
+is the one in the same set.
+
+----
+
+There are 2 possibilities -
+
+1. We put all it's occurences in the 'Same' bucket and all the distinct in the other
+
+This is given by min(distinct - 1, frequency[A[i]])
+
+[1, 2, 3], [4, 4, 4]
+
+2. We put one of it's occurences in the 'Distinct' bucket and all else in the 'Same' bucket
+
+This is given by min(distinct, frequency[A[i]] - 1)
+
+[1, 2, 3, 4] [4, 4, 4, 4]
+
+-----
+
+We will iterate over all of them and choose the best
+
+-----
+
+void solve()
+{
+    int no_of_elements;
+    cin >> no_of_elements;
+
+    vector <int> A(no_of_elements + 1);
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        cin >> A[i];
+    }
+
+    set <int> distinct;
+    map <int, int> frequency;
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        distinct.insert(A[i]);
+        frequency[A[i]]++;
+    }
+
+    int team_size = 0;
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        int team_size_here_1 = min(distinct.size() - 1, frequency[A[i]]);
+
+        int team_size_here_2 = min(distinct.size(), frequency[A[i]] - 1);
+
+        int team_size_here = max(team_size_here_1, team_size_here_2);
+
+        team_size = max(team_size, team_size_here);
+    }
+
+    cout << team_size << "\n";
+}
