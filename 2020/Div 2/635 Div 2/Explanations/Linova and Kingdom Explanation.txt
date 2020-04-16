@@ -1,0 +1,93 @@
+Let us try to calculate the contribution of a vertex to the sum if we add it.
+
+-----
+
+Firstly, it is always optimal to choose the first 'unpicked' vertex in a given chain.
+
+If we choose some other vertex v instead of u and depth[u] < depth[v]
+and u and v are in the same chain (lca(u, v) = u),
+
+then we can choose v instead of u and get a bigger sum.
+
+-----
+
+When we choose a leaf vertex, it contributes depth[v] to the sum.
+
+What happens when we choose a non-leaf vertex v ?
+
+The happiness of the v-th vertex is depth[v],
+
+but the happiness of every vertex in the subtree[v] reduces by 1.
+
+(Since v is now an industrial town).
+
+So, if v is added to our set, it contributes (depth[v] - subtree_size[v])
+
+So the contribution[v] = (depth[v] - subtree_size[v])
+
+-----
+
+We will sort the contribution of all the vertices and choose the greatest K vertices
+
+-----
+
+void dfs(int v, int parent_v)
+{
+    if(depth[v] != 0)
+    {
+        return;
+    }
+
+    depth[v] = 1 + depth[parent_v];
+
+    for(int i = 0; i < tree[v].size(); i++)
+    {
+        int child_v = tree[v][i];
+
+        if(child_v == parent_v)
+        {
+            continue;
+        }
+
+        dfs(child_v, v);
+
+        subtree_from[v] += (1 + subtree_from[child_v]);
+    }
+}
+
+int main()
+{
+    int no_of_vertices, chosen_vertices;
+    cin >> no_of_vertices >> chosen_vertices;
+
+    int no_of_edges = no_of_vertices - 1;
+    for(int i = 1; i <= no_of_edges; i++)
+    {
+        int u, v;
+        cin >> u >> v;
+
+        tree[u].push_back(v);
+        tree[v].push_back(u);
+    }
+
+    depth[0] = -1;
+    dfs(1, 0);
+
+    vector <long long> contribution;
+    for(int v = 1; v <= no_of_vertices; v++)
+    {
+        contribution.push_back(depth[v] - subtree_from[v]);
+    }
+
+    sort(all(contribution));
+    reverse(all(contribution));
+
+    long long sum = 0;
+    for(int i = 0; i < chosen_vertices; i++)
+    {
+        sum += contribution[i];
+    }
+
+    cout << sum << "\n";
+    return 0;
+}
