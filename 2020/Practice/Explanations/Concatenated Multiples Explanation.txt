@@ -1,0 +1,69 @@
+What is the value of concatenating A[i] with A[j] ?
+
+10^{length(A[j])} + A[i]
+
+Let f(t, m) be the frequency of remainder m (mod K) if an integer is multiplied by 10^t
+
+We will iterate from i = 1 to N
+and add
+
+f(length(A[j]), -A[i]) to the answer for each integer.
+
+We are not allowed to concatenate an integer with itself so we have to be careful about that.
+
+-----
+
+int main()
+{
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+
+    int no_of_elements, k;
+    cin >> no_of_elements >> k;
+
+    vector <int> A(no_of_elements + 1);
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        cin >> A[i];
+    }
+
+    const int MAX_DIGITS = 11;
+    map <long long, int> frequency_mod[MAX_DIGITS];
+    long long answer = 0;
+
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        for(long long t = 10, d = 1; d < MAX_DIGITS; d++, t = (t*10)%k)
+        {
+            frequency_mod[d][ (A[i]*t)%k ]++;
+
+            //cout << "D = " << d << " M = " << (A[i]*t)%k << " = " << frequency_mod[d][ (A[i]*t)%k ] << "\n";
+        }
+    }
+
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        long long first_part_mod = (0 - A[i]%k + k)%k;
+
+        //cout << "Need d = " << no_of_digits(A[i]) << " with M = " << first_part_mod << "\n";
+
+        answer += frequency_mod[no_of_digits(A[i])][first_part_mod];
+        //cout << "Answer = " << answer << "\n";
+
+        long long t = 1;
+        for(long long d = 1; d <= no_of_digits(A[i]) ;d++)
+        {
+            t = (t*10)%k;
+        }
+
+        if( (t*A[i] + A[i])%k == 0 )
+        {   //cout << "Self!\n";
+            answer--;
+        }
+
+        //cout << "Answer = " << answer << "\n";
+    }
+    cout << answer << "\n";
+
+    return 0;
+}
