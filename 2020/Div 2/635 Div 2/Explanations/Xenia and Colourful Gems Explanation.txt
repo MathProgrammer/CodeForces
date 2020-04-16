@@ -1,0 +1,96 @@
+Let us imagine that X <= Y <= Z
+
+We will iterate over the middle element.
+
+If we fix Y, then we will look for the closest X <= Y and the closest Z >= Y
+
+This is the optimal pairing.
+The reason is with a y fixed, replacing either the x with a smaller x
+or the z with a larger z will increase the sum
+
+----
+
+If we fix either the first or the third element, the exchange argument doesn't hold.
+
+For example,
+3
+3 4
+6
+
+If we fix the smallest element (3, 3, 6) is the triplet
+But we can do better by increasing 3 to 4 (3, 3, 4) gives us 14 which is smaller than 18
+
+-----
+
+We will check all 6 possibilities with each of the arrays given a chance to be X, Y and Z
+
+-----
+
+void find_best(vector <long long> &X, vector <long long> &Y, vector <long long> &Z, long long &answer)
+{
+    for(int j = 1; j < Y.size(); j++)
+    {
+        int i = lower_bound(all(X), Y[j]) - X.begin();
+
+        int k = lower_bound(all(Z), Y[j]) - Z.begin();
+
+        if(i != X.size() && k != Z.size())
+        {
+            answer = min(answer, square(X[i] - Y[j]) + square(Y[j] - Z[k]) + square(Z[k] - X[i]));
+        }
+
+        if(i > 1 && k != Z.size())
+        {
+            i--;
+
+            answer = min(answer, square(X[i] - Y[j]) + square(Y[j] - Z[k]) + square(Z[k] - X[i]));
+        }
+    }
+}
+
+void solve()
+{
+    int no_of_red, no_of_green, no_of_blue;
+    cin >> no_of_red >> no_of_green >> no_of_blue;
+
+    vector <long long> R(no_of_red + 1);
+    for(int i = 1; i <= no_of_red; i++)
+    {
+        cin >> R[i];
+    }
+    sort(all(R));
+
+    vector <long long> G(no_of_green + 1);
+    for(int i = 1; i <= no_of_green; i++)
+    {
+        cin >> G[i];
+    }
+    sort(all(G));
+
+    vector <long long> B(no_of_blue + 1);
+    for(int i = 1; i <= no_of_blue; i++)
+    {
+        cin >> B[i];
+    }
+    sort(all(B));
+
+    long long answer = LLONG_MAX; //cout << answer << "\n";
+    find_best(R, G, B, answer); find_best(R, B, G, answer);
+
+    find_best(G, R, B, answer); find_best(G, B, R, answer);
+
+    find_best(B, G, R, answer); find_best(B, R, G, answer);
+
+    cout << answer << "\n";
+}
+
+int main()
+{
+    int no_of_test_cases;
+    cin >> no_of_test_cases;
+
+    while(no_of_test_cases--)
+        solve();
+
+    return 0;
+}
