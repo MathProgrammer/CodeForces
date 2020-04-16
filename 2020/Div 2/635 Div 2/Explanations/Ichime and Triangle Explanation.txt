@@ -1,0 +1,16 @@
+The triangle inequality says (a + b > c)
+
+So, we can just print b c c
+
+b + c > c
+c + c > b
+
+-----
+
+void solve()
+{
+    int a, b, c, d;
+    cin >> a >> b >> c >> d;
+
+    cout << b << " " << c << " " << c << "\n";
+}

@@ -1,0 +1,27 @@
+The net reduction is H/2 or 10
+
+As long as H/2 > 10, it is always better to do the first operation
+
+And then, we can do the second operation to the maximum extent
+
+We will check if the value is still > 0 after these operations
+
+And give the answer accordingly
+
+-----
+
+void solve()
+{
+    int total, type_1, type_2;
+    cin >> total >> type_1 >> type_2;
+
+    while(total/2 + total%2 > 10 && type_1 > 0)
+    {
+        total = total/2 + 10;
+        type_1--;
+    }
+
+    total -= 10*type_2;
+
+    cout << (total <= 0 ? "YES\n" : "NO\n");
+}
