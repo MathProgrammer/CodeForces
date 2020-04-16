@@ -1,0 +1,23 @@
+The crucial insight here is that there will always be a path running through
+any 2 edges.
+
+So, there will always be a path that runs through both 0 and 1 and will have MEX = 2
+
+Now, is there a way, we can avoid having 2 on the same path as (0, 1) ?
+The only way to do this is if some vertex had degree >= 3 and we label it 0, 1, 2
+
+The mex of every path not containing 0 or 1 will be 0 or 1
+The mex of every path containing both 0 and 1 will be 2
+
+------
+
+My strategy was to start with the leaves and maintain a queue of them.
+After labelling an edge (u, v), we delete the edge and add u to our queue if u is now a leaf
+
+If the tree has at least 3 leaves,
+then it ensures that there is no path passing through (0, 1, 2)
+since there can be no path that hits 3 leaves.
+
+If the tree has only 2 leaves, then it is a bamboo and any labelling we do won't matter
+
+----
