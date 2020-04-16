@@ -1,0 +1,72 @@
+Firstly, if the sum is less than N, it is not possible
+
+Secondly, if any A[i] > (n - i), then it means that it must begin in one of
+the first (i - 1) squares.
+
+This means it would over write one of the (i - 1) colours.
+
+-----
+
+Suppose, these two conditions are not there, then it is always possible.
+
+When we paint the i-th colour, we want to be able to paint the entire thing.
+
+So, the i-th colour cannot start < i,
+because (i - 1) colours have been used and they each have at least 1 colour each.
+
+We also want to paint the whole thing, so A[i] should not start before
+
+(N - suffix_sum[i]) otherwise we can't paint the whole thing.
+
+i-th colour should start at max(i, N - suffix_sum[i])
+
+-----
+
+Now, if i starts at a position > i, we can be sure all the cells before it are coloured
+
+Since the (i - 1)-th colour started at a point where suffix_sum(i - 1) was enough to cover the entire thing
+
+-----
+
+int main()
+{
+    int no_of_cells, no_of_elements;
+    cin >> no_of_cells >> no_of_elements;
+
+    vector <int> A(no_of_elements + 5);
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        cin >> A[i];
+    }
+
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        if(A[i] + i - 1 > no_of_cells)
+        {
+            cout << "-1\n";
+
+            return 0;
+        }
+    }
+
+    vector <long long> suffix_sum(no_of_elements + 5, 0);
+    for(int i = no_of_elements; i >= 1; i--)
+    {
+        suffix_sum[i] = A[i] + suffix_sum[i + 1];
+    }
+
+    if(suffix_sum[1] < no_of_cells)
+    {
+        cout << "-1\n";
+
+        return 0;
+    }
+
+    for(long long i = 1; i <= no_of_elements; i++)
+    {
+        cout << max(i, no_of_cells - suffix_sum[i] + 1) << " ";
+    }
+
+    cout << "\n";
+    return 0;
+}
