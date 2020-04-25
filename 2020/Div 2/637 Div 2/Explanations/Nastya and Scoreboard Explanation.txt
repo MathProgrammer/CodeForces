@@ -1,0 +1,129 @@
+Here is the best strategy -
+
+We will try to make the left most strings as large an integer as possible.
+
+Suppose we have 100 operations in total.
+
+If we use 2 operations for A[1] to 9, then we have 98 operations for [2, 100].
+We have to know if this is possible.
+
+Similarly, if we use 3 operations for A[1] to 8, then we have 97 operations for [3, 100]
+We have to know if this is exactly possible.
+
+-----
+
+1. We will make a DP
+
+Let f(i, j) be true if it is possible to make A[i, ... , n] a valid string with exactly j operations
+and false otherwise
+
+To calculate the transition, we will go over all 10 digits and
+if we need to use 'd' operations to make A[i] = d,
+
+f(i, j) = true if f(i + 1, j - d) is true
+
+2. We will check all 10 digits and not stop when we first get a 'true'.
+The reason is there might be a situation when we set
+A[i] to 7 instead of 9 in order to make the entire number a valid string.
+
+-----
+
+memset(is_possible, false, sizeof(is_possible));
+
+    is_possible[no_of_digits][0] = true;
+    for(int i = no_of_digits - 1; i >= 0; i--)
+    {
+        for(int steps = 0; steps <= switched_off_stick; steps++)
+        {
+            for(int d = 0; d < DIGITS; d++)
+            {
+                int remaining_steps = steps - steps_to_convert(state[i], d);
+
+                if(remaining_steps >= 0 && is_possible[i + 1][remaining_steps])
+                {
+                    //cout << "F(" << i << "," << steps << ") = for " << d << " is possible\n";
+                    //cout << "Remaining Steps = " << remaining_steps << " And to Convert = " << steps_to_convert(state[i], d) << "\n";
+                    is_possible[i][steps] = true;
+                }
+            }
+        }
+    }
+
+-----
+
+How to construct the optimal string ?
+
+We will go from i = 0 to N - 1
+
+For each position, we will try to be greedy and place as high a digit as possible
+
+if(!is_possible[0][switched_off_stick])
+    {
+        cout << "-1\n";
+
+        return 0;
+    }
+
+    int steps_remaining = switched_off_stick;
+    string final_integer;
+    for(int i = 0 ; i < no_of_digits; i++)
+    {
+        for(int d = 9; d >= 0; d--)
+        {
+            int steps_for_suffix = steps_remaining - steps_to_convert(state[i], d);
+
+            if(steps_for_suffix >= 0 && is_possible[i + 1][steps_for_suffix])
+            {
+                final_integer.push_back('0' + d);
+
+                steps_remaining -= steps_to_convert(state[i], d);
+
+                break;
+            }
+        }
+    }
+
+    cout << final_integer << "\n";
+
+-----
+
+How to check how many steps are required to make A[i] = d, for each d from 0 to 9 ?
+
+We will have to 'hard-code' the values of 0 to 9 and then check
+
+void hardcode()
+{
+    digits.push_back("1110111"); //0
+    digits.push_back("0010010"); //1
+    digits.push_back("1011101"); //2
+    digits.push_back("1011011"); //3
+    digits.push_back("0111010"); //4
+    digits.push_back("1101011"); //5
+    digits.push_back("1101111"); //6
+    digits.push_back("1010010"); //7
+    digits.push_back("1111111"); //8
+    digits.push_back("1111011"); //9
+}
+
+int steps_to_convert(string &current, int number)
+{
+    int steps = 0;
+    string ending = digits[number];
+
+    for(int i = 0; i < NO_OF_SEGMENTS; i++)
+    {
+        if(current[i] == '1' && ending[i] == '0')
+        {
+            return oo;
+        }
+
+        if(current[i] == '0' && ending[i] == '1')
+        {
+            steps++;
+        }
+
+        //Otherwise current[i] = ending[i]
+    }
+
+    return steps;
+}
