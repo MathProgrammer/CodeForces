@@ -1,0 +1,122 @@
+Firstly, we will notice that the answer will never be more than N.
+
+We can always use at most one move for each element and make them all even.
+
+So, the answer is always <= N
+
+------
+
+If the answer is < N, then at least one element is unchanged.
+
+This means that the final gcd will be a divisor of one of the original no_of_elements
+
+The number of distinct divisors will not be too many.
+
+Unfortunately, we do not have enough time to factorise all the integers.
+
+Instead, we will randomly pick around 100 of them and
+take all the distinct prime factors of (A[i] - 1, A[i], A[i] + 1)
+
+------
+
+1. Ultimately we will change each element by some amount 
+
+2. We can always just make every integer even. This means that the total change is at most N. 
+
+3. If the total change <= N, then how many elements change by more than 1 ? 
+At most N/2 element change by more than 1 !
+In other words, at least N/2 elements change by at most 1 
+
+4. That means there are at least N/2 elements for which the 'best' factor is a divisor is one of the divisors of (A[I] - 1, A[I], A[I] + 1) 
+
+5. There are two types of elements - Those that change by at most 1 and those that change by more than 1. 
+There are at least N/2 of the former. The probability of a random element belonging to the first set is at least 1/2
+If we sample 100 elements randomly, the probability is 1/2^{100}
+
+------
+
+#include <iostream>
+#include <vector>
+#include <set>
+#include <algorithm>
+#include <random>
+
+using namespace std;
+
+void factorise(set <long long> &F, long long n)
+{
+    if(n <= 1)
+    {
+        return;
+    }
+    //cout << "N = " << n << "\n";
+
+    for(long long i = 2; i*i <= n; i++)
+    {
+        if(n%i == 0)
+        {
+            F.insert(i);
+
+            while(n%i == 0)
+            {
+                n /= i;
+            }
+        }
+    }
+
+    if(n > 1)
+    {
+        F.insert(n);
+    }
+}
+
+int main()
+{
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+
+    int no_of_elements;
+    cin >> no_of_elements;
+
+    vector <long long> A(no_of_elements + 1);
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        cin >> A[i];
+    }
+
+    const int MAX_TRIES = 100;
+    random_shuffle(A.begin() + 1, A.end());
+
+    set <long long> factors;
+    for(int i = 1; i <= MAX_TRIES && i <= no_of_elements; i++)
+    {
+        factorise(factors, A[i]);
+        factorise(factors, A[i] - 1);
+        factorise(factors, A[i] + 1);
+    }
+
+    long long minimum_moves = no_of_elements;
+    for(auto it = factors.begin(); it != factors.end(); it++)
+    {
+        long long x = *it; //cout << "X = " << x << "\n";
+
+        long long moves_here = 0;
+
+        for(int i = 1; i <= no_of_elements; i++)
+        {
+            long long moves_for_this_elements = (x - A[i]%x);
+
+            if(A[i] >= x)
+            {
+                moves_for_this_elements = min(moves_for_this_elements, A[i]%x);
+            }
+
+            moves_here += moves_for_this_elements; //cout << "Moves = " << moves_for_this_elements << "\n";
+        }
+
+        minimum_moves = min(minimum_moves, moves_here);
+    }
+
+    cout << minimum_moves << "\n";
+    return 0;
+}
