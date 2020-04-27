@@ -1,0 +1,68 @@
+Let us try to simulate the process -
+
+We start with an empty array.
+
+_ _ 1 _ _
+
+Now, for the next step, we have to put 2 in the spot next to the 1
+
+_ _ 1 2 _
+
+And now, the digit 3 can only be placed in the last position
+
+-----
+
+Claim - The final array can be broken into subarrays consisting of consecutive integers in ascending order
+
+For example
+
+x (x + 1) (x + 2) | y (y + 1) (y + 2) (y + 3) | z (z + 1) (z + 2) (z + 3)
+
+----
+
+Proof - We can prove this in with induction over the number of 'segments' already placed
+
+We have shown the base case that the first segment will cover the entire suffix
+
+-----
+
+Let us assume the 'k' segments are already placed and the suffix is already placed
+
+Let x be the first unplaced digit
+
+We can place x in any of the first empty places in the prefix
+
+(x + 1) has to be a neighbour to x
+(x + 2) has to be a neighbour to (x + 1)
+and so on till the entire prefix is over. 
+
+-----
+
+ void solve()
+{
+    int no_of_elements;
+    cin >> no_of_elements;
+
+    vector <int> P(no_of_elements + 1);
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        cin >> P[i];
+    }
+
+    int possible = true;
+    for(int i = no_of_elements; i > 1; i--)
+    {
+        if(P[i - 1] < P[i])
+        {
+            if(P[i - 1] != P[i] - 1)
+            {
+                possible = false;
+                break;
+            }
+
+            continue;
+        }
+    }
+
+    cout << (possible ? "Yes\n" : "No\n");
+}

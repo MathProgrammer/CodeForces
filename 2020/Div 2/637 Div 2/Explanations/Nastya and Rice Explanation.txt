@@ -1,0 +1,20 @@
+The minimum weight we can make n(a - b) and the maximum weight we can make n(a + b)
+
+We must check if the maximum weight is not < minimum capacity and that the
+minimum weight is not < maximum capacity
+
+-----
+
+void solve()
+{
+    int no_of_grains, a, b, c, d;
+    cin >> no_of_grains >> a >> b >> c >> d;
+
+    int minimum_weight = no_of_grains*(a - b);
+    int maximum_weight = no_of_grains*(a + b);
+
+    int minimum_capacity = (c - d);
+    int maximum_capacity = (c + d);
+
+    cout << (minimum_weight > maximum_capacity || maximum_weight < minimum_capacity ? "No\n" : "Yes\n");
+}
