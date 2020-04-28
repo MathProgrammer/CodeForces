@@ -1,0 +1,88 @@
+The idea is to be greedy.
+First, we will take a complete graph of K vertices.
+
+A vertex with K vertices has C(K, 3) triangles.
+
+We will choose the largest K such that C(K, 3) <= E
+
+-----
+
+After this, when we add the new vertex, we will connect it to as many vertices as possible so that the number of triangles is <= E
+
+If we connect this vertex with the first v vertices, then we will be adding C(v, 2) triangles.
+
+-----
+
+1. First take a complete graph
+2. Then, take a new vertex and connect it to the first i vertices so that total edges <= E
+
+-----
+
+int main()
+{
+    int no_of_edges;
+    cin >> no_of_edges;
+
+    int complete_graph = 0;
+    for(int i = 1; ; i++)
+    {
+        if(choose_3(i) > no_of_edges)
+        {
+            complete_graph = i - 1;
+            no_of_edges -= choose_3(complete_graph);
+            break;
+        }
+    }
+
+    vector <int> extra_matching;
+    while(no_of_edges > 0)
+    {
+        for(int i = complete_graph; i >= 0; i--)
+        {
+            if(choose_2(i) <= no_of_edges)
+            {
+                extra_matching.push_back(i);
+
+                no_of_edges -= choose_2(i);
+
+                break;
+            }
+        }
+    }
+
+    memset(graph, 0, sizeof(graph));
+
+    for(int i = 1; i <= complete_graph; i++)
+    {
+        for(int j = i + 1; j <= complete_graph; j++)
+        {
+            add_edge(i, j);
+        }
+    }
+
+    for(int i = 0; i < extra_matching.size(); i++)
+    {
+        int v = complete_graph + i + 1;
+        int v_limit = extra_matching[i];
+
+        for(int w = 1; w <= v_limit; w++)
+        {
+            add_edge(v, w);
+        }
+    }
+
+    int no_of_vertices = complete_graph + extra_matching.size();
+
+    cout << no_of_vertices << "\n";
+    for(int i = 1; i <= no_of_vertices; i++)
+    {
+        for(int j = 1; j <= no_of_vertices; j++)
+        {
+            cout << graph[i][j];
+        }
+
+        cout << "\n";
+    }
+
+    return 0;
+}
