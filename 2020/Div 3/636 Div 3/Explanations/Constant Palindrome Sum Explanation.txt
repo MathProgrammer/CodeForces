@@ -1,0 +1,112 @@
+Ultimately, the sum will be in [1, 2k]
+
+We will iterate over all x in [1, 2k] and find the best x.
+
+-----
+
+There are 3 types of pairs -
+
+1. Pairs with 0 changes
+2. Pairs with 1 changes
+3. Pairs with 3 changes
+
+----
+
+Pairs with 0 changes are those pairs who's sum = x
+
+Every pair can be changed to have sum = k
+
+Pairs with 2 changes = Total pair - 1_change - 2_changes
+
+Now, we only need to count the number of pairs with exactly 1 change
+
+-----
+
+We have a pair (A[i], A[n - i + 1])
+
+What are the possible sums we can get ?
+
+Suppose, without loss of generality, that A[i] < A[n - i + 1]
+
+Then, the smallest sum we can get is (A[i], 1)
+And, the largest sum we can get is (k, A[n - i + 1])
+
+We can get every sum in the range [A[i] + 1, A[n - i + 1] + k]
+
+-----
+
+Now, let us discuss a different problems,
+
+We have a list of lines -
+
+[L1, R1]
+[L2, R2]
+[L3, R3]
+.
+.
+[Ln, Rn]
+
+How do we calculate the number of lines that cover the point x ?
+
+Let us say that a line [L, R] starts at point L and ends at point R
+
+Then, Lines Covering x = lines Covering (x - 1) + Lines starting from(x) - Lines ending at (x)
+
+-----
+
+We can do 1 sweep and calculate the number of lines meeting at every x from [1, 2k]
+
+----
+
+One thing to keep in mind is that the range [A[i] + 1, A[n - i + 1] + k] covers (A[i], A[n - i + 1])
+
+But (A[i], A[n - i + 1]) requires 0 changes
+
+So, the number of 1-changes for x = Lines Covering x - Frequency(x)
+
+The number of 2-changes for x = (Total Pairs - Number of 1-changes - Number of 0-changes)
+
+-----
+
+void solve()
+{
+    int no_of_elements, k;
+    cin >> no_of_elements >> k;
+
+    vector <int> A(no_of_elements + 1);
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        cin >> A[i];
+    }
+
+    vector <int> frequency(2*k + 1, 0);
+    for(int i = 1; i <= no_of_elements/2; i++)
+    {
+        frequency[A[i] + A[no_of_elements - i + 1]]++;
+    }
+
+    vector <int> lines_starting_at(2*k + 2);
+    vector <int> lines_ending_at(2*k + 2);
+    for(int i = 1; i <= no_of_elements/2; i++)
+    {
+        lines_starting_at[min(A[i], A[no_of_elements - i + 1]) + 1]++;
+        lines_ending_at[max(A[i], A[no_of_elements - i + 1]) + k + 1]++;
+    }
+
+    vector <int> lines_passing_through(2*k + 1, 0);
+    for(int i = 1; i <= 2*k; i++)
+    {
+        lines_passing_through[i] = lines_passing_through[i - 1] + lines_starting_at[i] - lines_ending_at[i];
+     }
+
+    int answer = no_of_elements;
+    for(int x = 1; x <= 2*k; x++)
+    {
+        int changes_1 = lines_passing_through[x] - frequency[x];
+        int changes_2 = no_of_elements/2 - changes_1 - frequency[x];
+
+        answer = min(answer, changes_1 + 2*changes_2);
+    }
+
+    cout << answer << "\n";
+}
