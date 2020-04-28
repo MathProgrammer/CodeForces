@@ -8,7 +8,7 @@ There are 3 types of pairs -
 
 1. Pairs with 0 changes
 2. Pairs with 1 changes
-3. Pairs with 3 changes
+3. Pairs with 2 changes
 
 ----
 
