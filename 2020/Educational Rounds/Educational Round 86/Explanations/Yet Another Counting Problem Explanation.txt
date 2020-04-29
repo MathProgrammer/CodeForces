@@ -1,0 +1,115 @@
+Claim - Let us write 1 if an integer satisfies the property
+
+(x mod a) mod b != (x mod b) mod a
+
+And write a 0 otherwise.
+
+This pattern will be cyclic about the LCM(A, B)
+
+-----
+
+For example, if A = 4, B = 6
+
+0 0 0 0 0 1 1 1 1 1 1 0
+
+This is the pattern for [1, 12] and this pattern continually repeats
+
+-----
+
+Proof -
+
+x mod a = (x mod LCM) mod a
+x mod b = (x mod LCM) mod b
+
+So, (x mod a) mod b = ( (x mod LCM) mod a ) mod b
+and (x mod b) mod a = ( (x mod LCM) mod b ) mod a
+
+Whether (x mod a) mod b = (x mod b) mod a is true or not,
+it remains the same if we replace x by (x mod LCM)
+
+-----
+
+So, it is clear that the patter in cyclic over LCM
+
+-----
+
+Now, to answer each query, We will find the Count(R) - Count(L - 1)
+
+How to find Count(x) ?
+
+Where Count(x) is the number of 1's till x
+
+The pattern is cyclic about LCM so we will find out the number of 'complete cycles' till x
+
+This is equal to (X/LCM)
+
+Every complete cycle has Count(LCM) ones
+
+And then we will have Count(X mod LCM) ones
+
+So, all we have to do is precompute the number of 1s in [1, LCM] and then
+
+(X/LCM) C[LCM] + C[LCM mod X]
+
+-----
+
+long long gcd(long long x, long long y)
+{
+    if(min(x, y) == 0)
+    {
+        return max(x, y);
+    }
+
+    return gcd(max(x, y)%min(x, y), min(x, y));
+}
+
+long long get_count(vector <long long> &sum, long long lcm, long long N)
+{
+    long long full_cycles = N/lcm;
+
+    return full_cycles*sum[lcm] + sum[N%lcm];
+}
+
+void solve()
+{
+    int a, b, no_of_queries;
+    cin >> a >> b >> no_of_queries;
+
+    if(a > b)
+    {
+        swap(a, b);
+    }
+
+    long long lcm = (a*b)/gcd(a, b);
+    vector <long long> good_integers_sum(lcm + 1, 0);
+    for(int i = 1; i <= lcm; i++)
+    {
+        good_integers_sum[i] = good_integers_sum[i - 1] + ( (i%a)%b != (i%b)%a );
+    }
+
+    while(no_of_queries--)
+    {
+        long long left, right;
+        cin >> left >> right;
+
+        long long answer = get_count(good_integers_sum, lcm, right) - get_count(good_integers_sum, lcm, left - 1);
+
+        cout << answer << " ";
+    }
+
+    cout << "\n";
+}
+
+int main()
+{
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+
+    int no_of_test_cases;
+    cin >> no_of_test_cases;
+
+    while(no_of_test_cases--)
+        solve();
+
+    return 0;
+}
