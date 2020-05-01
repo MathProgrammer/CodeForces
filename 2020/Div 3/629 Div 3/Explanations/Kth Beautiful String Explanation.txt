@@ -1,0 +1,60 @@
+There can only be 2 b's
+
+Let us iterate over the position of the first b from the left.
+
+If b is in position i, then the second b can be placed in (i - 1) positions.
+
+When b is in position 2, there can be 1 string
+When b is in position 3, there can be 2 strings
+
+And so on
+
+-----
+
+We will keep changing the position of the first b till the number of strings is more than K
+
+Once the number of substrings is more than K, we will find the position of the second b
+
+-----
+
+Initially, the second 'b' is at the position next to the first 'b'.
+Suppose the first 'b' is fixed at position 5,
+
+then we can have
+aaab baaa
+aaab abaa
+aaab aaba
+aaab aaab
+
+We will move the second 'b' (no_of_strings - k) positions from position 4
+
+So, position_2 = position_1 - (no_of_strings - k) - 1
+
+------
+
+void solve()
+{
+    int length, k;
+    cin >> length >> k;
+
+    int position_1 = 0, position_2 = 0;
+    int string_position = 0;
+    for(int i = 2; i <= length; i++)
+    {
+        string_position += (i - 1);
+        if(string_position >= k)
+        {
+            position_1 = i;
+            break;
+        }
+    }
+
+    position_2 = position_1 - (string_position - k) - 1;
+
+    for(int i = length; i >= 1; i--)
+    {
+        cout << (i == position_1 || i == position_2 ? 'b' : 'a');
+    }
+
+    cout << "\n";
+}
