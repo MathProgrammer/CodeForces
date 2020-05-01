@@ -1,0 +1,31 @@
+We can use 1 fact about binary integers and powers of 2
+
+2^i = (2^{i - 1} + 2^{i - 2} + ... + 2^1 + 2^0) + 1
+
+So 2^n is greater than all other powers of 2 combined.
+
+So, 2^n will be in one pile along with the lightest (n/2 - 1) coins
+
+All the other coins will be in the other pile.
+
+-----
+
+void solve()
+{
+    int n;
+    cin >> n;
+
+    int heavy_pile = (1 << n);
+    for(int i = 1; i < n/2; i++)
+    {
+        heavy_pile += (1 << i);
+    }
+
+    int light_pile = 0;
+    for(int i = n/2; i < n; i++)
+    {
+        light_pile += (1 << i);
+    }
+
+    cout << (heavy_pile - light_pile) << "\n";
+}
