@@ -1,0 +1,180 @@
+There can be no row or column with more than 1 black segment
+
+The reason is that if there is a row with more than 1 black segment,
+then we can force a North Pole to reach the white squares between them.
+
+North Magnets can visit every black square so they should be able to visit both black segments
+Which means both black segments have a South Magnet which attracts the North Magnet in the other segment
+
+-----
+
+If there is a row with 0 black cells and is all white,
+the South Magnet has to be placed in a column with 0 black cells.
+
+If there is a row with 0 black cells and is all white and we place it in a column which has black cells,
+it will make the North Magnet visit the white cell which we don't want.
+
+So, a South Magnet should be placed at the intersection of a white row and white column
+
+-----
+
+If these two conditions are met, then we can see that it is sufficient to have 1 North Magnet per component
+
+As there is a South Magnet in every row and every column, it will help us to get the North Magnet into every black cell of the segment
+
+-----
+
+1. Each row and Column has at most 1 black segment
+2. If there is an all white row, there has to be an all white column
+3. Otherwise, we will count the number of components in the graph
+
+-----
+
+#include <iostream>
+#include <cstdio>
+#include <vector>
+#include <cstring>
+
+using namespace std;
+
+const int MAX_N = 1005, NO_OF_NEIGHOURS = 4;
+const char BLACK = '#', WHITE = '.';
+char grid[MAX_N][MAX_N];
+int visited[MAX_N][MAX_N];
+int next_r[NO_OF_NEIGHOURS] = {-1, 0, 0, 1};
+int next_c[NO_OF_NEIGHOURS] = {0, 1, -1, 0};
+int rows, columns;
+
+int inside_grid(int x, int y)
+{
+    return (1 <= x && x <= rows && 1 <= y && y <= columns);
+}
+
+void dfs(int x, int y)
+{
+    visited[x][y] = true;
+
+    for(int n = 0; n < NO_OF_NEIGHOURS; n++)
+    {
+        int next_x = x + next_r[n];
+        int next_y = y + next_c[n];
+
+        if(inside_grid(next_x, next_y) && grid[next_x][next_y] == BLACK && !visited[next_x][next_y])
+        {
+            dfs(next_x, next_y);
+        }
+    }
+}
+
+int main()
+{
+    scanf("%d %d", &rows, &columns);
+
+    for(int i = 1; i <= rows; i++)
+    {
+        scanf("%s", grid[i] + 1);
+    }
+
+    vector <int> row_frequency(rows + 1);
+    for(int i = 1; i <= rows; i++)
+    {
+        for(int j = 1; j <= columns; j++)
+        {
+            if(grid[i][j] == BLACK)
+            {
+                row_frequency[i]++;
+            }
+        }
+    }
+
+    vector <int> column_frequency(columns + 1);
+    for(int j = 1; j <= columns; j++)
+    {
+        for(int i = 1; i <= rows; i++)
+        {
+            if(grid[i][j] == BLACK)
+            {
+                column_frequency[j]++;
+            }
+        }
+    }
+
+    int possible = true, all_white_row = false, all_white_column = false;
+    for(int i = 1; i <= rows; i++)
+    {
+        int black_cells = 0;
+
+        for(int j = 1; j <= columns; j++)
+        {
+            if(grid[i][j] == BLACK)
+            {
+                black_cells++;
+
+                if(j + 1 <= columns && grid[i][j + 1] == WHITE && black_cells != row_frequency[i])
+                {
+                    possible = false;
+                    break;
+                }
+            }
+        }
+
+        if(row_frequency[i] == 0)
+        {
+            all_white_row = true;
+        }
+    }
+
+    for(int j = 1; j <= columns; j++)
+    {
+        int black_cells = 0;
+
+        for(int i = 1; i <= rows; i++)
+        {
+            if(grid[i][j] == BLACK)
+            {
+                black_cells++;
+
+                if(i + 1 <= rows && grid[i + 1][j] == WHITE && black_cells != column_frequency[j])
+                {
+                    possible = false;
+                    break;
+                }
+            }
+        }
+
+        if(column_frequency[j] == 0)
+        {
+            all_white_column = true;
+        }
+    }
+
+    if( (all_white_row && !all_white_column) || (!all_white_row && all_white_column) )
+    {
+        possible = false;
+    }
+
+    if(!possible)
+    {
+        cout << "-1\n";
+
+        return 0;
+    }
+
+    int no_of_components = 0;
+    memset(visited, false, sizeof(visited));
+
+    for(int i = 1; i <= rows; i++)
+    {
+        for(int j = 1; j <= columns; j++)
+        {
+            if(grid[i][j] == BLACK && !visited[i][j])
+            {
+                dfs(i, j);
+                no_of_components++;
+            }
+        }
+    }
+
+    cout << no_of_components << "\n";
+    return 0;
+}

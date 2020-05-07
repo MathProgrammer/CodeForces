@@ -1,0 +1,54 @@
+Two integers i and j will intersect if
+
+i + A[i] = j + A[j] (mod N)
+
+So, we have to ensure that all N moduli - (0 + A[0]), (1 + A[1]), ... , (N - 1 + A[N - 1]) are unique
+
+If any two of them are equal, there will be a collision.
+
+We have to ensure that each modulus occurs exactly one time.
+
+If any modulus between [0, N - 1] does not occur, then by the Pigeonhole Principle,
+some other modulus will occur at least twice
+
+Be careful to handle negative integers properly and ensure all the moduli are positive
+
+-----
+
+void solve()
+{
+    int no_of_elements;
+    cin >> no_of_elements;
+
+    vector <int> A(no_of_elements);
+    for(int i = 0; i < no_of_elements; i++)
+    {
+        cin >> A[i];
+    }
+
+    vector <int> frequency_mod(no_of_elements);
+    for(int i = 0; i < no_of_elements; i++)
+    {
+        A[i] %= no_of_elements;
+
+        if(A[i] < 0)
+        {
+            A[i] += 2*no_of_elements;
+
+            A[i] %= no_of_elements;
+        }
+
+        frequency_mod[ (i + A[i])%no_of_elements ]++;
+    }
+
+    int all_unique = true;
+    for(int i = 0; i < no_of_elements; i++)
+    {
+        if(frequency_mod[i] != 1)
+        {
+            all_unique = false;
+        }
+    }
+
+    cout << (all_unique ? "YES\n" : "NO\n");
+}
