@@ -1,0 +1,19 @@
+If we have only 1 row or 1 column, we can achieve any length of it 
+
+Otherwise, we can only achieve 2x2 and no other combination 
+
+-----
+
+void solve()
+{
+    int rows, columns;
+    cin >> rows >> columns;
+    
+    if(min(rows, columns) == 1)
+    {
+        cout << "YES\n";
+        return;
+    }
+    
+    cout << (max(rows, columns) <= 2 ? "YES\n" : "NO\n");
+}
