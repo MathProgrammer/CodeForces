@@ -1,0 +1,93 @@
+First, let us check if it is possible in less than 1 round.
+
+Then, we will check that the sum of the entire array is not non negative.
+If it is, then we will never find an answer.
+
+Suppose it isn't, we will always find an answer.
+The answer will consist of some number of full cycles followed by a partial cycle.
+
+Now, it might be an error if we try to write H as
+
+H = q.P[n] + r
+
+1000 6
+-100 -200 -300 125 77 -4
+
+Is the test case for this. If we calculate the number of total cycles as 1000/Sum, it gives us 2 cycles and then 2 more elements leading to 14 steps.
+
+But, there is actually an answer in 9 steps.
+
+To capture such answers, we have to do something slightly different.
+
+We will iterate over each i from 1 to N, and calculate the number of cycles required for the game to end at this i,
+
+Find the x, so that H + x.P[n] + P[i] ≤ 0
+
+For finding x, we have to divide (H + P[i])/x and take the ceil of it
+
+-----
+
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+long long ceil(long long n, long long d)
+{
+    return (n/d) + (n%d != 0);
+}
+
+int main()
+{
+    long long H, no_of_elements;
+    cin >> H >> no_of_elements;
+
+    vector <long long> A(no_of_elements + 1);
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        cin >> A[i];
+    }
+
+    vector <long long> prefix_sum(no_of_elements + 1);
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        prefix_sum[i] = A[i] + prefix_sum[i - 1];
+    }
+
+    long long answer = 0;
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        if(H + prefix_sum[i] <= 0)
+        {
+            answer = i;
+            break;
+        }
+    }
+
+    long long sum = abs(prefix_sum[no_of_elements]);
+
+    if(answer != 0)
+    {
+        cout << answer << "\n";
+
+        return 0;
+    }
+    else if(prefix_sum[no_of_elements] >= 0)
+    {
+        cout << "-1\n";
+
+        return 0;
+    }
+
+    answer = 2e18;
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        //H + x.P[n]  + P[i] = 0
+        long long rounds_required = ceil(H + prefix_sum[i], sum);
+
+        answer = min(answer, rounds_required*no_of_elements + i);
+    }
+
+    cout << answer << "\n";
+    return 0;
+}
