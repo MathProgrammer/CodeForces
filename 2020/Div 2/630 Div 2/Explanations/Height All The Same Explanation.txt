@@ -1,0 +1,131 @@
+We have to make 2 crucial observations
+
+1. The integer doesn't matter. Only the parity matters.
+We can make all integers of the same parity equal.
+
+2. It is possible to flip the parities of two cells u and v on the board,
+no matter where they are !
+
+Suppose there is a path from u to v
+
+u t1 t2 t3 ... tk v
+
+We will apply the second operation to
+(u, t1)
+(t1, t2)
+.
+.
+,
+(tk, v)
+
+u and v increase by 1 whereas all others increase by 2.
+This means that we can flip the parities of any two cells together.
+
+-----
+
+If there are an even number of even cells, we can make them all odd
+
+If there are an even number of odd cells, we can make them all even
+
+The only situation where we can't make all integers equal is when
+there are an odd number of even as well odd number of odd cells
+
+-----
+
+Now, let us try to count the number of boards.
+
+Let G = MN
+Let the number of ways to fill a cell be R - (L - 1) = N
+
+Now, if G is odd, then there must be either an even number of odd cells or an even number of even cells
+
+So every board is good.
+
+In that case, the answer = N^G
+
+------
+
+What is G is even ?
+
+We want the cases where either there are an even number of Even cells or even number of Odd cells
+
+Let the number of ways to fill a cell with an even number be E
+Let the number of ways to fill a cell with an odd number be O
+
+We want
+
+C(G, 0) E^0 O^G + C(G, 2) E^2 O^{G - 2} + ... + C(G, G) E^G O^0
+
+There is a beautiful combinatoric trick for this
+
+This is basically the expansion of (O + E)^G with the odd terms removed
+
+Let us look at the expansion of (O + E)^G !
+
+Here, all the odd terms have a negative sign !
+
+So, (O + E)^G + (O + E)^G gives us twice the number we want.
+
+So, we have to divide this by 2.
+
+We have to be careful that we are dealing it via MOD, so we have to multiply with inverse(2) rather than divide by 2
+
+-----
+
+#include <iostream>
+
+using namespace std;
+
+long long power_mod(long long x, long long power, long long MOD)
+{
+    long long result = 1;
+
+    while(power)
+    {
+        if(power%2)
+            result = (result*x)%MOD;
+
+        x = (x*x)%MOD;
+        power = power >> 1;
+    }
+
+    return result;
+}
+
+long long inverse(long long x, long long MOD)
+{
+    return power_mod(x, MOD - 2, MOD);
+}
+
+int main()
+{
+    long long rows, columns, left, right;
+    cin >> rows >> columns >> left >> right;
+
+    long long grid = rows*columns;
+
+    long long answer = 1;
+
+    const int MOD = 998244353;
+
+    if(grid%2 == 1)
+    {
+        long long one_cell = right - (left - 1);
+
+        answer = power_mod(one_cell, grid, MOD);
+    }
+    else
+    {
+        long long even_cells = right/2 - (left - 1)/2;
+        long long odd_cells = (right - (left - 1)) - even_cells;
+
+        answer = (power_mod(odd_cells + even_cells, grid, MOD) + power_mod(even_cells - odd_cells, grid, MOD))%MOD;
+        answer *= inverse(2, MOD);
+
+        answer %= MOD;
+    }
+
+    cout << answer << "\n";
+
+    return 0;
+}
