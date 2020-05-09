@@ -1,0 +1,131 @@
+First, we will calculate the minimum and maximum sum possible.
+
+The minimum sum is achieved when the tree is as balanced as possible.
+This means that level 2 is completely filled before moving to level 3
+Level 3 is completely filled before moving to level 4
+And so on
+
+The maximum sum is achieved when the tree is a chain
+1 + 2 + 3 + ... + n - 1
+
+If the desired sum is outside this range, then it is not possible.
+
+Otherwise, we will start with the tree having maximum sum and
+keep reducing the sum by 1 till we arrive at the desired sum
+
+-----
+
+How to reduce the sum by 1 ?
+
+We will choose the leaf with the lowest depth d
+We will try to move it to some vertex of depth (d - 2) which has less than 2 children
+
+If a leaf can't be moved in this way, we will consider it 'immobile' and search for another one 
+at a greater depth
+
+This process will continue till we reach the desired sum
+Of course, we will always reach the desired sum because
+this process only ends when the tree becomes completely balanced and
+we have already checked that condition
+
+-----
+
+int is_power_of_2(int n)
+{
+    return ( (n&(n - 1)) == 0 );
+
+
+}
+
+void solve()
+{
+    int no_of_vertices, total_depth_sum;
+    cin >> no_of_vertices >> total_depth_sum;
+
+    long long maximum_sum = (no_of_vertices*(no_of_vertices - 1))/2;
+    long long minimum_sum = 0;
+    for(int i = 1, level = 0; i <= no_of_vertices; i++)
+    {
+        if(is_power_of_2(i))
+        {
+            level++;
+        }
+
+        minimum_sum += (level - 1);
+    }
+
+    if(total_depth_sum < minimum_sum || maximum_sum < total_depth_sum)
+    {
+        cout << "NO\n";
+
+        return;
+    }
+
+    vector <int> depth(no_of_vertices + 1, 0);
+    vector <int> parent(no_of_vertices + 1, 0);
+    vector <int> no_of_children(no_of_vertices + 1, 1);
+    for(int i = 1; i <= no_of_vertices; i++)
+    {
+        parent[i] = i - 1;
+        depth[i] = i - 1;
+    }
+
+    no_of_children[no_of_vertices] = 0;
+
+    vector <int> immobile(no_of_vertices + 1, false);
+
+    for(long long sum = maximum_sum; sum > total_depth_sum; )
+    {
+        int first_v = 0;
+        for(int i = 1; i <= no_of_vertices; i++)
+        {
+            if(!immobile[i] && no_of_children[i] == 0 &&
+               (first_v == 0 || depth[i] < depth[first_v]))
+            {
+                first_v = i;
+            }
+        }
+
+        int best_parent = 0;
+        for(int i = 1; i <= no_of_vertices; i++)
+        {
+            if(depth[i] == depth[first_v] - 2 && no_of_children[i] < 2)
+            {
+                best_parent = i;
+            }
+        }
+
+        if(best_parent == 0)
+        {
+            immobile[first_v] = true;
+            continue;
+        }
+
+        sum--;
+
+        no_of_children[parent[first_v]]--;
+        depth[first_v]--;
+
+        parent[first_v] = best_parent;
+        no_of_children[best_parent]++;
+    }
+
+    cout << "YES\n";
+    for(int i = 2; i <= no_of_vertices; i++)
+    {
+        cout << parent[i] << " ";
+    }
+
+    cout << "\n";
+}
+
+int main()
+{
+    int no_of_test_cases;
+    cin >> no_of_test_cases;
+
+    while(no_of_test_cases--)
+        solve();
+
+    return 0;
+}
