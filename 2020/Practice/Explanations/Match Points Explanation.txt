@@ -1,0 +1,66 @@
+1. We can actually do binary search and check if it is possible to obtain K pairs
+
+2. To check if it is possible to obtain K pairs, we will try to match the first K points with the last K points.
+
+3. How to do the matching ?
+Let us take A[1] and match it with A[n - k + 1]
+Suppose we have two points L1 < L2 and R1 < R2
+Then, it is always best to pair [L1, R1], [L2, R2]
+
+If [L1, R2] and [L2, R1] are good segments, then even
+[L1, R1] and [L2, R2] are good segments.
+
+As R1 is paired with a smaller element in L1 and L2 is paired with a larger element R2
+
+Using this Exchange Argument we can see that it is always best to pair
+A[1], A[n - k + 1]
+A[2], A[n - k + 2]
+.
+.
+A[k], A[n]
+
+-----
+
+int main()
+{
+    int no_of_elements, distance;
+    cin >> no_of_elements >> distance;
+
+    vector <int> A(no_of_elements + 1);
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        cin >> A[i];
+    }
+
+    sort(all(A));
+
+    int left_pairs = 0, right_pairs = no_of_elements/2 + 1;
+    while(right_pairs - left_pairs > 1)
+    {
+        int mid = (left_pairs + right_pairs)/2;
+
+        int good_pairs = 0;
+
+        for(int i = 1; i <= mid; i++)
+        {
+            if(A[no_of_elements - mid + i] - A[i] >= distance)
+            {
+                good_pairs++;
+            }
+        }
+
+        if(good_pairs == mid)
+        {
+            left_pairs = mid;
+        }
+        else
+        {
+            right_pairs = mid;
+        }
+    }
+
+    int answer = left_pairs;
+
+    cout << answer << "\n";
+    return 0;
+}
