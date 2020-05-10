@@ -1,0 +1,84 @@
+Let us try to count the contribution of all sequences who's GCD = G
+
+Now, suppose there are n elements which are divisible by G.
+
+What is the contribution of each such sequence ?
+
+The contribution is
+
+1. C(n, 1) + 2. C(n, 2) + 3. C(n, 3) + ... + n. C(n, n)
+= sum k C(n, k) = sum k n/k sum(n - 1, k - 1) = n 2^{n - 1}
+
+Let this be f(n)
+
+-----
+
+Now, there is a problem here.
+
+This is all the sequences which are divisible by G.
+
+But, they might also be divisible by 2G, 3G or some other multiple of G,
+which means G might not be it's GCD
+
+To resolve this issue,
+We will start from G = 10^6 and then go downwards to 2
+
+When we are at G = i, we will maintain the invariant that we have calculated
+f(i + 1), f(i + 2), ... , f(10^6)
+
+f(G) = n 2^{n - 1} - f(2G) - f(3G) - ....
+
+This will give us exactly the contribution of all sequences who's GCD = G
+
+-----
+
+int main()
+{
+    const int MAX_N = 1e6 + 5, MOD = 1e9 + 7;
+    int no_of_elements;
+    cin >> no_of_elements;
+
+    vector <int> A(no_of_elements + 1);
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        cin >> A[i];
+    }
+
+    vector <int> multiple_count(MAX_N, 0);
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        multiple_count[A[i]]++;
+    }
+
+    for(int m = 1; m < MAX_N; m++)
+    {
+        for(int multiple = 2*m; multiple < MAX_N; multiple += m)
+        {
+            multiple_count[m] += multiple_count[multiple];
+        }
+    }
+
+    vector <long long> answer(MAX_N, 0);
+    for(int m = MAX_N - 1; m >= 1; m--)
+    {
+        answer[m] = multiple_count[m]*power_mod(2, multiple_count[m] - 1, MOD);
+
+        answer[m] %= MOD; //cout << answer[m] << "\n";
+
+        for(int multiple = 2*m; multiple < MAX_N; multiple += m)
+        {
+            answer[m] = (answer[m] - answer[multiple] + MOD)%MOD;
+        }
+        //cout << answer[m] << "\n";
+        //cout << "Answer " << m << " = " << answer[m] << "\n";
+    }
+
+    long long total_answer = 0;
+    for(int m = 2; m < MAX_N; m++)
+    {
+        total_answer = (total_answer + answer[m]*m)%MOD;
+    }
+
+    cout << total_answer << "\n";
+    return 0;
+}
