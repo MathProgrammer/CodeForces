@@ -1,0 +1,154 @@
+Here is the crucial insight
+
+If an element in [L, R] divides every other element in it, then it is the GCD
+
+Now, for each segment how do we check if the GCD occurs in it ?
+
+If the GCD occurs in it, then the GCD is the minimum integer
+
+GCD[L, R] = Min[L, R]
+
+Is the condition we need to check
+
+-----
+
+Let us use Sparse Tables for this as there are no update operations required
+
+We will do binary search on the length and
+settle the on the maximum length such that GCD[segment] = Minimum[segment]
+
+-----
+
+After finding out the maximum length, we will just collect all of them in a vector
+
+-----
+
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+const int MAX_N = 3e5 + 5, MAX_L = 20;
+int no_of_elements, A[MAX_N];
+int gcd_table[MAX_N][MAX_L], min_table[MAX_N][MAX_L];
+
+int gcd(int x, int y)
+{
+    if(min(x, y) == 0)
+    {
+        return max(x, y);
+    }
+
+    return gcd(max(x, y)%min(x, y), min(x, y));
+}
+
+int is_bit_set(int n, int bit)
+{
+    return ( (n&(1 << bit)) != 0 );
+}
+
+void precompute()
+{
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        gcd_table[i][0] = A[i];
+        min_table[i][0] = A[i];
+    }
+
+    for(int l = 1; l < MAX_L; l++)
+    {
+        int jump = (1 << (l - 1));
+
+        for(int i = 1; i + (1 << l) - 1 <= no_of_elements; i++)
+        {
+            int next = i + jump;
+
+            gcd_table[i][l] = gcd(gcd_table[i][l - 1], gcd_table[next][l - 1]);
+            min_table[i][l] = min(min_table[i][l - 1], min_table[next][l - 1]);
+        }
+    }
+}
+
+pair <int, int> compute(int i, int length)
+{
+    int gcd_here = A[i], min_here = A[i];
+    for(int bit = MAX_L; bit >= 0; bit--)
+    {
+        if(is_bit_set(length, bit))
+        {
+            gcd_here = gcd(gcd_here, gcd_table[i][bit]);
+            min_here = min(min_here, min_table[i][bit]);
+
+            i += (1 << bit);
+        }
+    }
+
+    return make_pair(gcd_here, min_here);
+}
+
+int possible(int length)
+{
+    for(int i = 1; i + length - 1 <= no_of_elements; i++)
+    {
+        pair <int, int> answer = compute(i, length);
+
+        int gcd_here = answer.first, minimum_here = answer.second;
+
+        if(gcd_here == minimum_here)
+        {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+int main()
+{
+    cin >> no_of_elements;
+
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        cin >> A[i];
+    }
+
+    precompute();
+
+    int left = 1, right = no_of_elements + 1;
+    while(right - left > 1)
+    {
+        int mid = (left + right)/2;
+
+        if(possible(mid))
+        {
+            left = mid;
+        }
+        else
+        {
+            right = mid;
+        }
+    }
+
+    vector <int> answer;
+    for(int i = 1; i + left - 1 <= no_of_elements; i++)
+    {
+        pair <int, int> answer_here = compute(i, left);
+        int gcd_here = answer_here.first, min_here = answer_here.second;
+
+        if(gcd_here == min_here)
+        {
+            answer.push_back(i);
+        }
+    }
+
+    cout << answer.size() << " " << left - 1 << "\n";
+    for(int i = 0; i < answer.size(); i++)
+    {
+        cout << answer[i] << " ";
+    }
+
+    cout << "\n";
+
+    return 0;
+}
