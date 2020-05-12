@@ -1,0 +1,75 @@
+Let us make 1 observation
+
+2^i > 1  + 2 + 2^2 + ... + 2^{i - 1}
+
+So, let us look at the largest side of the triangle.
+
+Let it be 2^i
+
+One of the other two sides also should be = 2^i,
+
+Otherwise, if both sides 2^j and 2^k are < 2^i,
+it will not satisfy the triangle inequality
+
+-----
+
+Every triangle is of this form
+
+(2^i, 2^j, 2^j) i < j
+(2^i, 2^i, 2^i)
+
+-----
+
+Let us be greedy.
+We will go through the sticks greedily
+
+For each i, we will try to pair 2 of it's sticks with as many of the sticks
+remaining in the prefix.
+
+Then, we will try to make as many equilateral triangles as possible
+
+-----
+
+This solution is always optimal.
+Let us suppose there is some optimal solution where the sticks of our triplet (i, j, j)
+are used in different triplets
+
+(i, k1, k1), (j, k2, k2) and (j, k3, k3) we can swap them to have the same arrangement
+(i, j, j), (k1, k2, k2) and (k1, k3, k3)
+Our solution won't get worse.
+
+We can apply a similar exchange argument to all cases relating to how many sticks we use 
+-----
+
+
+int main()
+{
+    int no_of_sticks;
+    cin >> no_of_sticks;
+
+    vector <int> A(no_of_sticks + 1);
+    for(int i = 1; i <= no_of_sticks; i++)
+    {
+        cin >> A[i];
+    }
+
+    long long no_of_triangles = 0;
+    int remaining_sticks = 0;
+    for(int highest = 1; highest <= no_of_sticks; highest++)
+    {
+        int triangles_here = min(remaining_sticks, A[highest]/2);
+
+        no_of_triangles += triangles_here;
+
+        A[highest] -= 2*triangles_here;
+        remaining_sticks = remaining_sticks - triangles_here;
+
+        no_of_triangles += A[highest]/3;
+        A[highest] %= 3;
+
+        remaining_sticks += A[highest];
+    }
+
+    cout << no_of_triangles << "\n";
+    return 0;
+}
