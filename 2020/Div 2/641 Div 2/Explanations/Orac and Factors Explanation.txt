@@ -1,0 +1,38 @@
+Let us notice that f(n) = 2 for all even integers.
+
+If n is odd, then (f(n) + n) is even
+
+So, we can do n = (f(n) + n) for our first step
+
+And for the remaining (k - 1) steps, we will just add 2 to n !
+
+The main idea here is observing that f(n) = 2 for all even
+
+-----
+
+void precompute()
+{
+    for(int i = 2; i < MAX_N; i++)
+    {
+        for(long long multiple = i; multiple < MAX_N; multiple += i)
+        {
+            if(smallest_multiple[multiple] == 0)
+            {
+                smallest_multiple[multiple] = i;
+            }
+        }
+    }
+}
+
+void solve()
+{
+    long long n, k;
+    cin >> n >> k;
+
+    n += smallest_multiple[n];
+    k--;
+
+    n += k*2;
+
+    cout << n << "\n";
+}
