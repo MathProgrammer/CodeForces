@@ -1,0 +1,132 @@
+void precompute()
+{
+    vector <int> is_prime(MAX_N, true);
+    
+    for(int i = 2; i < MAX_N; i++)
+    {
+        if(is_prime[i])
+        {
+            primes.push_back(i);
+        }
+        
+        for(int j = 0; j < primes.size() && i*primes[j] < MAX_N; j++)
+        {
+            is_prime[i*primes[j]] = false;
+            
+            if(i%primes[j] == 0)
+            {
+                break;
+            }
+        }
+    }
+}
+
+int main()
+{
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+    
+    precompute();
+    
+    vector <pair <int, int> > minimum_exponents(primes.size() + 1, make_pair(100, 100));
+    
+    int no_of_elements;
+    cin >> no_of_elements;
+    
+    vector <long long> A(no_of_elements + 1, 0);
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        cin >> A[i];
+    }
+    
+    if(no_of_elements == 2)
+    {
+        cout << (A[1]*A[2])/gcd(A[1], A[2]) << "\n";
+        
+        return 0;
+    }
+    
+    vector <int> frequency(MAX_N, 0);
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        frequency[A[i]]++;
+    }
+    
+    vector <int> no_of_multiples(primes.size() + 1, 0);
+    for(int i = 0; i < primes.size(); i++)
+    {
+        int p = primes[i];
+        
+        for(int multiple = p; multiple < MAX_N; multiple += p)
+        {
+            no_of_multiples[i] += frequency[multiple];
+        }
+    }
+    
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        for(int j = 0; j < primes.size() && A[i] > 1; j++)
+        {
+            int p = primes[j];
+            int exponent_here = 0;
+            
+            if(no_of_multiples[j] <= no_of_elements - 2)
+            {
+                continue;
+            }
+            
+            while(A[i]%p == 0)
+            {
+                exponent_here++;
+                
+                A[i] /= p;
+            }
+            
+            if(exponent_here <= minimum_exponents[j].first)
+            {
+                minimum_exponents[j].second = minimum_exponents[j].first;
+                minimum_exponents[j].first = exponent_here;
+            }
+            else if(exponent_here < minimum_exponents[j].second)
+            {
+                minimum_exponents[j].second = exponent_here;
+            }
+        }
+        
+        if(A[i] > 1)
+        {
+            int j = lower_bound(primes.begin(), primes.end(), A[i]) - primes.begin();
+            
+            if(no_of_multiples[j] > no_of_elements - 2)
+            {
+                int exponent_here = 1;
+            
+                if(exponent_here <= minimum_exponents[j].first)
+                {
+                    minimum_exponents[j].second = minimum_exponents[j].first;
+                    minimum_exponents[j].first = exponent_here;
+                }
+                else if(exponent_here < minimum_exponents[j].second)
+                {
+                    minimum_exponents[j].second = exponent_here;
+                }
+            }
+        }
+    }
+    
+    long long answer = 1;
+    for(int p = 0; p < primes.size(); p++)
+    {
+        int exponent = minimum_exponents[p].second;
+        if(no_of_multiples[ p ] <= no_of_elements - 2) continue;
+        
+        for(int j = 1; j <= exponent; j++)
+        {
+            answer *= primes[p];
+        }
+    }
+    
+    cout << answer << "\n";
+    
+    return 0;
+}
