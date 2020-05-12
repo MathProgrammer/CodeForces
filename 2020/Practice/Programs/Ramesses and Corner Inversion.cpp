@@ -1,0 +1,66 @@
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+void read(vector <vector <int> > &A)
+{
+    for(int i = 1; i < A.size(); i++)
+    {
+        for(int j = 1; j < A[0].size(); j++)
+        {
+            cin >> A[i][j];
+        }
+    }
+}
+
+void compute(vector <vector <int> > &A, vector <int> &row_sum, vector <int> &column_sum)
+{
+    for(int i = 1; i < A.size(); i++)
+    {
+        for(int j = 1; j < A[0].size(); j++)
+        {
+            row_sum[i] += A[i][j];
+            column_sum[j] += A[i][j];
+        }
+    }
+}
+
+int main()
+{
+    int rows, columns;
+    cin >> rows >> columns;
+    
+    vector <vector <int> > A(rows + 1, vector <int> (columns + 1));
+    read(A);
+    
+    vector <vector <int> > B(rows + 1, vector <int> (columns + 1));
+    read(B);
+    
+    vector <int> A_row_sum(rows + 1), A_column_sum(columns + 1);
+    compute(A, A_row_sum, A_column_sum);
+    
+    vector <int> B_row_sum(rows + 1), B_column_sum(columns + 1);
+    compute(B, B_row_sum, B_column_sum);
+    
+    int row_and_column_same_parity = true;
+    
+    for(int i = 1; i <= rows; i++)
+    {
+        if(A_row_sum[i]%2 != B_row_sum[i]%2)
+        {
+            row_and_column_same_parity = false;
+        }
+    }
+    
+    for(int j = 1; j <= columns; j++)
+    {
+        if(A_column_sum[j]%2 != B_column_sum[j]%2)
+        {
+            row_and_column_same_parity = false;
+        }
+    }
+    
+    cout << (row_and_column_same_parity ? "Yes\n" : "No\n");
+    return 0;
+}
