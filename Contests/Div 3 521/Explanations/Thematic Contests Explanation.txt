@@ -1,0 +1,74 @@
+We will keep track of the frequency of each topic.
+
+-----
+
+Let us try to fix the end of the segment.
+
+If the last contest has X problems, then the second last problem has X/2 problems.
+
+We will continue like this till either X is odd or there is no topic which has X problems
+
+-----
+
+int get_count_ending(int ending, vector <int> &A)
+{
+    int count = 0;
+
+    for(int i = A.size() - 1, current = ending; i >= 0 && A[i] >= current; i--)
+    {
+        count += current;
+
+        if(current%2 == 1)
+        {
+            break;
+        }
+
+        current /= 2;
+    }
+
+    return count;
+}
+
+
+-----
+
+Now, we will iterate over the possible end.
+
+It can be at most A[end]
+
+-----
+
+int main()
+{
+    int no_of_elements;
+    cin >> no_of_elements;
+
+    vector <int> A(no_of_elements + 1);
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        cin >> A[i];
+    }
+
+    map <int, int> frequency;
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        frequency[A[i]]++;
+    }
+
+    vector <int> frequencies;
+    for(auto it = frequency.begin(); it != frequency.end(); it++)
+    {
+        frequencies.push_back(it->second);
+    }
+
+    sort(all(frequencies));
+
+    int maximum = 0;
+    for(int i = 0; i <= frequencies.back(); i++)
+    {
+        maximum = max(maximum, get_count_ending(i, frequencies));
+    }
+
+    cout << maximum << "\n";
+    return 0;
+}
