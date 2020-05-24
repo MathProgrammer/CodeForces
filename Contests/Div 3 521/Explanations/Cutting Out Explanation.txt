@@ -1,0 +1,80 @@
+Let us binary search on the number of arrays we can have.
+
+Suppose we have to check if X arrays are possible.
+
+How do we do it ?
+
+For every element A[i] in the array, we will try to distribute it as evenly as possible
+in the array B.
+
+Each array will have (frequency[A[i]]/x) copies of A[i]
+
+At the end, we will say if we have managed to put k elements in B
+
+If Yes, then we can can create X copies of B
+
+-----
+
+int possible(int no_of_arrays, int length, vector <int> &answer)
+{
+    vector <int> filled;
+
+    for(auto it = frequency.begin(); it != frequency.end() && filled.size() < length; it++)
+    {
+        int required_frequency = (it->second)/no_of_arrays;
+
+        for(int i = 1; i <= required_frequency; i++)
+        {
+            filled.push_back(it->first);
+        }
+    }
+
+    if(filled.size() >= length)
+    {
+        answer = filled;
+    }
+
+    return (filled.size() >= length);
+}
+
+int main()
+{
+    int no_of_elements, k;
+    cin >> no_of_elements >> k;
+
+    A.resize(no_of_elements + 1);
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        cin >> A[i];
+    }
+
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        frequency[A[i]]++;
+    }
+
+    //L is always possible, R is always not possible
+    vector <int> answer;
+    int left = 0, right = no_of_elements + 1;
+    while(right - left > 1)
+    {
+        int mid = (left + right)/2;
+
+        if(possible(mid, k, answer))
+        {
+            left = mid;
+        }
+        else
+        {
+            right = mid;
+        }
+    }
+
+    for(int i = 0; i < k; i++)
+    {
+        cout << answer[i] << " ";
+    }
+
+    cout << "\n";
+    return 0;
+}
