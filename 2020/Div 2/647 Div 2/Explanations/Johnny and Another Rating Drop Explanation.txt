@@ -1,0 +1,73 @@
+Let us look at each bit seperately ?
+
+How much does the last bit contribute to the sum ?
+The last bit is always 01 01 01
+It contributes n to the sum as each of the n pairs (out of n + 1 integers), has a difference
+
+Let us look at the second last bit,
+It toggles 00 11 00 11 0 and so on
+It contributes ceil(N/2) to the sum
+
+Similarly, we will count the number of 'blocks', which is (N/2^i) + 1, 
+For N and the I-th bit 
+
+The contribution is (Number of Blocks - 1) as each adjacent pair of blocks contributes 1
+We have to count the contribution of each of the 63 bits
+
+-----
+
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+int is_bit_set(long long n, int bit)
+{
+    return ( (n& (1LL << bit)) != 0 );
+}
+
+long long ceil(long long n, long long d)
+{
+    return (n/d) + (n%d != 0);
+}
+
+void solve()
+{
+    long long n;
+    cin >> n;
+
+    long long answer = 0;
+
+    const int MAX_BITS = 63;
+
+    int msb = 0;
+    for(int bit = 0; bit < MAX_BITS; bit++)
+    {
+        if(is_bit_set(n, bit))
+        {
+            msb = bit;
+        }
+    }
+
+    for(int bit = 0; bit <= msb; bit++)
+    {
+        long long p = (1LL << bit);
+
+        long long no_of_blocks = n/p + 1;
+        //cout << "B = " << bit << " Contribution Number of BLocks = " << no_of_blocks << "\n";
+        answer += no_of_blocks - 1;
+    }
+
+    cout << answer << "\n";
+}
+
+int main()
+{
+    int no_of_test_cases;
+    cin >> no_of_test_cases;
+
+    while(no_of_test_cases--)
+        solve();
+
+    return 0;
+}

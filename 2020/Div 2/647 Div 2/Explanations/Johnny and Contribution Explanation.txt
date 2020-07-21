@@ -1,0 +1,66 @@
+We will model this by a graph.
+
+A blog is a vertex and two vertices will share an edge
+if there is a reference from one to the other.
+
+We will colour each vertex with it's topic number.
+
+The problem is to order the vertices in such an order that
+if we colour them in that order,
+making each vertex = MEX(neighbours),
+Each vertex will have the colour we desire
+
+-----
+
+We will start with an uncoloured graph.
+
+Clearly, we must colour all vertices with topic = 1 first
+Then, we must colour all vertices with topic = 2
+And so on
+
+We will first sort the vertices by their topic numbers
+Then, we will colour the graph
+While colouring the graph with our current colour, we will check the MEX (Neighbours)
+
+-----
+
+If it is the same as the colour we desire, we will continue.
+Otherwise, we will say it is not possible.
+
+-----
+
+The correct order is either the sorted order or does not exist
+
+-----
+
+Now, the question is, how do we find out the MEX of it's neighbours quickly ?
+One method is that When we are colour vertex V, we will check all it's neighbours
+and find out the MEX
+
+This requires us to keep a set for each vertex and adds an additional log factor.
+
+----
+
+There is a beautiful approach by which we can remove this log factor.
+Instead of maintaining a set against each vertex, we can maintain an array,
+MEX[N], which contains the MEX of each vertex
+
+Initially, the MEX of each vertex is 0.
+When we colour a vertex v, we will update the MEX of all it's neighbours.
+
+This is a beautiful example in which inverting the order of operations saves time
+
+1. Looking at all the neighbours and calculating MEX takes O(E log E) time for each vertex
+2. Colouring a neighbour and then updating all it's neighbours' MEX takes O(E) time
+
+This beautiful approach helps us reduce a log factor
+
+----
+
+Suppose U is a neighbour of V,
+If MEX[u] = Colour[V], Then MEX[u] = Colour[V] + 1
+Otherwise, MEX[u] remains as it is
+
+----
+
+----

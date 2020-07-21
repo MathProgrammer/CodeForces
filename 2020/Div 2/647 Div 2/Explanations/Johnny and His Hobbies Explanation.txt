@@ -1,0 +1,64 @@
+Let us try every k in [1, 1024]
+We will check if each k is good in O( N ) time and stop at the first good k
+k can not be greater than 2^{10}, as that bit is not set in any of the integers
+Store all the integers in a set for convenience
+
+-----
+
+There is also another idea
+
+XOR(A[i], x) = A[j]
+XOR(A[i], A[j]) = x,
+
+So, x will have to be one of (N - 1) possible values.
+
+-----
+
+int possible(int k, set <int> &S)
+{
+    for(auto it = S.begin(); it != S.end(); it++)
+    {
+        int x = *it;
+
+        if(S.find(x^k) == S.end())
+        {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+void solve()
+{
+    int no_of_elements;
+    cin >> no_of_elements;
+
+    vector <int> A(no_of_elements + 1);
+    set <int> S;
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        cin >> A[i];
+
+        S.insert(A[i]);
+    }
+
+    const int oo = 1e9, MAX_K = 1025;
+    int best_k = oo;
+    for(int k = 1; k <= MAX_K; k++)
+    {
+        if(possible(k, S))
+        {
+            best_k = min(best_k, k);
+
+            break;
+        }
+    }
+
+    if(best_k == oo)
+    {
+        best_k = -1;
+    }
+
+    cout << best_k << "\n";
+}
