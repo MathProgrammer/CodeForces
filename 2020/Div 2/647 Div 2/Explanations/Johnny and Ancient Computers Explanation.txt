@@ -1,0 +1,34 @@
+We can never remove any 1 from an integer. 
+The only operation we can do is append 0 and remove trailing 0's. 
+
+So, without loss of generality, let (a < b), 
+If this is not the case, then swap(a, b)
+
+We will try to reach a -> b by appending 0's only.
+If it is possible, we will take as many steps of 3 as possible. 
+Answer = Ceil(Steps/3)
+
+-----
+
+void solve()
+{
+    long long a, b;
+    cin >> a >> b;
+    
+    if(a > b)
+    {
+        swap(a, b);
+    }
+    
+    int steps = 0;
+    
+    while(a < b)
+    {
+        a *= 2;
+        steps++;
+    }
+    
+    int actual_steps = (a == b ? ceil(steps, 3) : -1);
+    
+    cout << actual_steps << "\n";
+}
