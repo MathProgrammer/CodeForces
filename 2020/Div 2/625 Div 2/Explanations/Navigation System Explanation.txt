@@ -1,0 +1,106 @@
+Let us find the shortest distance of each vertex from the source.
+Let it be in D
+
+To find D in a directed graph, we have to do BFS on the transpose graph
+
+-----
+
+void bfs(int source)
+{
+    queue <int> Q;
+
+    Q.push(source);
+    D[source] = 0;
+
+    while(!Q.empty())
+    {
+        int v = Q.front();
+        Q.pop();
+
+        for(int i = 0; i < transpose_graph[v].size(); i++)
+        {
+            int child = transpose_graph[v][i];
+
+            if(D[child] == -1)
+            {
+                D[child] = D[v] + 1;
+
+                Q.push(child);
+            }
+        }
+    }
+}
+
+-----
+
+Let us go through the stops in order.
+
+Suppose we are at stop i,
+
+1. If D[next] + 1 =/= D[v],
+Then the path will be forced to rebuild
+This will increase both the minimum and maximum paths by 1
+
+2. If D[next] + 1 = D[v],
+We will count the number of options
+If there is more than 1 valid option from v, then
+The maximum number of paths will increase by 1
+
+-----
+
+int main()
+{
+    int no_of_vertices, no_of_edges;
+    cin >> no_of_vertices >> no_of_edges;
+
+    for(int i = 1; i <= no_of_edges; i++)
+    {
+        int u, v;
+        cin >> u >> v;
+
+        graph[u].push_back(v);
+        transpose_graph[v].push_back(u);
+    }
+
+    int no_of_stops;
+    cin >> no_of_stops;
+
+    vector <int> stops(no_of_stops + 1, 0);
+    for(int i = 1; i <= no_of_stops; i++)
+    {
+        cin >> stops[i];
+    }
+
+    int source = stops[no_of_stops];
+    bfs(source);
+
+    int minimum_paths = 0, maximum_paths = 0;
+    for(int i = 1; i < no_of_stops; i++)
+    {
+        if(D[stops[i + 1]] + 1 != D[stops[i]])
+        {
+            minimum_paths++;
+            maximum_paths++;
+            continue;
+        }
+
+        int no_of_options = 0;
+        for(int j = 0; j < graph[stops[i]].size(); j++)
+        {
+            int next = graph[stops[i]][j];
+
+            if(D[next] + 1 == D[stops[i]])
+            {
+                no_of_options++;
+            }
+        }
+
+        if(no_of_options > 1)
+        {
+            maximum_paths++;
+        }
+    }
+
+    cout << minimum_paths << " " << maximum_paths << "\n";
+    return 0;
+}
