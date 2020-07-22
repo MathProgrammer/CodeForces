@@ -1,0 +1,138 @@
+Let us suppose P[1] is in A
+
+If P[2] < P[1], then P[2] will also be in A
+If P[3] < P[1], then P[3] will also be in A
+And so on,
+
+Let P[k] be the first element such that P[k] > P[1],
+
+-----
+
+We can divide P into sequences
+
+S[1], S[2], S[3], ... , S[k], where
+
+S[1] > S[2]
+S[1] > S[3]
+and so on till
+
+S[1] > S[k]
+
+The entire sequence has to be in the same set.
+The reason is if any of these (k - 1) elements are in the other set, then
+S[1] will come after it.
+
+-----
+
+The 'heads' of these sequences form an increasing sequence
+
+Each sequence can be either in A or in B, but a sequence has to be together.
+
+-----
+
+For example,
+if P =  {3, 2, 6, 1, 5, 7 , 8, 4}
+
+Then the sequences are
+
+{3, 2}
+{6, 1, 5}
+{7}
+{8, 4}
+
+We can divide these sequences into two sets such that their sum is 4
+
+-----
+
+A = {3, 2, 8, 4}
+B = {6, 1, 5, 7}
+
+Note that there are other valid partitions.
+We just need to ensure that the whole sequence is together.
+
+Within each set, sort the sequences by the chronological order in which they appear in P
+
+-----
+
+A = {3, 2}
+B = {6, 1, 5, 7, 8, 4}
+
+A = {3, 2, 6, 1, 5}
+B = {7, 8, 4}
+
+A = {6, 1, 5}
+B = {3, 2, 7, 8, 4}
+
+-----
+
+Let us take the sequence lengths
+
+L{1}, L{2}, ... , L{k}
+
+We have to check if they can be partitioned to two sets such that the sums are equal
+
+We have to check if there exists a subset who's sum is = n
+
+This can be done with a DP
+
+-----
+
+void solve()
+{
+    int n;
+    cin >> n;
+
+    vector <int> P(2*n + 5);
+    for(int i = 1; i <= 2*n; i++)
+    {
+        cin >> P[i];
+    }
+
+    vector <int> sequences;
+    int length = 1, beginning = P[1];
+    for(int i = 2; i <= 2*n; i++)
+    {
+        if(P[i] > beginning)
+        {
+            sequences.push_back(length);
+
+            beginning = P[i];
+            length = 1;
+        }
+        else
+        {
+            length++;
+        }
+    }
+    sequences.push_back(length);
+
+    vector <vector <int> > possible_sums(n + 1, vector <int> (sequences.size() + 1, false));
+    for(int s = 0; s <= n; s++)
+    {
+        for(int i = 0; i < sequences.size(); i++)
+        {
+            if(s == 0)
+            {
+                possible_sums[s][i] = true;
+                continue;
+            }
+
+            if(i == 0)
+            {
+                possible_sums[s][i] = (s == sequences[i] ? true : false);
+
+                continue;
+            }
+
+            possible_sums[s][i] = possible_sums[s][i - 1];
+
+            if(s >= sequences[i])
+            {
+                possible_sums[s][i] = (possible_sums[s][i - 1] ||
+                                       possible_sums[s - sequences[i]][i - 1]);
+            }
+        }
+    }
+
+    cout << (possible_sums[n][sequences.size() - 1] ? "YES\n" : "NO\n");
+}
