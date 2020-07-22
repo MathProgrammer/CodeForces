@@ -1,0 +1,68 @@
+Case 1 - The first element is not 1
+
+The first player always wins
+
+Proof - There are two possibilities
+
+(Either the pile of (N - 1) stones is winning for the first player or the second player)
+
+-----
+
+Case 1a -
+
+If the pile of (N - 1) stones (without the first pile) is winning for the first player,
+
+A - Leaves 1 stone  in the pile
+B - Takes that 1 stone
+
+And A is now the first player in the pile of (N - 1) stones
+
+Case 1b -
+
+If the pile of (N - 1) stones (without the first pile) is winning for the second player,
+
+A - Takes the entire pile
+
+And A is now the Second Player in the pile of (N - 1) stones
+
+------
+
+Case 2 - The first element is 1,
+
+The first player has no choice and has to take it
+In fact, if there is a prefix of 1's
+
+If there are an odd number of 1's, the second player has the turn after the 1s are over
+If there are an even number of 1's, the first player has the turn after the 1s are over
+
+If there are piles remaining after the prefix of 1's is over, the player who has the turn will win
+Otherwise, the last player who took the last stone will win
+
+------
+
+void solve()
+{
+    int no_of_piles;
+    cin >> no_of_piles;
+
+    vector <int> A(no_of_piles + 1);
+    for(int i = 1; i <= no_of_piles; i++)
+    {
+        cin >> A[i];
+    }
+
+    int prefix_1s = 0;
+    for(int i = 1; i <= no_of_piles && A[i] == 1; i++)
+    {
+        prefix_1s++;
+    }
+
+    if(prefix_1s == no_of_piles)
+    {
+        cout << (prefix_1s%2 == 0 ? "Second\n" : "First\n");
+
+        return;
+    }
+
+    cout << (prefix_1s%2 == 0 ? "First\n" : "Second\n");
+}
