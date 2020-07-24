@@ -1,0 +1,50 @@
+If all the integers have a 1 in a bit position or a 0 in a bit position, 
+then the answer will have a 0 there if we put a bit in X.
+
+If some integers have a 1 and some integers have a 0, then the answer will have
+that bit set in answer regardless of what we put in X.
+
+-----
+
+Suppose we are dealing with bit b,
+
+What we will do is put all the integers with that bit set in A,
+We will put all the integers with that bit unset in B
+
+We will solve the problem for the remaining bits in A and B seperately and add it to 2^b
+
+-----
+
+
+long long solve(int bit, vector <long long> &A)
+{
+    if(bit < 0 || A.size() == 0)
+    {
+        return 0;
+    }
+
+    vector <long long> set, unset;
+    for(int i = 0; i < A.size(); i++)
+    {
+        if(is_bit_set(A[i], bit))
+        {
+            set.push_back(A[i]);
+        }
+        else
+        {
+            unset.push_back(A[i]);
+        }
+    }
+
+    if(set.size() == 0)
+    {
+        return solve(bit - 1, unset);
+    }
+
+    if(unset.size() == 0)
+    {
+        return solve(bit - 1, set);
+    }
+
+    return ( (1LL << bit) + min(solve(bit - 1, set), solve(bit - 1, unset)) );
+}
