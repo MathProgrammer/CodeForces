@@ -1,0 +1,18 @@
+If the cost of 1 donut is less than the cost of a box, then the answer is 1
+Otherwise, it is impossible to buy donuts to be cheaper.
+
+As for the second shop, we will try to buy a box. If it is cheaper, then that is the answer.
+Otherwise, it is not possible
+
+-----
+
+void solve()
+{
+    long long cost, box_size, box_cost;
+    cin >> cost >> box_size >> box_cost;
+
+    int answer_1 = (cost < box_cost ? 1 : -1);
+    int answer_2 = (cost*box_size > box_cost ? box_size : -1);
+
+    cout << answer_1 << " " << answer_2 << "\n";
+}
