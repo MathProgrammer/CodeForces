@@ -1,0 +1,71 @@
+We will follow the above strategy.
+
+We will draw an edge between alphabets u and v, if some instance of u should be converted to v
+
+Let {t1, t2, ... , tk} be all the target vertices of vertex v
+and let t1 < t2 < ... < tk
+
+We will convert all the instances of v to t1 and use only one move.
+We will also add {t2, t3, ... , tk} to the target set of vertex t1
+
+------
+
+We will process the vertices in alphabetical order. Each alphabet will include at most 1 move.
+So, the total number of moves will not be more than 19.
+
+Also, this always works because a target set of an alphabet becomes empty after we finish processing it.
+When we finish processing all 20 alphabets, all the target sets are empty
+
+-----
+
+void solve()
+{
+    int length;
+    string A, B;
+    cin >> length >> A >> B;
+
+    for(int i = 0; i < length; i++)
+    {
+        if(A[i] > B[i])
+        {
+            cout << "-1\n";
+
+            return;
+        }
+    }
+
+    const int NO_OF_ALPHABETS = 26;
+    vector <set <int> > replacements(NO_OF_ALPHABETS);
+    for(int i = 0; i < length; i++)
+    {
+        if(A[i] != B[i])
+        {
+            replacements[A[i] - 'a'].insert(B[i] - 'a');
+        }
+    }
+
+    int moves = 0;
+
+    for(int alpha = 0; alpha < NO_OF_ALPHABETS; alpha++)
+    {
+        if(replacements[alpha].size() == 0)
+        {
+            continue;
+        }
+
+        moves++;
+
+        auto it = replacements[alpha].begin();
+        int next_alpha = *it;
+
+        for(it = replacements[alpha].begin(); it != replacements[alpha].end(); it++)
+        {
+            if(*it != next_alpha)
+            {
+                replacements[next_alpha].insert(*it);
+            }
+        }
+    }
+
+    cout << moves << "\n";
+}
