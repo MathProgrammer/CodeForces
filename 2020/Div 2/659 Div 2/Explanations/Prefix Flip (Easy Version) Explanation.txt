@@ -1,0 +1,41 @@
+We can always do it with 3 flips for every unequal position.
+
+If (A[i] = B[i]), we do nothing.
+
+Otherwise, we will flip and reverse the prefix of length i
+Then, we will flip the first bit,
+Then, we will again flip and reverse the prefix of length i
+
+This leaves the remaining (i - 1) bits unchanged and flips the i-th bit and now A[i] = B[i]
+
+This can also be done in O(n) time and we do not need to simulate all 3 flips
+
+-----
+
+void solve()
+{
+    string A, B;
+    int length;
+    cin >> length >> A >> B;
+
+    vector <int> moves;
+
+    for(int i = A.size() - 1; i >= 0; i--)
+    {
+        if(A[i] != B[i])
+        {
+            moves.push_back(i + 1);
+            moves.push_back(1);
+            moves.push_back(i + 1);
+        }
+    }
+
+    cout << moves.size() << " ";
+
+    for(int i = 0; i < moves.size(); i++)
+    {
+        cout << moves[i] << " ";
+    }
+
+    cout << "\n";
+}

@@ -1,0 +1,55 @@
+We will convert A to a string of all 0's and B to a string of all 0's
+
+If we reverse the order of operations done to B, then we can create B from a string of all 0's.
+
+-----
+
+How to convert a string S to all 0's ?
+
+Let us append an extra 0 at the end of string S
+
+If S[i] and S[i + 1] are different, we will flip the prefix of length i
+
+This maintains the invariant that when we are at position (i + 1), the first i elements are the no_of_special_segments
+
+When we finish processing the entire string, it will be all-0's since the last alphabet is 0
+
+-----
+
+void solve()
+{
+    string A, B;
+    int length;
+    cin >> length >> A >> B;
+
+    A += '0', B += '0';
+
+    vector <int> moves_A, moves_B;
+
+    for(int i = 1; i <= length; i++)
+    {
+        if(A[i] != A[i - 1])
+        {
+            moves_A.push_back(i);
+        }
+
+        if(B[i] != B[i - 1])
+        {
+            moves_B.push_back(i);
+        }
+    }
+
+    cout << moves_A.size() + moves_B.size() << " ";
+
+    for(int i = 0; i < moves_A.size(); i++)
+    {
+        cout << moves_A[i] << " ";
+    }
+
+    for(int i = moves_B.size() - 1; i >= 0; i--)
+    {
+        cout << moves_B[i] << " ";
+    }
+
+    cout << "\n";
+}
