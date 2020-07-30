@@ -1,0 +1,42 @@
+We want a set of integers and want to know the bits that are set in all, but 2 of the integers. 
+
+It can be shown that the optimal set always consists of 3 integers. And the value = OR(A[i], A[j], A[k])
+
+If We add a new integer Z, to the set {A[i], A[j], A[k]}, then every bit of Z must be set in any 2 of {A[i], A[j], A[k]}
+
+If Z has a bit set that is greater in value to the bits that are existing, we can just replace one of the 3 integers by Z 
+
+So, it will never be optimal to have more than 3 integers. 
+
+We just have to check all the triplets 
+
+-----
+
+int main()
+{
+    int no_of_elements;
+    cin >> no_of_elements;
+    
+    vector <long long> A(no_of_elements + 1);
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        cin >> A[i];
+    }
+    
+    long long answer = 0;
+    
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        for(int j = i; j <= no_of_elements; j++)
+        {
+            for(int k = j; k <= no_of_elements; k++)
+            {
+                answer = max(answer, A[i]|A[j]|A[k]);
+            }
+        }
+    }
+    
+    cout << answer << "\n";
+    
+    return 0;
+}
