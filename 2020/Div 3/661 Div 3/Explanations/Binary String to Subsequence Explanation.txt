@@ -1,0 +1,65 @@
+Let us keep track of the list of available sequences ending with 1 and with 0 
+
+When we are at S[i], we will check if there are any available sequences ending with it's complement. 
+
+If there are, then we will match S[i] with that and update it accordingly. 
+
+For example, if S[i] = 0, and we have sequence number 3 ending with 1, we will append s[i] to the third sequence 
+
+-----
+
+We will maintain a set of all avaialable sequences ending with both numbers 
+
+When we process S[i], we will check if it's complement is empty or if there is some available sequence 
+
+We will update it accordingly 
+
+-----
+
+void solve()
+{
+    int length;
+    string S;
+    cin >> length >> S;
+    
+    vector <int> sequence_no(length + 1);
+    set <int> available_label[2];
+    
+    int no_of_sequences = 1;
+    available_label[0].insert(1);
+    available_label[1].insert(1);
+    
+    for(int i = 0; i < length; i++)
+    {
+        int current = S[i] - '0';
+        int complement = 1 - current;
+        
+        if(available_label[complement].size() == 0)
+        {
+            no_of_sequences++;
+            
+            sequence_no[i] = no_of_sequences;
+            
+            available_label[current].insert(sequence_no[i]);
+        }
+        else
+        {
+            auto it = available_label[complement].begin();
+            
+            sequence_no[i] = *it;
+            
+            available_label[current].insert(sequence_no[i]);
+            
+            available_label[complement].erase(sequence_no[i]);
+        }
+    }
+    
+    cout << no_of_sequences << "\n";
+    
+    for(int i = 0; i < length; i++)
+    {
+        cout << sequence_no[i] << " ";
+    }
+    
+    cout << "\n";
+}
