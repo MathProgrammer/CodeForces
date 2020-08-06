@@ -1,0 +1,43 @@
+If N is odd, then we can divide it by the entire integer and first player wins
+(except when N = 1)
+
+If N is a power of 2, then we must subtract 1 and give our opponent this situation.
+(Except when N = 2)
+
+If N is even but has odd divisors, then we can divide by an odd divisor and give it to our opponent.
+Out opponent will lose, provided N is a multiple of 4 or more.
+If our opponent gets 2, he will win
+
+If our number is of the form 2p, then we will lose if p is prime and win otherwise
+
+-----
+
+void solve()
+{
+    int n;
+    cin >> n;
+
+    if(n%4 == 0)
+    {
+        cout << (!is_power_of_2(n) ? "Ashishgup\n" : "FastestFinger\n");
+        return;
+    }
+
+    if(n%2 == 1)
+    {
+        cout << (n > 1 ? "Ashishgup\n" : "FastestFinger\n");
+
+        return;
+    }
+
+    if(n == 2)
+    {
+        cout << "Ashishgup\n";
+
+        return;
+    }
+
+    int no_of_odd_divisors = get_prime_divisor_count(n) - 1;
+
+    cout << (no_of_odd_divisors > 1 ? "Ashishgup\n" : "FastestFinger\n");
+}
