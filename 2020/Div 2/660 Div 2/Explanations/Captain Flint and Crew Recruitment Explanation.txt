@@ -1,0 +1,39 @@
+The smallest nearly prime integers are 6, 10, 14
+
+So, we can give (6, 10, 14, n - 30) if n > 30
+
+The only condition we have to be careful about is if
+
+n - 30 = 6, 10, 14
+
+When n = 36, 40, 44
+
+In these cases, we will need a different solution.
+
+We can use (6, 10, 15, n - 31)
+
+-----
+
+void solve()
+{
+    int n;
+    cin >> n;
+
+    if(n <= 30)
+    {
+        cout << "NO\n";
+
+        return;
+    }
+
+    cout << "YES\n";
+    switch(n)
+    {
+        case 36 :
+        case 40 :
+        case 44 : cout << "6 10 15 " << n - 31 << "\n";
+            return;
+
+        default : cout << "6 10 14 " << n - 30 << "\n";
+    }
+}
