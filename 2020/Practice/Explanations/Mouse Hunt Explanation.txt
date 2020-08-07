@@ -1,0 +1,96 @@
+We are given a 'functional' graph in which every vertex has exactly one edge going out of it.
+
+There is guaranteed to be at least one cycle.
+
+Let us break the graph into cycles.
+
+Each mouse will visit one of the cycles at least once.
+
+So, we will put 1 trap in each of the cycle
+
+-----
+
+The problem is there might be vertices which lead into a cycle.
+
+Instead of 1 → 2 →3 →1, we might have 1 → 2 → 3 → 4 →5 → 3
+
+So, the dfs gets a little tricky.
+
+We will maintain two variables for each vertex -
+Visited - Whether it is Visited and
+Current_DFS - Indicating if the current vertex has been visited in the current DFS.
+
+-----
+
+We will begin a DFS when we encounter an unvisited vertex.
+
+1. If we encounter a vertex which is already visited and also in this DFS, then we have found our cycle
+
+2. If we encounter a vertex which was already visited in another DFS, then we have already processed that cycle before so we need not do it again
+
+-----
+
+So, we will update the cost within the DFS function itself
+
+-----
+
+void dfs(int v, int &total_cost)
+{
+    //Cycle Starts here
+    if(current_dfs[v])
+    {
+        int cost_here = cost[v];
+
+        for(int i = to[v]; i != v; i = to[i])
+        {
+            cost_here = min(cost_here, cost[i]);
+        }
+
+        total_cost += cost_here;
+        return;
+    }
+    else if(visits[v]) //It was already linked to a cycle from some other dfs
+    {
+        return;
+    }
+
+    visits[v] = true;
+
+    current_dfs[v] = true;
+
+    dfs(to[v], total_cost);
+
+    current_dfs[v] = false;
+}
+
+int main()
+{
+    int no_of_vertices;
+    cin >> no_of_vertices;
+
+    cost.resize(no_of_vertices + 1);
+    for(int i = 1; i <= no_of_vertices; i++)
+    {
+        cin >> cost[i];
+    }
+
+    to.resize(no_of_vertices + 1);
+    for(int i = 1; i <= no_of_vertices; i++)
+    {
+        cin >> to[i];
+    }
+
+    int total_cost = 0;
+    current_dfs.resize(no_of_vertices + 1, 0);
+    visits.resize(no_of_vertices + 1, 0);
+    for(int i = 1; i <= no_of_vertices; i++)
+    {
+        if(!visits[i])
+        {
+            dfs(i, total_cost);
+        }
+    }
+
+    cout << total_cost << "\n";
+    return 0;
+}
