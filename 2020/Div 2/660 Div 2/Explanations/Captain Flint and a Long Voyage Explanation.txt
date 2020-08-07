@@ -1,0 +1,31 @@
+First of all, we want the length of the binary number to be maximum possible.
+So, we will use a 4 digit number.
+
+If the digit is deleted, then we cannot distinguish between 8 and 9.
+As they have asked for the smallest such answer if there are multiple, we will print 8
+
+After all the deletions are over, we will print all 9's to make the integer as large as possible
+
+-----
+
+ void solve()
+{
+    int n;
+    cin >> n;
+
+    int eights = n/4 + (n%4 != 0);
+
+    int nines = n - eights;
+
+    for(int i = 1; i <= nines; i++)
+    {
+        cout << "9";
+    }
+
+    for(int i = 1; i <= eights; i++)
+    {
+        cout << "8";
+    }
+
+    cout << "\n";
+}
