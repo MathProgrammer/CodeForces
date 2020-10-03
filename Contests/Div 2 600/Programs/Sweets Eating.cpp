@@ -1,53 +1,38 @@
 #include <iostream>
 #include <vector>
 #include <algorithm>
-
-#define all(v) (v).begin(), (v).end()
 using namespace std;
 
 int main()
 {
-    int no_of_elements, max_per_day;
-    cin >> no_of_elements >> max_per_day;
+	ios::sync_with_stdio(false);
+	cin.tie(0);
 
-    vector <int> A(no_of_elements + 1, 0);
-    for(int i = 1; i <= no_of_elements; i++)
-    {
-        cin >> A[i];
-    }
+	int nbSweets, maxPerDay;
+	cin >> nbSweets >> maxPerDay;
 
-    sort(all(A));
+	vector<int> val(nbSweets);
 
-    vector <long long> sum_till(no_of_elements + 1, 0);
-    for(int i = 1; i <= no_of_elements; i++)
-    {
-        sum_till[i] = sum_till[i - 1] + A[i];
-    }
+	for (int iSweet = 0; iSweet < nbSweets; ++iSweet) {
+		cin >> val[iSweet];
+	}
 
-    vector <long long> penalty(no_of_elements + 1, 0);
-    for(int i = 1; i <= no_of_elements; i++)
-    {
-        long long day_1 = 0, remaining_days = 0;
-        
-        if(i <= max_per_day)
-        {
-            day_1 = sum_till[i];
-        }
-        else
-        {
-            day_1 = sum_till[i] - sum_till[i - max_per_day];
-            
-            remaining_days = penalty[i - max_per_day] + sum_till[i - max_per_day];
-        }
-        
-        penalty[i] = day_1 + remaining_days;
-    }
+	sort(val.begin(), val.end());
 
-    for(int i = 1; i <= no_of_elements; i++)
-    {
-        cout << penalty[i] << " ";
-    }
+	vector<long long> ans(nbSweets);
 
-    return 0;
+	long long curSum = 0;
+
+	for (int lastTaken = 0; lastTaken < nbSweets; ++lastTaken) {
+		curSum += val[lastTaken];
+		ans[lastTaken] = curSum;
+
+		if (lastTaken >= maxPerDay) {
+			ans[lastTaken] += ans[lastTaken - maxPerDay];
+		}
+
+		cout << ans[lastTaken] << (lastTaken == nbSweets-1 ? '\n' : ' ');
+	}
+
+	return 0;
 }
- 
