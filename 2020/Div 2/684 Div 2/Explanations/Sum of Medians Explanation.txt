@@ -1,0 +1,57 @@
+We will be greedy and try to put the largest possible elements in the medians.
+
+Let us sort the array in descending order.
+
+Suppose the array length is n. Then the suffix length is (n/2).
+
+The first (n/2) elements cannot be a median of any array.
+The largest median possible is A[n/2 + 1].
+
+Similarly, the largest value of the second median is A[n/2 + 1 + n/2 + 1].
+
+And so on.
+
+We will choose all elements that are a multiple of (n/2 + 1).
+
+We can prove this by an exchange argument.
+Let us suppose we have k medians.
+
+We can take the largest median and replace it with A[n/2 + 1].
+We cannot replace it with any larger integer since it requires (n/2) greater elements.
+The sum either remains the same or increases.
+
+After this, we can do the same with the second largest median after deleting the largest median
+and the first (n/2) and last (n/2) elements.
+
+Ultimately, we will be left with the medians that we have constructed.
+------
+
+void solve()
+{
+    int no_of_elements, no_of_arrays;
+    cin >> no_of_elements >> no_of_arrays;
+
+    vector <int> A(no_of_elements*no_of_arrays + 1);
+    for(int i = 1; i <= no_of_elements*no_of_arrays; i++)
+    {
+        cin >> A[i];
+    }
+
+    int median_position = (no_of_elements/2) + (no_of_elements%2);
+    int suffix = no_of_elements - median_position;
+
+    sort(all(A));
+    reverse(all(A));
+
+    long long answer = 0;
+    for(int i = suffix + 1, medians = 0; medians < no_of_arrays; i += (suffix + 1))
+    {
+
+            answer += A[i];
+
+            medians++;
+
+    }
+
+    cout << answer << "\n";
+}
