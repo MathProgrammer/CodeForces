@@ -1,0 +1,136 @@
+If there are an odd number of rows or odd number of columns,
+we will handle the last odd row and last odd column seperately.
+
+We will do this greedily.
+
+If two consecutive elements of a row or column are 1,
+we will flip a L that involves both of them.
+Otherwise, we will flip an L that involves only one of them.
+
+I have written various helper functions to do this.
+
+Note - When both rows and columns are odd
+While making a flip operation on the last column,
+avoid performing an operation that would flip an element of the last row.
+The reason is we have already flipped the last row first
+and the last row should contain all 0s.
+
+-----
+
+Now, we have a NxM matrix where both N and M are even.
+Divide the matrix in 2x2 squares and solve each 2x2 square seperately.
+
+1. If it has 4 ones, flip and make it have 1 one.
+2. If it has 1 one, flip and make it have 2 ones.
+3. If it has 2 ones, flip and make it have 3 ones.
+4. If it has 3 ones, flip and make it have 0 ones.
+
+Every 2x2 square takes at most 4 operations.
+
+-----
+
+void get(vector <vector <int> > &M, vector <pair <int, int> > &op, vector <pair <int, int> > &S)
+{
+    int one_count = 0;
+    for(int i = 0; i < S.size(); i++)
+    {
+        one_count += (M[S[i].first][S[i].second] == 1);
+    }
+
+    switch(one_count)
+    {
+        case 4 : solve_4(M, op, S);
+        case 1 : solve_1(M, op, S);
+        case 2 : solve_2(M, op, S);
+        case 3 : solve_3(M, op, S);
+    }
+}
+
+-----
+
+How do we convert a matrix with 4 ones to 1 one ?
+
+Flip any arbitrary L
+
+void solve_4(vector <vector <int> > &M, vector <pair <int, int> > &op, vector <pair <int, int> > &S)
+{
+    for(int i = 0; i < 3; i++)
+    {
+        perform(M, op, S[i]);
+    }
+}
+
+
+------
+
+How do we convert a matrix with 1 one to 2 ones ?
+
+Flip any L containing the 1
+
+void solve_1(vector <vector <int> > &M, vector <pair <int, int> > &op, vector <pair <int, int> > &S)
+{
+    int r_1, c_1;
+
+    for(int i = 0; i < S.size(); i++)
+    {
+        if(M[S[i].first][S[i].second] == 1)
+        {
+            r_1 = S[i].first; c_1 = S[i].second;
+        }
+    }
+
+    for(int i = 0; i < S.size(); i++)
+    {
+        if(S[i].first == r_1 || S[i].second == c_1)
+        {
+            perform(M, op, S[i]);
+        }
+    }
+}
+
+-----
+
+How do we convert a matrix with 2 ones to 3 ones ?
+
+Flip a L that contains one of the 1's
+
+void solve_2(vector <vector <int> > &M, vector <pair <int, int> > &op, vector <pair <int, int> > &S)
+{
+    int frequency_1 = 0;
+
+    for(int i = 0; i < S.size(); i++)
+    {
+        if(M[S[i].first][S[i].second] == 1)
+        {
+            if(frequency_1 == 0)
+            {
+                perform(M, op, S[i]);
+            }
+
+            frequency_1++;
+        }
+        else
+        {
+            perform(M, op, S[i]);
+        }
+    }
+}
+
+------
+
+How do we convert a matrix with 3 1's to a matrix with 0 1's ?
+
+Flip the 3 1's
+
+void solve_3(vector <vector <int> > &M, vector <pair <int, int> > &op, vector <pair <int, int> > &S)
+{
+    for(int i = 0; i < S.size(); i++)
+    {
+        if(M[S[i].first][S[i].second] == 1)
+        {
+            perform(M, op, S[i]);
+        }
+    }
+}
+
+------
