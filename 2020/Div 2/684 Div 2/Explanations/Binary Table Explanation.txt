@@ -20,6 +20,10 @@ and the last row should contain all 0s.
 Now, we have a NxM matrix where both N and M are even.
 Divide the matrix in 2x2 squares and solve each 2x2 square seperately.
 
+There are basically $4$ cases - The square can have $\{1, 2, 3, 4\}$ ones. Each case should be handled differently
+
+I came up with an elegant implementation. Instead of writing separate code for each of the $4$ cases, I reduced each case to another case.
+
 1. If it has 4 ones, flip and make it have 1 one.
 2. If it has 1 one, flip and make it have 2 ones.
 3. If it has 2 ones, flip and make it have 3 ones.
