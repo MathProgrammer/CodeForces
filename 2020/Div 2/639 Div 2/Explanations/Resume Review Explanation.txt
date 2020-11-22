@@ -1,0 +1,132 @@
+Let us see what happens when we increment some B[i] from (x - 1) to x
+
+The function changes by |x.(A[i] - x)^2| - |(x - 1).(A[i] - (x - 1))^2|
+
+This is (A[i] - 3x^2 + 3x - 1)
+
+It is interesting to note that this function decreases as x >= 1
+
+The more we increase B[i], the more we decrease this function.
+However, we have to add k B[i]'s anyway.
+
+So, we must try to the greatest values of this update as possible
+
+-----
+
+We can do this by binary search.
+We will fix a value of R, and check how many additions we need to process all contributions > R
+
+For example, if R = 100,
+We will check how many addition steps we need to do to B such that all contributions > 100 are counted
+
+We will maintain the invariant that it is always possible for R and not possible for L and stop when (R - L = 1)
+
+-----
+
+long long left = -3e18, right = 3e18;
+    while(right - left > 1)
+    {
+        long long mid = (left + right)/2;
+
+        if(no_of_steps(mid) <= total_steps)
+        {
+            right = mid;
+        }
+        else
+        {
+            left = mid;
+        }
+    }
+
+-----
+
+Now, let us try to answer a different question
+
+Given an integer X, how many steps do we have to perform if,
+for every B[i] we set it to a value such that all gains are strictly > x ?
+
+We can do this with binary search !
+
+---
+
+We know for a given A[i], if we set B[i] = m, what the last gain will be
+
+It will be (A[i] - 3m^2 + 3m - 1)
+
+This is a decreasing function so we can use binary search.
+
+The invariant we maintain is that
+
+It is always possible to do L steps and never possible to do R steps.
+Initially, L = 0, R = A[i] + 1
+
+If (A[i] - 3m^2 + 3m - 1) > x, then set L = m
+Otherwise, set R = m
+
+In the end, L is the answer that we want -
+The maximum number of addition steps we can do such that B[i] has all contributions > R counted
+
+---
+
+long long no_of_steps(long long x)
+{
+    long long steps = 0;
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        long long left = 0, right = A[i] + 1;
+
+        //Left is always possible, right is not
+        while(right - left > 1)
+        {
+            long long mid = (left + right)/2;
+
+            long long smallest_contribution = A[i] - 3*mid*mid+ 3*mid - 1;
+
+            if(smallest_contribution > x)
+            {
+                left = mid;
+            }
+            else
+            {
+                right = mid;
+            }
+        }
+
+        B[i] = left;
+
+        steps += left;
+    }
+
+    return steps;
+}
+
+-----
+
+A side note to be made here is that we might not have used exactly K elements
+If we have used < K elements, then we must increment B[i] such that the gain = x
+
+(It will always be possible that there is an integer increasing which will give us a gain = x
+This is because of the invariant of our binary search.
+
+If there is no integer who's contribution is exactly x, then R would have stopped at a lower integer in our binary search.)
+
+R stopped at the minimum integer such that it is possible to make contributions > R
+
+----
+
+long long final_steps = no_of_steps(right);
+
+    for(int i = 1; i <= no_of_elements && final_steps < total_steps; i++)
+    {
+        if(B[i] == A[i])
+        {
+            continue;
+        }
+
+        long long new_b = B[i] + 1;
+        if(A[i] - 3*new_b*new_b + 3*new_b - 1 == right)
+        {
+            B[i]++;
+            final_steps++;
+        }
+    }
