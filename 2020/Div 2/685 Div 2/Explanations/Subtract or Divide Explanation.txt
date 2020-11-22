@@ -1,0 +1,30 @@
+1. If n is 1, we do not need to do anything.
+2. If n is 2, we can subtract 1 and do it in each step.
+3. If n is even, we can go to 2 in 1 step and 1 in another. It is 2.
+4. If n is 3, we can go to 2 in one step. And reach 1 in 2.
+5. If n is odd, we can go an even integer in 1 step. And reach 1 in 3.
+
+------
+
+void solve()
+{
+    int n;
+    cin >> n;
+
+    int moves = 0;
+
+    if(n == 2)
+    {
+        moves++;
+    }
+    else if(n%2 == 0)
+    {
+        moves = 2;
+    }
+    else if(n > 1)
+    {
+        moves = (n == 3 ? 2 : 3);
+    }
+
+    cout << moves << "\n";
+}

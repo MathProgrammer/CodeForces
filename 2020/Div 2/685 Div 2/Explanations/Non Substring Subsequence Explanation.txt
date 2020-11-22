@@ -1,0 +1,65 @@
+We will search for A[L] in S[1, L - 1]
+We will search for A[R] in S[R + 1, N]
+
+If either of these conditions are met, the subsequence is met.
+But, we must show that it is also necessary.
+
+Let us suppose that there is such a sequence in S.
+If the sequence begins before A[L], then the first character is before A[L].
+
+(If the first occurence of A[L] is A[L], then it is not possible.)
+
+If the sequence begins After A[L],
+then the last character must occur again after A[R].
+
+(If the last occurence of A[R] is R, then it is not possible.)
+
+-----
+
+void solve()
+{
+    int length, queries;
+    cin >> length >> queries;
+
+    string S;
+    cin >> S;
+
+    for(int i = 1; i <= queries; i++)
+    {
+        int left, right;
+        cin >> left >> right;
+
+        int answer_found = false;
+        for(int i = right + 1; i <= length; i++)
+        {
+            if(S[right - 1] == S[i - 1])
+            {
+                cout << "YES\n";
+                answer_found = true;
+                break;
+            }
+        }
+
+        if(answer_found)
+        {
+            continue;
+        }
+
+        for(int i = 1; i < left; i++)
+        {
+            if(S[i - 1] == S[left - 1])
+            {
+                cout << "YES\n";
+                answer_found = true;
+                break;
+            }
+        }
+
+        if(answer_found)
+        {
+            continue;
+        }
+
+        cout << "NO\n";
+    }
+}

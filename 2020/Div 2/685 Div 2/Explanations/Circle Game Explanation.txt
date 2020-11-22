@@ -1,0 +1,66 @@
+Let us look at the line x = y.
+
+Suppose the furthest points in the line x = y inside the circle is
+
+(kz, kz)
+
+Let (k(z + 1), kz) be outside the circle of radius d.
+Then, the second person will always win.
+No matter what the first player does, the second player can always ensure that
+the coin remains on the line (x = y).
+It will be the first player who moves out of the circle.
+
+
+-----
+
+If (k(z + 1), kz)) is inside the circle,
+then after the first player makes a move, the first player is in the same position
+the second player was in the previous situation.
+
+The first player can always ensure the difference in the multiplier of x and y
+differs by 1 after each of his move so
+
+(k(z + 1, kz)) can only be reached after the first player's turn. 
+
+-----
+
+We will do binary search to find the furthest z, such that
+
+(kz, kz) is inside d-circle
+
+------
+
+long long ceil(long long n, long long d)
+{
+    return (n/d) + (n%d != 0);
+}
+
+long long square(long long n)
+{
+    return n*n;
+}
+
+void solve()
+{
+    long long d, k;
+    cin >> d >> k;
+
+    long long left = 0, right = ceil(d, k);
+    while(right - left > 1)
+    {
+        long long mid = (left + right)/2;
+
+        if(2*square(k*mid) <= square(d))
+        {
+            left = mid;
+        }
+        else
+        {
+            right = mid;
+        }
+    }
+
+    long long z = left;
+
+    cout << (square(k*z) + square(k*(z + 1)) <= square(d) ? "Ashish" : "Utkarsh") << "\n";
+}
