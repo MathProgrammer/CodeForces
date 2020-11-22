@@ -1,0 +1,70 @@
+1. Because of the constraint (r1 <= r2) and (c1 <= c2),
+any path we choose will contain only one square on the diagonal (r1 + c1).
+
+2. Let us notice something. If any diagonal has XOR 0, we can choose a path
+that makes the XOR of every diagonal = 0
+If every diagonal has XOR 0, then any path we choose will make the XOR non zero
+
+Since the final matrix has the XOR of every diagonal 0,
+this helps us in determining the winner.
+
+3. Let us choose the smallest and largest diagonals having (r + c) values
+which are non-zero XOR
+
+In the first diagonal, we will choose a square which has the same bit set as X(r + c).
+There has to be at least one such square or the XOR will not have that bit set.
+We will perform subtraction to ensure the XOR becomes 0.
+Suppose the XOR was X and the square has S,
+
+We will make the square = XOR(S, X)
+
+Every other diagonal, there are additions allowed so we can make all the XOR's 0
+
+4. If the XOR is 0, then our subtraction in the first square makes it non zero.
+
+5. Each diagonal corresponds to a pile of stones.
+We can subtract from 1 set of piles but can add on the other piles.
+We can come up with this observation by noticing that the question
+says only the first square has a restriction of addition and the other squares are free.
+What is a property of the first square that no other square in the path has ?
+The diagonal !
+This is the way to think of this 
+
+-----
+
+void solve()
+{
+    int rows, columns;
+    cin >> rows >> columns;
+
+    vector <int> diagonal (rows + columns + 1);
+    for(int i = 1; i <= rows; i++)
+    {
+        for(int j = 1; j <= columns; j++)
+        {
+            int x;
+            cin >> x;
+
+            diagonal[i + j] ^= x;
+        }
+    }
+
+    int nim_sum = 0;
+    for(int i = 2; i <= rows + columns; i++)
+    {
+        nim_sum += diagonal[i];
+    }
+
+    cout << (nim_sum != 0 ? "Ashish\n" : "Jeel\n");
+}
+
+int main()
+{
+    int no_of_test_cases;
+    cin >> no_of_test_cases;
+
+    while(no_of_test_cases--)
+        solve();
+
+    return 0;
+}

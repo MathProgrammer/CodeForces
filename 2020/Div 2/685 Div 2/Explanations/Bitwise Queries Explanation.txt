@@ -1,0 +1,146 @@
+Here is the main idea of the problem -
+
+1. We will find 1 element.
+2. We will use that element to determine the rest of the array.
+
+-----
+
+How do we find out 1 element ? And how do we use it to find the remaining ?
+
+Firstly, we will keep XOR[i] = XOR(A[1], A[i]), for all i
+
+If we know A[1], then A[i] = XOR(A[1], XOR[i])
+
+XOR is the best operation for recovering the original elements because OR and AND lose bits.
+In general, the symmetry offered by XOR is always the best for such problems.
+
+We will use the following identity - a + b = XOR(a, b) + 2AND(a, b)
+
+The reason is -
+
+1. When both a, b have a 0 at a bit, XOR is also 0 and addition is also 0
+2. When one has a 1, XOR and addition both give 1
+3. When both have a 1, XOR contributes 0 and addition contributes 2x2^i
+
+So, in order to complete addition, we need to add double of all the bits that are set in both a and b
+This is AND(a, b) !
+
+------
+
+We will find out the sums of
+
+A[1] + A[2] = S[12]
+A[2] + A[3] = S[23]
+A[3] + A[1] = S[31]
+
+This requires 6 queries and the remaining (n - 3) can be guessed with 1 query each.
+
+But, we can use the following idea to bring it down to 5 -
+
+XOR(A[2], A[3]) = XOR( XOR(A[1], A[2]), XOR(A[1], A[3]) )
+
+This is enough for the Easy Version
+
+------
+
+Let us use the fact that all integer are in [0, n - 1] and
+that n is a power of 2.
+
+This means that either there is some integer that repeats twice or
+all integers in [0, n - 1] are present.
+
+If some integer is present twice, then XOR[i] = XOR[j].
+We can use AND(i, j) to find out A[i] and use A[i] to find out A[1]
+A[1] can be used to find out the remaining array. This requires
+1 + (n - 1) = n operations
+
+If every integer is present, it means every integer's binary complement occurs.
+This means that for every integer, there will be an integer such that their sum is (n - 1).
+This means that the XOR is (N - 1) and AND is 0.
+This save us a query.
+
+If XOR[i] = N - 1, then we will find out (A[1], A[i], A[j]) using the system of equations method we used.
+But we only need 4 queries instead of 5 since AND(A[1], A[i]) is known.
+
+------
+
+void ask(int i, int j, string operation, int &result)
+{
+    cout << operation << " " << i << " " << j << "\n";
+    cout.flush();
+
+    cin >> result;
+}
+
+int main()
+{
+    int no_of_elements;
+    cin >> no_of_elements;
+
+    vector <int> A(no_of_elements + 1, -1);
+    vector <int> xor_1(no_of_elements + 1, 0);
+    for(int i = 2; i <= no_of_elements; i++)
+    {
+        ask(1, i, "XOR", xor_1[i]);
+    }
+
+    int and_12 = -1, and_23 = -1, and_13 = -1;
+    int xor_12 = -1 , xor_13 = -1, xor_23 = -1;
+    int second = 0, third = 0;
+
+    map <int, int> last_xor_occurence;
+
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        //All Elements Different, At least one pair XOR = n - 1, n = 2^p
+        if(xor_1[i] == no_of_elements - 1)
+        {
+            second = i;
+            third = (i == 2 ? 3 : 2);
+
+            xor_12 = xor_1[second];
+            xor_13 = xor_1[third];
+            xor_23 =  xor_1[second]^xor_1[third];
+
+            and_12 = 0;
+            ask(second, third, "AND", and_23);
+            ask(1, third, "AND", and_13);
+            break;
+        }
+
+        //Two Equal Elements
+        if(last_xor_occurence[xor_1[i]] != 0)
+        {
+            ask(last_xor_occurence[xor_1[i]], i, "AND", A[i]);
+            A[1] = A[i]^xor_1[i];
+
+            break;
+        }
+
+        last_xor_occurence[xor_1[i]] = i;
+    }
+
+    if(second != 0 && third != 0)
+    {
+        int sum_12 = xor_12 + 2*and_12;
+        int sum_23 = xor_23 + 2*and_23;
+        int sum_13 = xor_13 + 2*and_13;
+
+        A[1] = (sum_12 - sum_23 + sum_13)/2;
+    }
+
+    for(int i = 2; i <= no_of_elements; i++)
+    {
+        A[i] = A[1]^xor_1[i];
+    }
+
+    cout << "! ";
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        cout << A[i] << " ";
+    }
+    cout << "\n";
+    cout.flush();
+
+    return 0;
+}
