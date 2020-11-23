@@ -1,0 +1,187 @@
+In each range [L, R], let us count only the first K occurrences of each distinct element.
+
+In order to do this, we need to do something creative.
+
+For each index i, let K[i] denote the K-th previous occurrence of A[i].
+
+Instead of counting at most K occurrences of each index,
+we will count an index i
+if and only if K[i] < L
+
+If K[i] < L, we can be sure that A[i] is one of the first k occurrences of A[i] in [L, R]
+
+-----
+
+Let us build an auxiliary array K
+
+K[i] will contain the index of the K-th previous index of A[i].
+
+When we are given a query [L, R]
+
+------
+
+1. Build a Merge Sort Tree on K
+2. For each query, count the number of elements in the range who's value < K
+
+Each such value is one of the first K values in [L, R]
+
+Instead of generating the vector each time, we will binary search each node and count
+the number of integers < x
+
+We can do this by finding the first integer >= x
+
+Since the vectors are 0-indexed, this returns the number of integers < x
+
+-----
+
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+#define LEFT(n) (2*n)
+#define RIGHT(n) (2*n + 1)
+#define all(v) (v).begin(), (v).end()
+using namespace std;
+
+const int MAX_N = 1e5 +5;
+int k_th_ancestor[MAX_N];
+vector <int> indices[MAX_N];
+vector <int> tree[3*MAX_N];
+
+vector <int> merge(vector <int> &L, vector <int> &R)
+{
+    vector <int> answer;
+
+    for(int l = 0, r = 0; l < L.size() || r < R.size(); )
+    {
+        if(l == L.size())
+        {
+            answer.push_back(R[r++]);
+            continue;
+        }
+
+        if(r == R.size())
+        {
+            answer.push_back(L[l++]);
+            continue;
+        }
+
+        if(L[l] <= R[r])
+        {
+            answer.push_back(L[l++]);
+        }
+        else
+        {
+            answer.push_back(R[r++]);
+        }
+    }
+
+    return answer;
+}
+
+void build(int n, int left, int right)
+{
+    if(left == right)
+    {
+        tree[n].push_back(k_th_ancestor[left]);
+
+        /*cout << "n = " << n  <<"[" << left <<"," << right << "]\n" << endl;
+        for(int i = 0; i < tree[n].size(); i++)
+        {
+            cout << tree[n][i] << " ";
+        } cout << "\n";*/
+        return;
+    }
+
+    int mid = (left + right)/2;
+    build(LEFT(n), left, mid);
+    build(RIGHT(n), mid + 1, right);
+
+    tree[n] = merge(tree[LEFT(n)], tree[RIGHT(n)]);
+    /*cout << "n = " << n  <<"[" << left <<"," << right << "]\n" << endl;
+    for(int i = 0; i < tree[n].size(); i++)
+    {
+        cout << tree[n][i] << " ";
+    } cout << "\n";*/
+}
+
+int query(int n, int left, int right, int query_left, int query_right, int x)
+{
+    if(query_right < left || right < query_left)
+    {
+        return 0;
+    }
+
+    if(query_left <= left && right <= query_right)
+    {
+        return (upper_bound(all(tree[n]), x - 1) - tree[n].begin());
+    }
+
+    int mid = (left + right)/2;
+
+    return (query(LEFT(n), left, mid, query_left, query_right, x) +
+            query(RIGHT(n), mid + 1, right, query_left, query_right, x));
+}
+
+int main()
+{
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+
+    int no_of_elements, k;
+    cin >> no_of_elements >> k;
+
+    vector <int> A(no_of_elements + 1);
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        cin >> A[i];
+
+        indices[A[i]].push_back(i);
+
+        if(indices[A[i]].size() > k)
+        {
+            int k_th_step = indices[A[i]].size() - 1 - k;
+
+            k_th_ancestor[i] = indices[A[i]][k_th_step]; //cout << " K-th " << i << " = " << k_th_ancestor[i] << "\n";
+        }
+        else
+        {
+            k_th_ancestor[i] = 0;
+        }
+    }
+
+    build(1, 1, no_of_elements);
+
+    int no_of_queries;
+    cin >> no_of_queries;
+
+    int answer = 0;
+
+    for(int i = 1; i <= no_of_queries; i++)
+    {
+        int x, y;
+        cin >> x >> y;
+
+        int left = ((x + answer)%no_of_elements) + 1;
+        int right = ((y + answer)%no_of_elements) + 1;
+        if(left > right)
+        {
+            swap(left, right);
+        }
+
+       // cout << "L = " << left << " R = " << right << "\n";
+        //vector <int> range = query(1, 1, no_of_elements, left, right);
+        /*cout << "Size = " << range.size() << "\n";
+        for(int i = 0; i < range.size(); i++)
+        {
+            cout << range[i] << " ";
+        }
+        cout << "\n";*/
+
+        answer = query(1, 1, no_of_elements, left, right, left);
+
+        cout << answer << "\n";
+    }
+
+    return 0;
+}
