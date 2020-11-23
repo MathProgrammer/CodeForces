@@ -1,0 +1,137 @@
+The array is sorted in non-increasing order.
+This is important because it allows us to use a Minimum Segment Tree built over A.
+
+Let us see how we can simulate the process.
+
+We will start at 1 and then traverse the tree.
+
+If the current node's range is completely outside the range we are looking at, discard it.
+If the current node's minimum is > M, then we cannot buy a single element here, so discard it.
+
+If these two conditions are not satisfied,
+then it means there is at least 1 element here which we can buy.
+
+If the current node is completely within the range and the sum < M, buy everything in the range.
+
+Otherwise, go to the left child and then the right child.
+
+This ensures we are visiting the array elements in left-to-right order.
+The sorting helps us use the Minimum Segment Tree
+
+-----
+
+{
+    propagate(n, left, right);
+
+    if(right < query_left || query_right < left)
+    {   //cout << "Outside range\n";
+        return;
+    }
+
+    //cout << "In "<< n << " [" << left << "," << right << "]\n";
+    if(tree[n].minimum > M)
+    {   //cout << "Minimum = " << tree[n].minimum << " > " << M << "\n";
+        return;
+    }
+
+    if(query_left <= left && right <= query_right && tree[n].sum <= M)
+    {
+        M -= tree[n].sum; //cout << "Sum = " << tree[n].sum << "\n";
+        C += (right - left + 1);
+        //cout << "Completely within Range and now " << M << "\n";
+        return;
+    }
+
+    int mid = (left + right)/2;
+    //cout << "Breaking into Left with " << M << "\n";
+    go_right(LEFT(n), left, mid, query_left, query_right, M, C); //cout << "Breaking into right with " << M << "\n";
+    go_right(RIGHT(n), mid + 1, right, query_left, query_right, M, C);
+}
+
+-----
+
+Be careful while doing lazy propagation. I had 2 mistakes -
+
+1. I was propagating even when lazy[n] = 0
+2. I was adding lazy[n] to it's children, when I should be assigning.
+Adding affects the sum and the minimum.
+
+Do not propagate if you are at a leaf node. I avoided this mistake, but it is a common one.
+
+-----
+
+struct node
+{
+    long long sum, minimum, maximum, lazy;
+
+    node()
+    {
+        sum = 0; lazy = 0;
+    }
+
+    node(long long S, long long Min, long long Max)
+    {
+        sum = S; minimum = Min; maximum = Max;
+        lazy = 0;
+    }
+};
+
+node merge(node &L, node &R)
+{
+    return node(L.sum + R.sum, min(L.minimum, R.minimum), max(L.maximum, R.maximum));
+}
+
+const int MAX_N = 2e5 + 5, oo = 1e9;
+node tree[3*MAX_N];
+
+void propagate(int n, int left, int right)
+{
+    if(tree[n].lazy == 0)
+    {
+        return;
+    }
+
+    tree[n].maximum = tree[n].lazy;
+    tree[n].minimum = tree[n].lazy;
+    tree[n].sum = (right - left + 1)*tree[n].lazy;
+
+    if(left != right)
+    {
+        tree[LEFT(n)].lazy = tree[n].lazy;
+        tree[RIGHT(n)].lazy = tree[n].lazy;
+    }
+
+    tree[n].lazy = 0;
+}
+
+
+-----
+
+For the update operation, we have to update some suffix of the prefix since A is sorted.
+So, we will look for the first integer < y and then update everything in [i, x]
+
+int find_first(int n, int left, int right, int x)
+{
+    propagate(n, left, right);
+
+    if(tree[n].minimum >= x)
+    {
+        return oo;
+    }
+
+    if(left == right)
+    {
+        return right;
+    }
+
+    int mid = (left + right)/2;
+
+    if(tree[LEFT(n)].minimum < x)
+    {
+        return find_first(LEFT(n), left, mid, x);
+    }
+
+    return find_first(RIGHT(n), mid + 1, right, x);
+}
+
+-----
