@@ -1,0 +1,168 @@
+A connected graph with N vertices and N edges has exactly 1 cycle.
+
+-----
+
+We can prove this with Mathematical Induction.
+
+It is true for a graph with 2 vertices.
+
+Suppose it is true for a graph with n vertices.
+
+Consider a graph of (n + 1) vertices.
+Either it is a single cycle of length (n + 1), or it will have at least 1 leaf.
+We can delete the leaf and get a graph of n vertices and n edges, and use the
+Induction Hypothesis.
+
+-----
+
+The Graph looks like a ring where each vertex is the root of a tree.
+
+Suppose the sizes of the subtree are (S1, S2, ... Sk)
+
+Instead of counting paths, let us count source-destination pairs.
+
+There are 2 types of pairs of vertices
+
+1. Pairs within the same subtree
+2. Pairs in different subtrees
+
+Pairs in the same subtree have only 1 path between them.
+Pairs in different subtrees have 2 paths between them because of the cycle.
+The cycle gives us exactly 2 paths between every pair of roots.
+
+Suppose we are processing the i-th subtree.
+The number of pairs of different trees =
+
+Si(S1 + S2 + ... + S{i - 1} + S{i + 1} + ... + Sk)
+
+In order to avoid overcounting this and ensuring each pair is only counted once,
+I only added it with the prefix.
+
+So pairs between S[3] and S[5],
+will be added to the total only when we are processing the 5-th subtree
+
+------
+
+void solve()
+{
+    cin >> no_of_vertices;
+
+    cycle.clear();
+
+    for(int i = 1; i <= no_of_vertices; i++)
+    {
+        graph[i].clear();
+
+        parent[i] = 0;
+        visited[i] = false;
+        lies_on_cycle[i] = false;
+    }
+
+    for(int i = 1; i <= no_of_vertices; i++)
+    {
+        int u, v;
+        cin >> u >> v;
+
+        graph[u].push_back(v);
+        graph[v].push_back(u);
+    }
+
+    long long remaining = 0;
+    long long answer = 0;
+
+    dfs(1, 0);
+
+    for(int i = 0; i < cycle.size(); i++)
+    {
+        int v = cycle[i];
+
+        long long subtree_here = dfs_without_cycle(v, 0);
+
+        long long inside = choose_2(subtree_here);
+        long long inside_outside = 2*(subtree_here*remaining);
+        //cout << "Multiplying 2 " << inside << " " << remaining << " = " << inside_outside << "\n";
+
+        answer += (inside + inside_outside);
+
+        remaining += subtree_here;
+    }
+
+    cout << answer << "\n";
+}
+
+-----
+
+Here is how to DFS to find a cycle.
+
+Keep track of number of times a vertex is visited and the parent of each vertex.
+
+When we are visiting a vertex for the second time, we have found a cycle and must go back.
+
+void dfs(int v, int parent_v)
+{
+    if(visited[v] == 2)
+    {
+        return ;
+    }
+
+    if(visited[v] == 1)
+    {
+        lies_on_cycle[v] = true;
+        cycle.push_back(v);
+
+        int u = parent_v;
+
+        while(u != v)
+        {
+            cycle.push_back(u);
+
+            lies_on_cycle[u] = true;
+            u = parent[u];
+
+            visited[u] = 2;
+        }
+
+        return;
+    }
+
+    visited[v] = 1;
+    parent[v] = parent_v;
+
+    for(int i = 0; i < graph[v].size(); i++)
+    {
+        int child_v = graph[v][i];
+
+        if(child_v == parent_v)
+        {
+            continue;
+        }
+
+        dfs(child_v, v);
+    }
+
+    visited[v] = 2;
+}
+
+-----
+
+In order to DFS to find the size of the subtree rooted at v,
+do a normal DFS but ignore the neighbours of v on the cycle
+
+int dfs_without_cycle(int v, int parent_v)
+{
+    int count = 1;
+
+    for(int i = 0; i < graph[v].size(); i++)
+    {
+        int child_v = graph[v][i];
+
+        if(child_v == parent_v || lies_on_cycle[child_v])
+        {
+            continue;
+        }
+
+        count += dfs_without_cycle(child_v, v);
+    }
+
+    return count;
+}

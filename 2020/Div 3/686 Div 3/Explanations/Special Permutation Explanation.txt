@@ -1,0 +1,16 @@
+I printed one cyclic rotation of the matrix
+
+-----
+
+void solve()
+{
+    int no_of_elements;
+    cin >> no_of_elements;
+
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        cout << i%no_of_elements + 1 << " ";
+    }
+
+    cout << "\n";
+}

@@ -1,0 +1,35 @@
+Look for the minimum integer who's frequency is 1
+
+We can also do this by inserting everything into a set and printing the first element of the set.
+
+-----
+
+void solve()
+{
+    int no_of_elements;
+    cin >> no_of_elements;
+
+    map <int, int> frequency;
+    vector <int> A(no_of_elements + 1);
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        cin >> A[i];
+
+        frequency[A[i]]++;
+    }
+
+    const int oo = 1e9 + 9;
+    int winner = -1, answer = oo;
+
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        if(frequency[A[i]] == 1 && A[i] < answer)
+        {
+            answer = A[i];
+
+            winner = i;
+        }
+    }
+
+    cout << winner << "\n";
+}
