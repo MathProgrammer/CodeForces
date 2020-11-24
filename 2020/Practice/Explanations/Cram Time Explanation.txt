@@ -1,0 +1,100 @@
+It is always optimal to use consecutive integers.
+
+Let x be the larget integer such that x(x + 1)/2 <= (a + b),
+
+we will show that it is always possible to attain x.
+
+We will fill up i = x down to 1 in descending order in a.
+
+When a = a' < i, we will put a' in a, so that a = 0 is completely filled.
+
+Since a is completely filled and x(x + 1)/2 <= (a + b),
+we can put all the remaining integers in b
+
+-----
+
+Please note that filling it in ascending order will not work.
+It might leave gaps.
+
+For example suppose we are at i and have already placed all integers < i.
+
+a = a' < i
+
+Now, we cannot put i in a and since we have already filled all the smaller integers,
+we can never fill a.
+
+This leaves a gap.
+
+So, we have to fill it in descending order. We have to ensure that at least one of the days is completely packed.
+
+-----
+
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+void display(vector <long long> &A)
+{
+    cout << A.size() << "\n";
+
+    for(int i = 0; i < A.size(); i++)
+    {
+        cout << A[i] << " ";
+    }
+
+    cout << "\n";
+}
+
+int main()
+{
+    long long a, b;
+    cin >> a >> b;
+
+    long long left = 0, right = 1e5;
+    while(right - left > 1)
+    {
+        long long mid = (right + left)/2;
+
+        if(mid*(mid + 1) <= (a + b)*2)
+        {
+            left = mid;
+        }
+        else
+        {
+            right = mid;
+        }
+    }
+
+    vector <long long> day_a, day_b;
+    long long problems = left;
+    for(long long i = problems; i >= 1; i--)
+    {
+        if(a >= i)
+        {
+            day_a.push_back(i);
+            a -= i;
+        }
+        else
+        {
+            for(; i >= 1; i--)
+            {
+                if(i == a)
+                {
+                    day_a.push_back(i);
+                    a -= i;
+                }
+                else
+                {
+                    day_b.push_back(i);
+                    b -= i;
+                }
+            }
+        }
+    }
+
+    display(day_a);
+    display(day_b);
+
+    return 0;
+}
