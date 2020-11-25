@@ -1,0 +1,95 @@
+Let us suppose the question was asking us to sort P.
+The question is actually equivalent to it.
+We just have to relabel each integer in S so that S = {1, 2, 3, ... , N}
+
+-----
+
+We will first place N in it's position and then N - 1 and so on.
+
+Suppose N is in position i,
+
+A[i] = N
+
+There will be at least one integer to the left of A[i] that is <= i
+There is at least one integer in j in [i + 1, N] that is A[j] <= i
+When we encounter such an A[j], we will swap (A[i], A[j])
+This way both A[i] and A[j] move close to their destinations mutually.
+
+How do we prove there is always such an integer ?
+
+There are (N - i) integers > i
+And N is not in [i + 1, N]
+Since the number of positions is more than the number of integers,
+there will be at least 1 integer A[j] such that A[j] <= i
+by the Pigeonhole Principle
+
+The number of swaps will be |Position[i] - i| summed over all i.
+Clearly this is the optimal value.
+
+-----
+
+int main()
+{
+    int no_of_elements;
+    cin >> no_of_elements;
+
+    vector <int> P(no_of_elements + 1), S(no_of_elements + 1);
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        cin >> P[i];
+    }
+
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        cin >> S[i];
+    }
+
+    vector <int> label(no_of_elements + 1);
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        label[S[i]] = i;
+    }
+
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        P[i] = label[P[i]];
+    }
+
+    long long cost = 0;
+    vector <pair <int, int> > swaps;
+
+    for(int current = no_of_elements, i; current >= 1; current--)
+    {
+        for(i = 1; i <= no_of_elements; i++)
+        {
+            if(P[i] == current)
+            {
+                break;
+            }
+        }
+
+        //cout << "Current = " << current << " i = " << i << " \n";
+        for(int j = i + 1; j <= current; j++)
+        {
+            if(P[j] <= i)
+            {   //cout << "j = " << j << "\n";
+
+                swap(P[i], P[j]);
+
+                swaps.push_back(make_pair(i, j));
+
+                cost += (j - i);
+
+                i = j;
+            }
+        }
+    }
+
+    cout << cost << " " << swaps.size() << "\n";
+    for(int i = 0; i < swaps.size(); i++)
+    {
+        cout << swaps[i].first << " " << swaps[i].second << "\n";
+    }
+
+    return 0;
+}
