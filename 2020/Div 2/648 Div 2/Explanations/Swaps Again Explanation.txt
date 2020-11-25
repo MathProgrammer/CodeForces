@@ -1,0 +1,86 @@
+Let us look at how the array is affected after one operation
+
+- $(a_1, a_2, \dots , a_i, \dots , a_{n - i + 1}, a_{n - i + 2}, \dots , a_n)$
+- $(a_{n - i + 1}, a_{n - i + 2}, \dots , a_n, \dots , a_1, a_2 \dots  a_i)$
+
+There is a very interesting invariant here. The pairs $(a_i, a_{n - i + 1})$ are always together, but can be swapped.
+
+So, we will check whether all $n/2$ pairs $(a_i, a_{n - i + 1})$ and see that both arrays have the same pairs.
+
+-----
+
+If the invariant is met, we can put each element in place in at most 3 steps
+
+Suppose we want to put the correct element in the index $i$. And suppose $a_i$ is in position $p$.
+
+- We will perform $[1, p]$ if $p < n$
+    - Now $a_p$ is the last element.
+- We will perform operation $[1, i]$
+    - Now $a_p$ is in the $i$-th index
+- If $p$ was in the second half of the array, we'd need an extra operation.
+
+It requires at most $3$ operations for each pair.
+
+------
+
+void solve()
+{
+    int no_of_elements;
+    cin >> no_of_elements;
+
+    vector <int> A(no_of_elements + 1);
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        cin >> A[i];
+    }
+
+    vector <int> B(no_of_elements + 1);
+    for(int j = 1; j <= no_of_elements; j++)
+    {
+        cin >> B[j];
+    }
+
+    map < pair <int, int>, int> frequency_A;
+    for(int i = 1; 2*i <= no_of_elements; i++)
+    {
+        if(A[i] > A[no_of_elements - i + 1])
+        {
+            swap(A[i], A[no_of_elements - i + 1]);
+        }
+
+        frequency_A[make_pair(A[i], A[no_of_elements - i + 1])]++;
+    }
+
+    map < pair <int, int>, int> frequency_B;
+    for(int i = 1; 2*i <= no_of_elements; i++)
+    {
+        if(B[i] > B[no_of_elements - i + 1])
+        {
+            swap(B[i], B[no_of_elements - i + 1]);
+        }
+
+        frequency_B[make_pair(B[i], B[no_of_elements - i + 1])]++;
+    }
+
+    int possible = true;
+
+    if(no_of_elements%2 == 1)
+    {
+        if(A[no_of_elements/2 + 1] != B[no_of_elements/2 + 1])
+        {
+            possible = false;
+        }
+    }
+
+    for(auto it = frequency_A.begin(); it != frequency_A.end(); it++)
+    {
+        pair <int, int> current_pair = it->first;
+
+        if(frequency_A[current_pair] != frequency_B[current_pair])
+        {
+            possible = false;
+        }
+    }
+
+    cout << (possible ? "Yes\n" : "No\n");
+}
