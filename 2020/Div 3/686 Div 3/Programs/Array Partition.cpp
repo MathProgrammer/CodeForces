@@ -4,89 +4,19 @@
 #include <map>
 #include <stack>
 
-#define LEFT(n) (2*n)
-#define RIGHT(n) (2*n + 1)
 #define all(v) (v).begin(), (v).end()
 using namespace std;
 
-struct node
-{
-    long long sum, minimum, maximum, lazy;
-    
-    node()
-    {
-        sum = 0; lazy = 0;
-    }
-    
-    node(long long S, long long Min, long long Max)
-    {
-        sum = S; minimum = Min; maximum = Max;
-        lazy = 0;
-    }
-};
-
-node merge(node L, node R)
-{
-    return node(L.sum + R.sum, min(L.minimum, R.minimum), max(L.maximum, R.maximum));
-}
-
-const int MAX_N = 3e5 + 5, oo = 1e9 + 9;
+const int MAX_N = 2e5 + 5;
 vector <int> indices[MAX_N];
 vector <int> A(MAX_N);
-node tree[3*MAX_N];
 
-void update(int n, int left, int right, int query_left, int query_right, long long x)
+void compress_coordinates(int no_of_elements)
 {
-    if(right < left || query_right < query_left || query_right < left || right < query_left)
-    {
-        return;
-    }
-    
-    if(query_left <= left && right <= query_right)
-    {
-        tree[n] = node(x, x, x);
-        return;
-    }
-    
-    int mid = (left + right)/2;
-    
-    update(LEFT(n), left, mid, query_left, query_right, x);
-    update(RIGHT(n), mid + 1, right, query_left, query_right, x);
-    
-    tree[n] = merge(tree[LEFT(n)], tree[RIGHT(n)]);
-}
-
-node get(int n, int left, int right, int query_left, int query_right)
-{
-    if(right < left || query_right < query_left || query_right < left || right < query_left)
-    {
-        return node(0, oo, 0);
-    }
-    
-    if(query_left <= left && right <= query_right)
-    {
-        return tree[n];
-    }
-    
-    int mid = (left + right)/2;
-    
-    return merge(get(LEFT(n), left, mid, query_left, query_right),
-                 get(RIGHT(n), mid + 1, right, query_left, query_right));
-}
-
-void solve()
-{
-    int no_of_elements;
-    cin >> no_of_elements;
-    
     vector <int> sorted_A(no_of_elements + 1);
     for(int i = 1; i <= no_of_elements; i++)
     {
-        cin >> A[i];
-        
         sorted_A[i] = A[i];
-        
-        indices[i].clear();
     }
     
     sort(sorted_A.begin(), sorted_A.end());
@@ -102,13 +32,26 @@ void solve()
     {
         A[i] = label[A[i]]; //cout << A[i] << " ";
         
-        update(1, 1, no_of_elements, i, i, A[i]);
-        
         indices[A[i]].push_back(i);
     }
-    
-    
-    vector <int> left_border(no_of_elements + 1);
+}
+
+void compute_prefix_and_suffix_max(int no_of_elements, vector <int> &prefix_maximum, vector <int> &suffix_maximum)
+{
+   for(int i = 1; i <= no_of_elements; i++)
+   {
+       prefix_maximum[i] = max(prefix_maximum[i - 1], A[i]);
+   }
+   
+   
+   for(int i = no_of_elements; i >= 1; i--)
+   {
+       suffix_maximum[i] = max(suffix_maximum[i + 1], A[i]);
+   }
+}
+
+void compute_borders(int no_of_elements, vector <int> &left_border, vector <int> &right_border)
+{
     stack <pair <int, int> > left_S;
     left_S.push(make_pair(0, 0));
     for(int i = 1; i <= no_of_elements; i++)
@@ -124,7 +67,6 @@ void solve()
     }
         
     stack <pair <int, int> > right_S;
-    vector <int> right_border(no_of_elements + 1);
     right_S.push(make_pair(0, no_of_elements + 1));
     for(int i = no_of_elements; i >= 1; i--)
     {
@@ -137,27 +79,75 @@ void solve()
         
         right_S.push(make_pair(A[i], i));
     }
+}
+
+void solve()
+{
+    int no_of_elements;
+    cin >> no_of_elements;
+    
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        cin >> A[i];
+        
+        indices[i].clear();
+    }
+    
+    compress_coordinates(no_of_elements);
+    
+    vector <int> prefix_maximum(no_of_elements + 1);
+    vector <int> suffix_maximum(no_of_elements + 5);
+    compute_prefix_and_suffix_max(no_of_elements, prefix_maximum, suffix_maximum);
+    
+    vector <int> left_border(no_of_elements + 1);
+    vector <int> right_border(no_of_elements + 1);
+    compute_borders(no_of_elements, left_border, right_border);
     
     for(int i = 1; i <= no_of_elements; i++)
     {   //cout << "For " << i << " is minimum in [" << left_border[i] << " " << right_border[i] << "]\n";
-        if(indices[A[i]].size() < 3)
+        if(indices[A[i]].size() < 3 || i == indices[A[i]][0] || i == indices[A[i]].back())
         {
             continue;
         }
         
-        int p = lower_bound(all(indices[A[i]]), i) - indices[A[i]].begin() - 1;
-        int s = lower_bound(all(indices[A[i]]), i) - indices[A[i]].begin() + 1;
-        int prefix = A[p], suffix = A[s];
+        if(prefix_maximum[left_border[i] - 1] > A[i] || suffix_maximum[right_border[i] + 1] > A[i])
+        {
+            continue;
+        }
+        
+        int p = upper_bound(all(indices[A[i]]), left_border[i] - 2) - indices[A[i]].begin();
+        if(indices[A[i]][p] == i)
+        {
+            p--;
+        }
+        
+        int s = lower_bound(all(indices[A[i]]), right_border[i] - 1) - indices[A[i]].begin();
+        if(s == indices[A[i]].size() || indices[A[i]][s] > right_border[i] + 1)
+        {
+            s--;
+        }
+        
+        while(s < indices[A[i]].size() && indices[A[i]][s] <= i)
+        {
+            s++;
+        }
+        
+        int prefix, suffix;
         //cout << "p = " << indices[A[i]][p] << " s = " << indices[A[i]][s] << "\n";
         int left_possible = false;
         
         while(p >= 0)
         {
             prefix = max(indices[A[i]][p], left_border[i] - 1);
-            
-            if(get(1, 1, no_of_elements, 1, prefix).maximum == A[i])
+            //cout << "Prefix = " << prefix << " Maximum = " << prefix_maximum[prefix] << "\n";
+            if(prefix_maximum[prefix] == A[i])
             {
                 left_possible = true;
+                break;
+            }
+            
+            if(p < left_border[i] - 1)
+            {
                 break;
             }
             
@@ -173,14 +163,20 @@ void solve()
         
         while(s < indices[A[i]].size())
         {
-            suffix = min(right_border[i] + 1, indices[A[i]][s]);
+            suffix = min(indices[A[i]][s], right_border[i] + 1);
+            //cout << "Prefix = " << suffix<< " Maximum = " << suffix_maximum[suffix] << "\n";
             
-            if(get(1, 1, no_of_elements, suffix, no_of_elements).maximum == A[i])
+            if(suffix_maximum[suffix] == A[i])
             {
                 right_possible = true;
                 break;
             }
-                
+            
+            if(s > right_border[i] + 1)
+            {
+                break;
+            }
+            
             s++;
         }
         
@@ -203,6 +199,9 @@ void solve()
 
 int main()
 {
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+    
     int no_of_test_cases;
     cin >> no_of_test_cases;
     
