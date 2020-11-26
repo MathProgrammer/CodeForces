@@ -1,0 +1,61 @@
+It is possible to increase the length of the alternating sequence by at most 2.
+
+Suppose we have consecutive 1's or consecutive 0's.
+
+If we have a substring 00 in our string,
+we will flip it to either 10 or 01
+It increases the number of sequences by 2.
+
+If 00 is at the end or beginning of the string,
+we increase the number of alternate sequences by 1.
+
+If it is in the middle, we increase it by 2.
+
+-----
+
+We can prove this is optimal by considering the impact of the flip on the
+compressed string where each equal substring is compressed to a single character.
+
+Flipping [L, R] is the same as
+
+1. Flipping [1, R]
+2. Flipping [1, L - 1]
+
+------
+
+The number of alternating sequences in the prefix will remain the same since
+it is flipped twice.
+
+The suffix is not flipped at all.
+
+The only way we can increase the number of characters in our compressed string is
+by flipping a part of a segment.
+
+If the segment is first or last, we increase by 1
+If the segment is in the middle, we increase by 2.
+
+If there is no segment of length > 1, we cannot increase the length of the
+longest alternating subsequence. 
+
+-----
+
+int main()
+{
+    int length;
+    string S;
+    cin >> length >> S;
+
+    int alternating_subsequence = 0;
+    for(int i = 0; i < length; i++)
+    {
+        if(i == 0 || S[i] != S[i - 1])
+        {
+            alternating_subsequence++;
+        }
+    }
+
+    int answer = min(alternating_subsequence + 2, length);
+    cout << answer << "\n";
+
+    return 0;
+}
