@@ -1,0 +1,35 @@
+Whenever we are asked to compute a sum,
+we must try to break it down and count the individual contribution of each term.
+
+In this case, every cost consists of some prefix of the string concatenated
+with some suffix of the string.
+
+Let us count the contribution of each digit when it is
+
+1. Part of the prefix
+2. Part of the suffix.
+
+-----
+
+If a digit is part of the suffix, then it means there is no digit to it's right
+that is deleted.
+
+So, if it is the s-th digit from the right, it's value will be
+
+10^s S[s]
+
+How many strings have this digit in it's suffix ?
+
+We can remove p(p - 1)/2 + p strings from the prefix,
+where p = length of string before S[s]
+
+So, the total suffix cost of S[s] = p(p + 1)/2 10^s S[s]
+
+-----
+
+Now, let us count the prefix cost of S[i].
+This means that no character to it's left is deleted.
+
+This is a little more tricky.
+
+Suppose S[i] is the 5th character from the right. 
