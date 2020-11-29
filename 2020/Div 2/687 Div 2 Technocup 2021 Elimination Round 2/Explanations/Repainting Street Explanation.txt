@@ -1,0 +1,43 @@
+There are only 100 colours so check the cost to make the array equal to each colour.
+
+The check can be done greedily.
+
+-----
+
+int calculate(vector <int> &A, int k, int chosen)
+{
+    int n = A.size() - 1, no_of_days = 0;
+
+    for(int i = 1; i <= n; i++)
+    {
+        if(A[i] != chosen)
+        {
+            no_of_days++;
+
+            i += (k - 1);
+        }
+    }
+
+    return no_of_days;
+}
+
+void solve()
+{
+    int no_of_elements, k;
+    cin >> no_of_elements >> k;
+
+    vector <int> A(no_of_elements + 1);
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        cin >> A[i];
+    }
+
+    const int MAX_COLOURS = 100;
+    int answer = ceil(no_of_elements, k);
+    for(int c = 1; c <= MAX_COLOURS; c++)
+    {
+        answer = min(answer, calculate(A, k, c));
+    }
+
+    cout << answer << "\n";
+}

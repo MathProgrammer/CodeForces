@@ -1,0 +1,20 @@
+The X and Y axes are independent.
+
+The X answer is max(i - 1, n - i)
+The Y answer is max(j - 1, m - j)
+
+Add the answers
+
+-----
+
+void solve()
+{
+    int rows, columns, i, j;
+    cin >> rows >> columns >> i >> j;
+
+    int row_answer = max(rows - i, i - 1);
+    int column_answer = max(columns - j, j - 1);
+
+    int answer = row_answer + column_answer;
+    cout << answer << "\n";
+}
