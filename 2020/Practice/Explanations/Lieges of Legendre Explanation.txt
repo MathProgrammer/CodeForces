@@ -1,0 +1,119 @@
+This is an impartial game.
+Let us try to reduce it to a game of NIM using the Sprague Grundy Theorem.
+
+Let us try to find out the grundy number of f(2n)
+
+f(2n) = mex{f(2n - 1), XOR(f(n), f(n), ... , f(n))}
+
+If K is even, then f(2n) = mex{f(2n - 1), 0}
+If K is odd, then f(2n) = mex{f(2n - 1), f(n)}
+
+-----
+
+Let us write out the function for even K
+
+f(0) = 0
+f(1) = mex(f(0)) = 1
+f(2) = mex(f(1), 0) = 2
+f(3) = mex(f(2)) = 0
+f(4) = mex(f(3)) = 1
+f(5) = mex(f(4)) = 0
+
+Here, we can see that f(n) = 1, if n is odd and 0 if n is even > 2
+
+We can prove this with mathematical induction.
+
+It is true for f(3), f(4)
+Suppose it is true for f(k), f(k + 1)
+
+f(k + 2) = mex(f(k + 1)) = mex(1) = 0
+f(k + 3) = mex(f(k + 2), 0) = mex(0, 0) = 1
+
+-----
+
+Let us write out the first few values with odd K
+
+f(0) = 0
+f(1) = mex(f(0)) = 1
+f(2) = mex(f(1)) = 0
+f(3) = mex(f(2)) = 1
+f(4) = mex(f(3), f(2)) = 2
+f(5) = mex(f(4)) = 0
+f(6) = mex(f(5), f(3)) = 2
+f(7) = 0
+f(8) = 1
+f(9) = 0
+f(10) = 1
+f(11) = 0
+f(12) = 1
+f(13) = 0
+f(14) = 1
+
+We see a pattern emerge that
+f(n) = 0 for all odd n > 3 and
+f(n) > 0 for all even n > 2
+
+We can prove this with Mathematical Induction.
+It is true for f(5), f(6).
+
+Suppose it is true for f(k), f(k + 1)
+
+f(k + 2) = mex{f(k + 1)} = 0, since f(k + 1) > 0 by the Induction Hypothesis
+f(k + 3) = mex{f(k + 2), f((k + 3)/2)} > 0
+
+-----
+
+For odd K, we can return the answer as 0 if it is odd > 3
+And if it is even, then we will check the value of f(n/2)
+
+If f(n/2) = 1, then f(n) = 2
+If f(n/2) > 1, then f(n) = 1
+
+The only exception is f(4) = 2 even though f(4/2) = 0 because f(3) = 1
+and f(2) = 0
+
+The time complexity is O(log MAXN)
+
+-----
+
+int get_grundy(int n, int k)
+{
+    if(n == 0)
+    {
+        return 0;
+    }
+
+    if(n == 1)
+    {
+        return 1;
+    }
+
+    if(k%2 == 0)
+    {
+        if(n == 2)
+        {
+            return 2;
+        }
+
+        return (n%2 == 0 ? 1 : 0);
+    }
+    else
+    {
+        if(n%2 == 1)
+        {
+            return (n <= 3 ? 1 : 0);
+        }
+
+        if(n == 2)
+        {
+            return 0;
+        }
+
+        if(n == 4)
+        {
+            return 2;
+        }
+
+        return (get_grundy(n/2, k) == 1 ? 2 : 1);
+    }
+}

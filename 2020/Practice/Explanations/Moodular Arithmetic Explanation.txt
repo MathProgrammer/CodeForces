@@ -1,0 +1,90 @@
+Let us study the implication of the functional equation.
+
+Suppose f(n) = x
+
+f(k n) = k x
+f(k^2 n) = k f(k n) = k^2 x
+f(k^3 n) = k f(k^2 n) = k^3 x
+And so on
+
+f(k^i n) = k^i f(n)
+
+So, if we assign f(n) to a value, the values of
+f(kn), f(k^2 n), f(k^3 n), ... , f(k^i n) are determined until
+k^{i + 1} = 1 because (n, kn, k^2 n, ... k^i n are all distinct)
+
+What about f(0) ?
+f(0) = k f(0) (mod p)
+(k - 1) f(0) = 0 (mod p)
+This means that f(0) = 0 since p cannot divide (k - 1) as k <= p
+
+So, we can divide {1, ... , p - 1} into (p - 1)/m subgroups
+where m is the order of k.
+
+In each subgroup, we can choose one value freely among p options and the rest are determined.
+
+The answer is p^{(p - 1)/m}
+
+-----
+
+If k = 0, then f(0) = 0 (mod n)
+The remaining values can be chosen freely.
+This can be done in p^{p - 1} ways
+
+If k = 1, then f(n) = f(n) (mod n)
+This can be done in p^p ways.
+
+------
+
+int main()
+{
+    int p, k;
+    cin >> p >> k;
+
+    const int MOD = 1e9 + 7;
+    if(k == 0)
+    {
+        cout << power_mod(p, p  - 1, MOD) << "\n";
+        return 0;
+    }
+    if(k == 1)
+    {
+        cout << power_mod(p, p, MOD) << "\n";
+        return 0;
+    }
+
+    cout << power_mod(p, (p - 1)/order(k, p), MOD) << "\n";
+    return 0;
+}
+
+------
+
+We will use Lagrange's Theorem which says that the order of any subgroup divides the order of the group.
+
+This will enable us to find out the order of k.
+
+It must be a factor of (p - 1).
+
+-----
+
+int order(int k, int m)
+{
+    int answer = m - 1;
+
+    for(int i = 1; i*i <= m - 1; i++)
+    {
+        if((m - 1)%i == 0)
+        {
+            if(power_mod(k, i, m) == 1)
+            {
+                answer = min(answer, i);
+            }
+            else if(power_mod(k, (m - 1)/i, m) == 1)
+            {
+                answer = min(answer, (m - 1)/i);
+            }
+        }
+    }
+
+    return answer;
+}
