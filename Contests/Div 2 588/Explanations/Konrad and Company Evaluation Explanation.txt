@@ -1,0 +1,109 @@
+In any counting question, it is always a good idea to iterate over the middle
+to count triplets.
+
+We want to count the number of vertices (u, v, w) that are connected.
+
+Let us iterate over the middle vertex v and count the number of incoming and outgoing edges.
+
+The total count is the sum of (indegree[v]*outdegree[v]) over all v.
+
+-----
+
+We will draw a graph where u->v, if u < v
+
+How do we process updates when v becomes the largest vertex in the graph ?
+Although the question says salary increases by (n + i), ignore it.
+
+When v becomes the largest element in the graph, we need to reverse the direction of
+all edges going out of v and make them come into v.
+
+We have to correspondingly update the indegree and outdegree of v and all it's neighbours.
+
+-----
+
+How do we do this in time ?
+
+At first, I maintained an adjacency set and for each neighbour of v,
+I erased it from v's adjacency set and inserted v into the adjacency set of it's neighbour.
+
+However, this adds an additional log factor.
+
+It is more efficient to simply use Adjacency Lists !
+We will first insert v into the adjacency lists of all it's neighbours.
+Instead of erasing the elements of v one by one, we will just clear v's adjacency list
+all at once when we are done.
+v will anyway be empty and become a sink after we are done, so we can do this !
+
+Before updating the edge, indegree and outdegree of a vertex,
+we will remove it's contribution from the sum and then add it's new contribution to the sum.
+It is easier to do this than to try to count the amount it's contribution has changed.
+
+-----
+
+long long contribution(int v)
+{
+    return indegree[v]*outdegree[v];
+}
+
+int main()
+{
+    int no_of_vertices, no_of_edges;
+    cin >> no_of_vertices >> no_of_edges;
+
+    for(int i = 1; i <= no_of_edges; i++)
+    {
+        int u, v;
+        cin >> u >> v;
+
+        if(u > v)
+        {
+            swap(u, v);
+        }
+
+        graph[u].push_back(v);
+
+        //Reverse
+        indegree[v]++;
+        outdegree[u]++;
+    }
+
+    int no_of_queries;
+    cin >> no_of_queries;
+
+    long long no_of_paths = 0;
+    for(int i = 1; i <= no_of_vertices; i++)
+    {
+        no_of_paths += contribution(i);
+    }
+
+    cout << no_of_paths << "\n";
+    for(int i = 1; i <= no_of_queries; i++)
+    {
+        int v;
+        cin >> v;
+
+        no_of_paths -= contribution(v);
+
+        for(auto child_v : graph[v])
+        {   //cout << "u = " << u << "\n";
+            no_of_paths -= contribution(child_v); //cout << "Old Contribution = " << contribution(u) << "\n";
+
+            indegree[child_v]--;
+            outdegree[v]--;
+
+            graph[child_v].push_back(v);
+            indegree[v]++;
+            outdegree[child_v]++;
+
+            no_of_paths += contribution(child_v); //cout << "New Contribution = " << contribution(u) << "\n";
+        }
+
+        graph[v].clear();
+
+        no_of_paths += contribution(v);
+
+        cout << no_of_paths << "\n";
+    }
+
+    return 0;
+}
