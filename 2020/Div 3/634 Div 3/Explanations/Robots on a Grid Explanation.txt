@@ -1,0 +1,181 @@
+Fact - If 2 Robots intersect, they will do so in the first NM moves
+
+Once two robots meet, they will always move together.
+So, if they meet in <= NM moves, they will be together after NM moves.
+
+Let us look at the structure of the graph.
+It is a functional graph where each vertex has exactly one outgoing edge.
+So, the graph consists of some cycles and some tress which go into cycles.
+As the graph has MN vertices in total, after MN moves,
+every robot will be inside a cycle. 
+(The length of the path going into a cycle cannot be greater than MN).
+
+If 2 robots are inside a cycle and not coincident, they will never meet
+since they move an equal distance in the same direction each time
+and the distance between them remains constant !
+
+----
+
+Now, how do we find out where a Robot ends up in NM moves ?
+We can use binary lifting for this.
+
+1. We will do a DFS and find out f(0, i, j), that is where the robot at
+cell (i, j) goes in 2^0 = 1 move
+
+2. Then, we will use it to recursively build this table
+
+f(L, i, j) = f(L - 1, f(L - 1, i, j))
+
+That is we will see where we go from (i, j) in 2^{L - 1} steps
+And we will see where we will reach if we take 2^{L - 1} steps from there
+
+2^{L - 1} + 2^{L - 1} = 2^L
+
+-----
+
+This table is built is O(NM log(NM)) time
+
+For every (NM) cells, we will find out the ultimate destination it is in after
+(NM) steps
+
+-----
+
+For every cell, we will keep track of the number of
+black and white cells which reach here after (NM) moves.
+
+Since robots can never meet, if there are multiple robots finishing at (i, j),
+only one of them can be in the initial grid.
+If possible, we will choose a black square robot.
+
+Once we are done, we will scan all NM squares
+If black_starts(i, j) > 0, then we will update the number of black robots
+If white_starts(i, j) > 0, then we will update the number of white robots
+
+------
+
+int get_next(int x, int y)
+{
+    switch(S[x][y])
+    {
+        case 'U' : return label(x - 1, y);
+        case 'R' : return label(x, y + 1);
+        case 'L' : return label(x, y - 1);
+        case 'D' : return label(x + 1, y);
+    }
+
+    return 0;
+}
+
+void dfs(int v)
+{
+    if(visited[v])
+    {
+        return;
+    }
+
+    visited[v] = true;
+
+    int x = v/columns, y = v%columns;
+
+    int next = get_next(x, y);
+    //cout << "At " << v << " " << x << "," << y << " Next = " << next << "\n";
+    step[0][v] = next;
+
+    dfs(next);
+}
+
+void solve()
+{
+    cin >> rows >> columns;
+
+    colour.resize(rows);
+    for(int i = 0; i < rows; i++)
+    {
+        cin >> colour[i];
+    }
+
+    S.resize(rows);
+    for(int i = 0; i < rows; i++)
+    {
+        cin >> S[i];
+    }
+
+    visited.resize(rows*columns, false);
+    for(int i = 0; i < rows*columns; i++)
+    {
+        visited[i] = false;
+    }
+
+    for(int i = 0; i < MAX_L; i++)
+    {
+        step[i].resize(rows*columns);
+    }
+
+    for(int v = 0; v < rows*columns; v++)
+    {
+        if(!visited[v])
+        {
+            dfs(v);
+        }
+    }
+
+    for(int l = 1; l < MAX_L; l++)
+    {
+        for(int i = 0; i < rows*columns; i++)
+        {
+            int previous_step = step[l - 1][i];
+
+            //cout << "L = " << l << "Start at " << i/columns << "," << i%columns << " previous = " << previous_step/columns << "," << previous_step%columns <<" and finish at " << step[l - 1][previous_step]/columns << " " << step[l - 1][previous_step]%columns << "\n";
+
+            step[l][i] = step[l - 1][previous_step];
+        }
+    }
+
+    vector <int> black_starts(rows*columns);
+    vector <int> white_starts(rows*columns);
+    int total_steps = rows*columns;
+    for(int i = 0; i < rows*columns; i++)
+    {
+        int finish = i;
+
+        for(int bit = MAX_L - 1; bit >= 0; bit--)
+        {
+            if(is_bit_set(total_steps, bit))
+            {
+                finish = step[bit][finish];
+            }
+        }
+
+        const char BLACK = '0', WHITE = '1';
+        int start_x = i/columns, start_y = i%columns;
+        if(colour[start_x][start_y] == BLACK)
+        {
+            black_starts[finish]++;
+        }
+        else
+        {
+            white_starts[finish]++;
+        }
+
+        //cout << "Start at " << start_x << "," << start_y << " and finish at " << finish/columns << " " << finish%columns << "\n";
+    }
+
+    int total = 0, black = 0;
+    for(int i = 0; i < rows; i++)
+    {
+        for(int j = 0; j < columns; j++)
+        {
+            if(black_starts[label(i, j)] > 0)
+            {
+                total++;
+                black++;
+            }
+            else if(white_starts[label(i, j)] > 0)
+            {
+                total++;
+            }
+        }
+    }
+
+    cout << total << " " << black << "\n";
+}
