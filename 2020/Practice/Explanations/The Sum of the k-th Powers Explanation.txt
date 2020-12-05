@@ -1,0 +1,130 @@
+Let f(n, k) = 1^k + 2^k + ... + n^k
+
+f(n, k) is a polynomial of degree k + 1.
+
+We can invoke the Fundamental Theorem of Algebra and interpolate it
+by getting the value of this function at (k + 2) points.
+
+-----
+
+If n <= (k + 2), we can give the answer directly.
+
+Otherwise, we will perform Lagrangian Interpolation in O(k) time.
+
+-----
+
+Proof that f(n, k) is a polynomial of degree (k + 1) by Mathematical Induction
+
+f(n, 1) = n^2/2 + n/2 is a polynomial of degree 2.
+
+Let it be true for f(n, k)
+
+Let us take the derivative of f(n, k + 1) with respect to k
+
+f'(n, k + 1) = k(1^k + 2^k + ... + n^k) = k.f(n, k)
+
+Since the derivative is a polynomial of degree (k + 1),
+
+f(n, k + 1) is a polynomial function of degree (k + 2).
+
+This means that we can perform Lagrangian Interpolation on it.
+
+-----
+
+How do we perform Lagrangian Interpolation in O(k) time ?
+
+The numerator is
+
+(n - 1)(n - 2) ... (n - (i - 1)) (n - (i + 1)) ... (n - (k + 1))
+
+What happens when we transition from i to i + 1 ?
+
+We must remove (n - (i + 1)) from the product and put (n - i) back into the product.
+
+The denominator is a little more tricky.
+At first, it is
+
+(1 - 2)(1 - 3) .... (1 - (k + 1))
+
+Then, it becomes
+(2 - 1) (2 - 3) .... (2 - (k + 1))
+
+Since the values that we have sampled the function at {1, 2, ... , k + 1}
+are contiguous, we can take advantage of it.
+
+The running product increases by 1 at each step.
+
+We will keep track of the smallest and largest term in the denominator product.
+At each step, we will remove the smallest term, and add a (largest + 1) term into the product.
+
+There is a special case here.
+The denominator will never have a term of 0.
+
+So if either smallest or largest points to 0, increase it by 1 again.
+Also, ensure that the terms are never negative as we are dealing with MOD.
+
+-----
+
+int main()
+{
+    long long n, power;
+    cin >> n >> power;
+
+    //f(i) = 1^k + 2^k + ... + i^k
+    vector <long long> value(power + 3, 0);
+    for(int i = 1; i <= power + 2; i++)
+    {
+        value[i] = (value[i - 1] + power_mod(i, power))%MOD;
+    }
+
+    if(n <= power + 2)
+    {
+        cout << value[n] << "\n";
+        return 0;
+    }
+
+    long long numerator = 1, denominator = 1;
+    long long largest = (1 - 2 + MOD)%MOD, smallest = (1 - (power + 2) + MOD)%MOD;
+    for(int i = 2; i <= power + 2; i++)
+    {
+        numerator = (numerator*(n - i))%MOD;
+
+        denominator = (denominator*(1 - i + MOD))%MOD;
+    }
+
+    long long answer = value[1]*numerator;
+    answer = (answer*inverse(denominator))%MOD;
+
+    for(int i = 2; i <= power + 2; i++)
+    {
+        numerator = (numerator*inverse(n - i))%MOD;
+        numerator = (numerator*(n - (i - 1)))%MOD;
+
+        largest = (largest + 1)%MOD;
+        if(largest == 0)
+        {
+            largest = (largest + 1)%MOD;
+        }
+
+        if(smallest == 0)
+        {
+            smallest = (smallest + 1)%MOD;
+        }
+
+        denominator = (denominator*inverse(smallest))%MOD;
+        denominator = (denominator*(largest))%MOD;// cout << "Remove small = " << smallest << " largest = " << largest << " D = " << denominator << "\n";
+
+       smallest = (smallest + 1)%MOD;
+
+
+
+        long long current_term = (numerator*inverse(denominator))%MOD;
+        current_term = (value[i]*current_term)%MOD;
+
+        answer = (answer + current_term)%MOD;
+    }
+
+    cout << answer << "\n";
+
+    return 0;
+}
