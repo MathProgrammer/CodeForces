@@ -1,0 +1,92 @@
+Suppose we use (A[1], A[2], ... , A[x]) before using a reset.
+What is the total cost ?
+
+Remember that we can only add the boss point to our total before killing the boss.
+Total = (x - 1)A[1] + (x - 2)A[2] + ... + 0A[x]
+
+Seeing this, it is clearly optimal to visit elements in non-increasing order
+in 1 play through.
+
+-----
+
+However, we also have negative increments. In this situation, it is better to use our play throughs.
+
+We need to imagine we have (k + 1) piles or stacks.
+
+It is always better for the larger element to be at a higher level in a stack.
+
+Suppose we have to elements a and b with a >= b
+at levels i and j respectively with i < j
+
+The current contribution to the total from both of these is
+
+ai + bj
+
+But, if we swap a and b, we will make the contribution (aj + bi),
+which is greater.
+
+-----
+
+So, we will keep the lowest elements in the lowest level of all stacks.
+Then, the next lowest in the second,
+and so on.
+
+This is what we will start with - Distribute the integers as evenly as possible.
+After that, we will see if the answer can be improved by moving some of the greatest integers
+into one stack.
+
+-----
+
+When i = 0 (mod k), we cannot put any more piles on the same stack since we have reached the limit.
+
+Suppose there are the 4 stacks and we are trying to build a tower of maximum length.
+We can put the box on the second stack on the first tower,
+box of the third stack on the first tower,
+box of the fourth stack on the first tower
+But we increase the height further as the
+box of the first pile is already in the first pile.
+
+-----
+
+int main()
+{
+    int no_of_elements, no_of_resets;
+    cin >> no_of_elements >> no_of_resets;
+
+    int no_of_stacks = no_of_resets + 1;
+
+    vector <long long> A(no_of_elements);
+    for(int i = 0; i < no_of_elements; i++)
+    {
+        cin >> A[i];
+    }
+
+    sort(all(A));
+
+    vector <long long> suffix_sum(no_of_elements + 5, 0);
+    for(int i = no_of_elements - 1; i >= 0; i--)
+    {
+        suffix_sum[i] = suffix_sum[i + 1] + A[i];
+    }
+
+    long long total = 0;
+
+    //Distribute Negative Integers Evenly
+    for(int i = 0; i < no_of_elements; i++)
+    {
+        total += A[i]*(i/no_of_stacks);
+    }
+
+    for(int i = no_of_elements - 1; i >= 0; i--)
+    {
+        if(i%no_of_stacks == 0) //This element stays on same level
+        {
+            continue;
+        }
+        //cout << "i = " << i << " Total = " << total  << " and suffix = " << suffix_sum[i] << "\n";
+        total = max(total, total + suffix_sum[i]); //cout << "total = " << total << "\n";
+    }
+
+    cout << total << "\n";
+    return 0;
+}
