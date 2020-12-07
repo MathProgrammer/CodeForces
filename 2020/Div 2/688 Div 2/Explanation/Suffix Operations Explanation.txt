@@ -1,0 +1,55 @@
+Let us observe that if we apply the operations on [i, n],
+
+A[i + 1] - A[i],
+A[i + 2] - A[i - 1],
+...
+A[n] - A[n - 1]
+
+do not change.
+The differences of adjacent elements in the suffix remain the same.
+
+-----
+
+In order to make it equal, the only way is to apply the operation to
+[i, N]
+We have to apply it |A[i] - A[i - 1]| times.
+
+Which element can we change ?
+If we change A[i], it is optimal to set it to either A[i - 1] or A[i + 1].
+
+|A[i - 1] - x| + |A[i + 1] - x| is minimum when x = A[i - 1] or A[i + 1].
+We will examine the maximum change we can do at every level and choose the best.
+
+-----
+
+void solve()
+{
+    int no_of_elements;
+    cin >> no_of_elements;
+
+    vector <long long> A(no_of_elements + 1);
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        cin >> A[i];
+    }
+
+    long long change = max(abs(A[no_of_elements] - A[no_of_elements - 1]),
+                           abs(A[1] - A[2]));
+    for(int i = 2; i < no_of_elements; i++)
+    {
+        long long new_operations = abs(A[i + 1] - A[i - 1]);
+        long long old_operations = abs(A[i] - A[i - 1]) + abs(A[i + 1] - A[i]);
+
+        change = max(change, old_operations - new_operations);
+    }
+
+    long long answer = 0;
+    for(int i = 2; i <= no_of_elements; i++)
+    {
+        answer += abs(A[i] - A[i - 1]);
+    }
+
+    answer -= change;
+
+    cout << answer << "\n";
+}
