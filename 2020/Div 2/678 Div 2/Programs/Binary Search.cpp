@@ -1,0 +1,88 @@
+#include <iostream>
+
+using namespace std;
+
+const int MOD = 1e9 +7;
+
+long long power_mod(long long x, long long power)
+{
+    if(power < 0)
+    {
+        return 0;
+    }
+    
+    long long result = 1;
+    
+    while(power)
+    {
+        if(power%2 == 1)
+            result = (result*x)%MOD;
+        
+        x = (x*x)%MOD;
+        
+        power = power >> 1;
+    }
+    
+    return result;
+}
+
+long long inverse(long long n)
+{
+    return power_mod(n, MOD - 2);
+}
+
+long long factorial(long long n)
+{
+    long long answer = 1;
+    for(int i = 2; i <= n; i++)
+    {
+        answer = (answer*i)%MOD;
+    }
+    
+    return answer;
+}
+
+long long choose(long long n, long long r)
+{
+    if(r > n)
+    {
+        return 0;
+    }
+    
+    long long denominator = factorial(n - r);
+    
+    return (factorial(n)*inverse(denominator))%MOD;
+}
+
+int main()
+{
+    int no_of_elements, x, position;
+    cin >> no_of_elements >> x >> position;
+    
+    int larger = 0, smaller = 0;
+    
+    int left = 0, right = no_of_elements;
+    while(left < right)
+    {
+        int mid = (left + right)/2;
+        
+        if(mid <= position)
+        {
+            left = mid + 1;
+            smaller++;
+        }
+        else
+        {
+            right = mid;
+            larger++;
+        }
+    }
+    
+    long long result = (choose(no_of_elements - x, larger)*choose(x - 1, smaller - 1))%MOD;
+    
+    int remaining = no_of_elements - (larger + smaller);
+    result = (result*factorial(remaining))%MOD;
+    
+    cout << result << "\n";
+    return 0;
+}
