@@ -1,0 +1,105 @@
+
+Claim - It is possible to sort the permutation if and only if, for every i such that p(i) =/= i, 
+
+there exists a series of consecutive 1s in between i and p(i) allowing the element p(i) to be swapped one-by-one and placed at position p(i) from position i.
+
+Proof - We can easily see that if i =/= p(i) and there is no stream of one's in between i and p(i), we can never get an array in order as there will always be some 
+element p(i) that can never travel to position p(i).
+
+For example, Consider this
+
+1 2 7 4 5 6 3
+
+0 0 1 1 0 1 
+
+Since 7 is not in it's place and there is no continuous stream of 1s from 3 to 7, it is impossible for 7 to travel all the way to 3. 
+
+----------------------------------------------------
+
+Now, to prove the other way around - i.e. it is always possible to sort an array if there exists a stream of 1s in between every i and p(i) where i =/= p(i)
+
+I will prove that if the condition of stream of 1s in between every i and p(i) is satisfied, then it is always possible to place the SMALLEST out of order element in it's 
+right place. 
+
+Choose the smallest element x, such that for all y < x, p(y) = y. In other words, pick the smallest element that is not in it's right position. 
+
+{This means that the array is sorted from A[1, 2, .... x - 1]}
+
+Let x be located at position i. (P(x) = i). 
+
+Now, we can conclude that x < i. Because all y < x, P(y) = y, so P(x) can't be < x. It has to be > x.
+
+Based on the condition, it means there is a string of consecutive 1s from x to (i - 1), allowing the travel. 
+
+Since it is already established that there is a stream of 1s in between x and (i - 1). We perform the swaps one by one, 
+till x moves all the way from position i to position x
+
+A[1, 2, ... x] The unsorted array is from A[x + 1, ... n]. 
+
+Now, the smallest element that is out of order either lies in between x and i or it doesn't. 
+
+Either way, the condition of it having a string of 1s in between it's current and true position remains invariant. 
+
+Because if it lies outside [x, i), then it was never disturbed. 
+
+If it did, then it still remains somewhere in the stream of 1s in between x and i. If it had a string of 1s in the beginning, it still does now, because it is still connected
+
+So, we keep placing the minimum element out-of-order in it's right place till the entire array is sorted.
+
+---------------------------------------------------------------
+
+Here's what I did - Maintain a prefix sum of the number of 1s till i. 
+
+For every i, such that p(i) != i
+
+Right = Max{p(i), i}
+Left = Min{p(i), i}
+
+Now, there should be continuous 1s from Left to (Right - 1).
+
+The expected number of 1s = (Right - 1) - (Left - 1)
+
+The number of 1s present = Prefix(Right - 1) - Prefix(Left - 1)
+
+If these two numbers are not equal, then it means there is some element which can't go it's true position. 
+
+If these two numbers are equal for all i, such that i =/= p(i), then it means that the array can always be sorted by placing the minimum out-of-order element in it's right place.
+
+------------------------------------------------------------------------------
+
+int main()
+{
+    int n;
+    scanf("%d", &n);
+
+    vector <int> permutation(n + 1, 0);
+    for(int i = 1; i <= n; i++)
+        scanf("%d", &permutation[i]);
+
+    vector <int> ones_till(n + 1, 0);
+    for(int i = 1; i <= n - 1; i++)
+    {
+        int digit;
+        scanf("%1d", &digit);
+
+        ones_till[i] = (digit == 1) + ones_till[i - 1];
+    }
+
+    int is_sortable = true;
+    for(int i = 1; i <= n; i++)
+    {
+        if(permutation[i] != i)
+        {
+            int right = max(i, permutation[i]);
+            int left = min(i, permutation[i]);
+
+            int distance = (right - 1) - (left - 1);
+
+            if(ones_till[right - 1] - ones_till[left - 1] != distance)
+                is_sortable = false;
+        }
+    }
+
+    printf(is_sortable ? "YES\n" : "NO\n");
+    return 0;
+}

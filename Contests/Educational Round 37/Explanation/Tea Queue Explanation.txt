@@ -1,0 +1,58 @@
+
+This problem is made a lot easier, because the inputs are sorted in terms of their l_i's 
+
+Otherwise, we'd need to use structures and call a custom sort. 
+
+Here's what we do, 
+
+First initial time = left[1]
+
+For each person that arrives, 
+
+	set current time to max{current time, left[i]} [If current time < left[i], then the current customer will be served. He'll just have to wait till left[i]. 
+							So, directly set the current time to left[i]. If current time > left[i], let it be.]
+	
+	(check if current time <= right[i])
+
+		if it is, then service time[i] = current time, current time++
+
+Note - I made the mistake of increasing service time regardless of whether the person was served. That was a mistake. Incrememnt time only if he has been served.
+
+For example,
+
+1 4
+1 1
+
+The first person is served at moment 1. Now, the time is 2. The second person is not served. This means that he has left the queue. the time REMAINS 2 for the third customer
+
+It does NOT increase to 3 even if he didn't take the tea. Only the serviced customers increment the current time.
+
+---------------------------------------------------------------------
+
+void solve()
+{
+    int number_of_students;
+    scanf("%d", &number_of_students);
+
+    vector <int> left(number_of_students + 1);
+    vector <int> right(number_of_students + 1);
+    for(int i = 1; i <= number_of_students; i++)
+        scanf("%d %d", &left[i], &right[i]);
+
+    vector <int> served_time(number_of_students + 1, 0);
+
+    for(int current_time = left[1], student = 1; student <= number_of_students; student++)
+    {
+            current_time = max(current_time, left[student]);
+
+            if(current_time <= right[student])
+            {
+                served_time[student] = current_time++;
+            }
+    }
+
+    for(int i = 1; i <= number_of_students; i++)
+        printf("%d ", served_time[i]);
+
+    printf("\n");
+}
