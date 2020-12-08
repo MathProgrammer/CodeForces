@@ -1,0 +1,26 @@
+A[i]/i is counted i times, so we are actually counting
+
+i(A[i]/i) = A[i]
+
+The question is asking if the sum of the array is equal to m !
+
+It's quite beautiful
+
+-----
+
+void solve()
+{
+    int no_of_elements, target_sum;
+    cin >> no_of_elements >> target_sum;
+
+    int sum = 0;
+    vector <int> A(no_of_elements + 1);
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        cin >> A[i];
+
+        sum += A[i];
+    }
+
+    cout << (sum == target_sum ? "YES" : "NO") << "\n";
+}

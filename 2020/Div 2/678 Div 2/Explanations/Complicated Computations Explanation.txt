@@ -1,0 +1,127 @@
+We are looking for the smallest integer which is not a MEX in any subarray
+
+Given an integer X, how do we check which subarrays it is a MEX in ?
+
+It turns out that if there is any subarray in which x is a MEX,
+a subarray between consecutive occurrences of x will also satisfy this property.
+
+Suppose MEX[L, R] = X
+Then, MEX[L - 1, R] or MEX[L, R + 1] will also be X
+as long as A[L - 1] =/= X and A[R + 1] =/= X
+
+X can only be a MEX in some subarray that does not contain it.
+
+-----
+
+For each X, we will check the following segments -
+
+1. The subarray between consecutive occurrences of X
+2. The prefix subarray before the first occurrence of X
+3. The suffix subarray after the last occurrence of X
+
+We don't need to handle the last case seperately since last[x] = 0,
+for all x in the beginning.
+
+We will also need to find out the MEX of the entire array.
+
+-----
+
+int main()
+{
+    int no_of_elements;
+    cin >> no_of_elements;
+
+    vector <int> A(no_of_elements + 1);
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        cin >> A[i];
+    }
+
+    map <int, int> last;
+    vector <int> is_mex(no_of_elements + 10, false);
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        if(last[A[i]] + 1 != i)
+        {
+            int mex_here = get_first_smaller(1, 1, MAX_N, last[A[i]] + 1);
+
+            //cout << "Mex[" << last[A[i]] + 1 << "," << i - 1 << "] = " << mex_here << "\n";
+
+            is_mex[mex_here] = true;
+        }
+
+        last[A[i]] = i;
+
+        update(1, 1, MAX_N, A[i], i);
+    }
+
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        if(last[A[i]] != no_of_elements)
+        {
+            int suffix_mex = get_first_smaller(1, 1, MAX_N, last[A[i]] + 1);
+
+            //cout << "Suffix Mex[" << last[A[i]] + 1 << "," << no_of_elements << "] = " << suffix_mex << "\n";
+            is_mex[suffix_mex] = true;
+        }
+    }
+
+    int array_mex = get_first_smaller(1, 1, MAX_N, 1);
+    is_mex[array_mex] = true;
+
+    //cout << "Array Mex = " << array_mex << "\n";
+
+    int final_mex = 0;
+    for(int i = 1; i < is_mex.size(); i++)
+    {
+        if(!is_mex[i])
+        {
+            final_mex = i;
+            break;
+        }
+    }
+
+    cout << final_mex << "\n";
+    return 0;
+}
+
+-----
+
+How do we find out the MEX of a segment [L, R] ?
+
+1. Let us maintain an array last, which contains the last occurrence of x
+2. Let us suppose we have processed all elements from [1, R] and know their
+last occurrence
+3. We are looking for the first index i, such that last[i] < L
+
+This means that i does not occur in the segment [L, R]
+and is the smallest integer which satisfies this property and is therefore the MEX.
+
+We can get the first element in last which is < L in O(log n) time using a
+minimum segment tree like this
+
+-----
+
+int get_first_smaller(int n, int left, int right, int x)
+{
+    if(min_tree[n] > x)
+    {
+        return -1;
+    }
+
+    if(left == right)
+    {
+        return left;
+    }
+
+    int mid = (left + right)/2;
+
+    if(min_tree[LEFT(n)] < x)
+    {
+        return get_first_smaller(LEFT(n), left, mid, x);
+    }
+
+    return get_first_smaller(RIGHT(n), mid + 1, right, x);
+}
+
+-----

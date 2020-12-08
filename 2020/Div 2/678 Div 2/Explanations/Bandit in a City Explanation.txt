@@ -1,0 +1,82 @@
+The answer for a given node is
+
+maximum of the value of any leaf in it's subtree or
+ceil(sum[v], leaves[v])
+
+-----
+
+- If we are at a leaf, then the answer is equal to the value of the leaf.
+- Suppose we are at a vertex, all of who’s children are leaves 🍁
+    - If the subtree sum is $S[v]$, and the number of leaves is $l[v]$,
+    at least one leaf has to have $S[v]/l[v]$ by the PigeonHole Principle.
+    - However, if some leaf already has a greater amount, then we cannot change it.
+    - When we reach $v$, if every leaf has a smaller amount than $S[V]/l[v]$,
+    then we can achieve $S[v]/l[v]$ by distributing in the required way.
+    - $M[v] = \max(M[c], S[v]/l[v])$ is the answer.
+- We can apply this logic recursively.
+For every vertex $v$ that we visit, we already know the values of $M, S, l$ for all it's children.
+If every single leaf in it's subtree has weight $< S[v]/l[v]$, we can achieve it.
+Otherwise, we leave the maximum undisturbed and distribute into the other leaves.
+    - Please note that it is always possible to distribute into the other leafs and
+    ensure that the maximum does not exceed $M[v]$ if $M[v] > S[v]/L[v]$. The reason is that if $M[v]$ is greater than this, at least one leaf has to be smaller than this value.
+
+-----
+
+long long ceil(long long n, long long d)
+{
+    return (n/d) + (n%d != 0 ? 1 : 0);
+}
+
+void dfs(int v)
+{
+    sum[v] = A[v];
+
+    if(tree[v].size() == 0)
+    {
+        leaves[v] = 1;
+
+        maximum[v] = sum[v];
+
+        return;
+    }
+
+    for(int child_v : tree[v])
+    {
+        dfs(child_v);
+
+        leaves[v] += leaves[child_v];
+
+        sum[v] += sum[child_v];
+
+        maximum[v] = max(maximum[v], maximum[child_v]);
+    }
+
+    maximum[v] = max(maximum[v], ceil(sum[v], leaves[v]));
+}
+
+int main()
+{
+    int no_of_vertices;
+    cin >> no_of_vertices;
+
+    for(int i = 2; i <= no_of_vertices; i++)
+    {
+        int source;
+        cin >> source;
+
+        tree[source].push_back(i);
+    }
+
+    for(int i = 1; i <= no_of_vertices; i++)
+    {
+        cin >> A[i];
+
+        leaves[i] = 0;
+        maximum[i] = 0;
+    }
+
+    dfs(1);
+
+    cout << maximum[1] << "\n";
+    return 0;
+}
