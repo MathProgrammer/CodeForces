@@ -1,0 +1,45 @@
+Let us look at the rightmost unsorted element.
+
+If this element is not in it's correct place, the array will not be sorted.
+
+So, we will only look at segments which impact this element.
+
+This element will be in it's correct place if at least 1 or more of these segments work.
+
+In order to make it easier, we will calculate the probability of failure and subtract 1 from it.
+
+-----
+
+void solve()
+{
+    int no_of_elements, no_of_operations;
+    cin >> no_of_elements >> no_of_operations;
+
+    int maximum_unsorted = 0;
+    vector <int> A(no_of_elements + 1);
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        cin >> A[i];
+
+        if(A[i] != i)
+        {
+            maximum_unsorted = max(maximum_unsorted, i);
+        }
+    }
+
+    double failure_probability = (maximum_unsorted == 0 ? 0 : 1);
+    for(int i = 1; i <= no_of_operations; i++)
+    {
+        int right;
+        double p;
+        cin >> right >> p;
+
+        if(right >= maximum_unsorted)
+        {
+            failure_probability *= (1 - p);
+        }
+    }
+
+    double success_probability = 1 - failure_probability;
+    cout << fixed << setprecision(6) << success_probability << "\n";
+}
