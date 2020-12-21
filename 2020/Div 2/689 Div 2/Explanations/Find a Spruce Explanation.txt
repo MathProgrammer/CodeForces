@@ -1,0 +1,95 @@
+Let L[i][j] denote the maximum size of the left spruce
+starting at (i, j) and only going left.
+
+L[i][j] has a left spruce of size x, if
+
+L[i][j] >= x and L[i][j - 1] >= x - 1
+
+So,
+
+L[i][j] = min(Height[i][j], L[i][j - 1] + 1)
+
+Let R[i][j] denote the maximum size of the right spruce
+starting at (i, j)
+
+R[i][j] = min(Height[i][j], R[i][j + 1] + 1)
+
+ The length of the spruce at (i, j) is min(L[i][j], R[i][j])
+
+ -----
+
+void solve()
+{
+    int rows, columns;
+    cin >> rows >> columns;
+
+    vector <string> grid(rows);
+    for(int i = 0; i < rows; i++)
+    {
+        cin >> grid[i];
+    }
+
+    vector <vector <int> > height(rows, vector <int> (columns, 0));
+    for(int i = 0; i < rows; i++)
+    {
+        for(int j = 0; j < columns; j++)
+        {
+            if(grid[i][j] == '*')
+            {
+                height[i][j] = (i == 0 ? 1 : height[i - 1][j] + 1);
+            }
+
+        }
+    }
+
+    vector <vector <int> > left_spruce(rows, vector <int> (columns, 0));
+    for(int i = 0; i < rows; i++)
+    {
+        for(int j = 0; j < columns; j++)
+        {
+            left_spruce[i][j] = height[i][j];
+
+            if(j == 0)
+            {
+                left_spruce[i][j] = min(left_spruce[i][j], 1);
+            }
+
+            if(j > 0)
+            {
+                left_spruce[i][j] = min(left_spruce[i][j], left_spruce[i][j - 1] + 1);
+            }
+        }
+    }
+
+    vector <vector <int> > right_spruce(rows, vector <int> (columns, 0));
+    for(int i = 0; i < rows; i++)
+    {
+        for(int j = columns - 1; j >= 0; j--)
+        {
+            right_spruce[i][j] = height[i][j];
+
+            if(j == columns - 1)
+            {
+                right_spruce[i][j] = min(right_spruce[i][j], 1);
+            }
+
+            if(j < columns - 1)
+            {
+                right_spruce[i][j] = min(right_spruce[i][j], right_spruce[i][j + 1] + 1);
+            }
+        }
+    }
+
+    long long total_spruce = 0;
+    for(int i = 0; i < rows; i++)
+    {
+        for(int j = 0; j < columns; j++)
+        {
+            int spruce_here = min(right_spruce[i][j], left_spruce[i][j]);
+
+            total_spruce += spruce_here;
+        }
+    }
+
+    cout << total_spruce << "\n";
+}
