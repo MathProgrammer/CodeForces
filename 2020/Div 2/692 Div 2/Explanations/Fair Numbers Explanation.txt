@@ -1,0 +1,44 @@
+In Any interval [L, L + X], there will be at least one multiple of x. 
+
+The LCM of (1, 2, ... , 9) is 2520. 
+
+In any interval of 2520 integers, there is at least one number that is divisible 
+by all 9 digits. 
+
+So the gap in between two fair integers cannot exceed 2520. 
+
+This allows us to compute it using brute force. 
+
+-----
+
+int fair(long long n)
+{
+    long long value = n;
+    
+    while(n)
+    {
+        int digit = n%10;
+        
+        if(digit != 0 && value%digit != 0)
+        {//cout << value << " not divisible "
+            return false;
+        }
+        
+        n /= 10;
+    }
+    
+    return true;
+}
+ 
+void solve()
+{
+    long long n;
+    cin >> n;
+    
+    long long answer;
+    
+    for(answer = n; !fair(answer); answer++);
+    
+    cout << answer << "\n";
+}
+ 
