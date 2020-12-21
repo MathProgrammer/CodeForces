@@ -1,0 +1,27 @@
+Count the suffix of ) and compare with the rest of the string 
+
+-----
+
+void solve()
+{
+    int length;
+    string S;
+    
+    cin >> length >> S;
+    
+    int suffix = 0;
+    for(int i = length - 1; i >= 0; i--)
+    {
+        if(S[i] != ')')
+        {
+            break;
+        }
+        
+        suffix++;
+    }
+    
+    //cout << "String Read : " << S << " Suffix = " << suffix << "\n";
+    
+    int prefix = length - suffix;
+    cout << (prefix < suffix ? "Yes" : "No") << "\n";
+}
