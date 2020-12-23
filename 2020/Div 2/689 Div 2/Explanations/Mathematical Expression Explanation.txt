@@ -1,0 +1,143 @@
+Let us go case by case and eliminiate the simple cases.
+
+If there is only 1 sign, then we have to use that sign everywhere.
+
+Suppose there is (+-), we will use addition everywhere.
+Suppose there is (-*), we will use multiplication everywhere
+except near a 0.
+
+-----
+
+The case (+*) is the same as (+*-).
+We can eliminate the minus sign and just solve it with the other two.
+
+Now, multiplication is normally better than addition
+
+Even, 2 x 2 = 2 + 2, and for all other integers > 2, multiplication is clearly better.
+
+The problem is when there are ones.
+
+We might be better off adding some ones and then using a multiplication.
+
+-----
+
+Now, how do we handle the case where there is both + and *
+
+We will solve each segment of non-zero digits separately.
+
+-----
+
+Let f(i) be the maximum for the first i digits.
+Let us iterate over the position of the last plus sign.
+
+f(i) = max{f(j) + A[j... i]}, for all j
+
+Now, this is a O(n^2) DP, but we can make some observations that ensure we do
+at most 20 linear scans.
+
+-----
+
+When we begin processing a segment, we will put + signs on all the prefix and suffix ones.
+This is the best because multiplication here would just make the answer 1.
+
+Now, we have a segment A[L, R], where A[L] > 1 and A[R] > 1
+
+1. We will find the best value of f(i) only at the non-1 elements.
+2. If there are more than 20 non-one elements, we will do multiplication everywhere.
+
+-----
+
+Suppose there are 20 elements > 1. 2^{20} is the smallest such product.
+Suppose we replace any multiplication sign on this segment with an addition sign.
+
+The product is reducing at least by 2^{19}
+and the maximum value we can get by addition is 10^5, which is smaller.
+
+So, we are better off doing multiplication everywhere.
+
+-----
+
+If A[i] = 1, then f(i) = f(i - 1) + 1
+
+If the last element of the segment is 1, it is better to add 1 then multiply.
+
+So, we only need to loop backwards when A[i] > 1, which only happens 20 times.
+
+-----
+
+void solve(int left, int right, vector <char> &S, vector <int> &A)
+{
+    while(left <= right && A[left] == 1)
+    {
+        S[left] = '+';
+        left++;
+    }
+
+    if(right <= left)
+    {
+        return;
+    }
+
+    while(right >= left && A[right] == 1)
+    {
+        S[right - 1] = '+';
+        right--;
+    }
+
+    const int MAX_NON_1 = 20;
+    int non_1 = 0;
+    for(int i = left; i <= right; i++)
+    {
+        non_1 += (A[i] != 1);
+    }
+
+    if(non_1 >= MAX_NON_1)
+    {
+        for(int i = left; i < right; i++)
+        {
+            S[i] = '*';
+        }
+
+        return;
+    }
+
+    for(int i = left; i <= right; i++)
+    {
+        last_plus[i] = 0;
+        max_answer[i] = 0;
+    }
+
+    for(int i = left; i <= right; i++)
+    {
+        if(A[i] == 1)
+        {
+            max_answer[i] = max_answer[i - 1] + 1;
+            last_plus[i] = i - 1;
+            continue;
+        }
+
+        long long product_here = 1;
+        for(int j = i; j >= left; j--)
+        {
+            product_here *= A[j];
+
+            if(product_here + max_answer[j - 1] > max_answer[i])
+            {
+                max_answer[i] = max_answer[j - 1] + product_here;
+                last_plus[i] = j - 1;
+
+                //cout << "Max " << j << " = " << max_answer[j] << " and last plus = " << last_plus[i] << "\n";
+            }
+        }
+    }
+
+    for(int i = right; i >= left; i = last_plus[i])
+    {
+        for(int j = i - 1; j > last_plus[i]; j--)
+        {
+            S[j] = '*';
+        }
+
+        S[last_plus[i]] = '+';
+    }
+}

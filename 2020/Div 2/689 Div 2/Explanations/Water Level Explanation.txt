@@ -1,0 +1,107 @@
+We need to deal with 3 different cases.
+
+1. Refill < usage
+2. Refill = usage
+3. Refill > usage
+
+------
+
+When refill < usage, we will refill it everyday to ensure it stays in the limit.
+We only need to see if we can refill it on the very first day as a special case.
+
+-----
+
+When refill = usage, just check if refilling or using it makes it go out of bounds.
+
+-----
+
+When refill > usage, we do not want to overflow.
+So, we will only refill it greedily just when another usage would make the
+water level drop below L.
+
+In fact, we will look at the water level (mod u).
+As long as we are using without refilling, the remainder is invariant.
+When we refill it, it becomes (x + R) (mod u).
+We will check if we every visit a remainder that is already visited.
+If so, we have reached a cycle and will be within [L, R] indefinitely.
+
+
+-----
+
+int main()
+{
+    long long left, right, initial, no_of_days, usage, refill;
+    cin >> initial >> left >> right >> no_of_days >> usage >> refill;
+
+    int possible = true;
+    if(refill < usage)
+    {
+        long long reduction = usage - refill;
+
+        if(initial + refill > right)
+        {
+            initial -= usage;
+            no_of_days--;
+        }
+
+        if(left > initial)
+        {
+            possible = false;
+        }
+
+        long long days_used = (initial - left)/reduction;
+
+        if(days_used < no_of_days)
+        {
+            possible = false;
+        }
+    }
+    else if(refill == usage)
+    {
+        if(initial + refill > right && initial - refill < left)
+        {
+            possible = false;
+        }
+    }
+    else
+    {
+        vector <int> reached(usage + 1, false);
+        reached[initial%usage] = true;
+
+        possible = in_between(initial, left, right);
+        while(no_of_days > 0 && possible)
+        {
+            long long days_used = (initial - left)/usage;
+
+            no_of_days -= days_used;
+            initial -= (days_used*usage);
+
+            if(no_of_days <= 0)
+            {   //cout << "Not enought days\n";
+                possible = true;
+                break;
+            }
+
+            initial += refill; //cout << "After refill = " << initial << "\n";
+
+            if(initial > right)
+            {   //cout << "Overflow\n";
+                possible = false;
+                break;
+            }
+
+            if(reached[initial%usage])
+            {   //cout << "Already reached\n";
+                possible = true;
+                break;
+            }
+
+
+            reached[initial%usage] = true;
+        }
+    }
+
+    cout << (possible ? "Yes" : "No") << "\n";
+
+    return 0;
+}

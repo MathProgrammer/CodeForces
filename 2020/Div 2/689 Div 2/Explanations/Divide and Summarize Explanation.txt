@@ -1,0 +1,28 @@
+Let us precompute all possible sums we can get and store it in a set.
+This allows us to answer each query in O(log N) time.
+
+While we are precomputing the sums, we keep dividing the array into 2
+and the height of this tree is at most Log N.
+
+So, the total time taken to precompute is O(N Log N)
+
+The number of sums stored is N + N/2 + N/4 + N/8 + N/16 + ... = O(N log N)
+-----
+
+void check(map <long long, int> &S, int left, int right)
+{
+    S[get_sum(left, right)] = true;
+
+    if(A[left] == A[right])
+    {
+        return;
+    }
+
+    int middle_element = (A[left] + A[right])/2;
+
+    //Points to last occurrence of middle_element
+    int mid = upper_bound(A.begin() + left, A.begin() + right, middle_element) - A.begin() - 1;
+
+    check(S, left, mid);
+    check(S, mid + 1, right);
+}
