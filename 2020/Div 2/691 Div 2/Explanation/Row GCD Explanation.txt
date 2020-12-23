@@ -1,0 +1,49 @@
+- $g = \gcd(a_1 + b_i, a_2 + b_i, a_3 + b_i, \dots , a_n + b_i) = \gcd(a_1 + b_i, a_2 - a_1, a_3 - a_2, \dots , a_n - a_{n - 1})$
+- We will precalculate the GCD of the differences before hand so we can find the GCD in one step.
+
+-----
+
+int main()
+{
+    int no_of_elements_a, no_of_elements_b;
+    cin >> no_of_elements_a >> no_of_elements_b;
+
+    vector <long long> A(no_of_elements_a + 1), B(no_of_elements_b + 1);
+    for(int i = 1; i <= no_of_elements_a; i++)
+    {
+        cin >> A[i];
+    }
+
+    for(int i = 1; i <= no_of_elements_b; i++)
+    {
+        cin >> B[i];
+    }
+
+    sort(all(A));
+
+    vector <long long> difference(no_of_elements_a);
+    for(int i = 1; i < no_of_elements_a; i++)
+    {
+        difference[i] = A[i + 1] - A[i];
+    }
+
+    long long array_gcd = 0;
+    for(int i = 2; i < no_of_elements_a; i++)
+    {
+        array_gcd = gcd(array_gcd, difference[i]);
+    }
+
+    vector <long long> answer(no_of_elements_b + 1);
+    for(int i = 1; i <= no_of_elements_b; i++)
+    {
+        answer[i] = gcd(A[1] + B[i], array_gcd);
+    }
+
+    for(int i = 1; i <= no_of_elements_b; i++)
+    {
+        cout << answer[i] << " ";
+    }
+
+    cout << "\n";
+    return 0;
+}
