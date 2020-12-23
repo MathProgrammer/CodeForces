@@ -1,0 +1,49 @@
+Let the sorted array be
+
+A[1] < A[2] < ... < A[n]
+
+Now, if A[L, ... R] is a group, then the number of people should be A[R]
+
+How do we check all possibilities ?
+
+For every person A[i], let us make A[i] the largest experience in the group.
+
+Let f(i) be the largest number of groups for the first i people.
+
+There are 2 possibilities
+
+1. i is the last part of a group.
+In which case, the current group goes from A[i - A[i], i]
+
+2. i is not part of any group.
+
+So, f(i) = max(1 + f(i - A[i]), f(i - 1))
+
+------
+
+void solve()
+{
+    int no_of_elements;
+    cin >> no_of_elements;
+
+    vector <int> A(no_of_elements + 1);
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        cin >> A[i];
+    }
+
+    sort(A.begin(), A.end());
+
+    vector <int> max_groups(no_of_elements + 1);
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        max_groups[i] = max_groups[i - 1];
+
+        if(i - A[i] >= 0)
+        {
+            max_groups[i] = max(max_groups[i], 1 + max_groups[i - A[i]]);
+        }
+    }
+
+    cout << max_groups[no_of_elements] << "\n";
+}
