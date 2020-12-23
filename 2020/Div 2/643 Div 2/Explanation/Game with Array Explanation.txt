@@ -1,0 +1,55 @@
+A win is always possible if S > 2n
+
+In the array [2, 2, 2, ... 2, S - 2(n - 1)],
+
+there is no subarray with sum either 1 or S - 1
+
+If there exists a subarray who's sum is (S - 1), then the remaining array must
+sum to 1.
+But, this does not exist.
+
+-----
+
+If S <= 2n, we can reach every integer in [0, S]
+
+The array consists of 1's and 2's.
+
+- Let us look at the prefix sums $\mod S$
+- $P_1, P_2, \dots , P_n$ are all distinct  since they are all positive.
+- $P_1 + K, P_2 + K, P_3 + K, \dots , P_n + k$ are also all pairwise distinct.
+- Now, we have $2n$ integers all in the range $[0, S - 1]$. By the Pigeonhole Principle,
+there must be two that are equal since $S < 2n$
+
+- $P_i = P_j + K \pmod S$
+    - If $i > j$, then we have a subarray $[j, i]$ who's sum is $K$
+    - Otherwise, we have a subarray $[j, i]$ who's sum is $(S - K)$ since some prefix  $[1, j - 1]$and suffix $[i, n]$  add up to $K$
+
+-----
+
+#include <iostream>
+
+using namespace std;
+
+int main()
+{
+    int no_of_elements, sum;
+    cin >> no_of_elements >> sum;
+
+    if(sum >= 2*no_of_elements)
+    {
+        cout << "YES\n";
+        for(int i = 1; i <= no_of_elements; i++)
+        {
+            cout << (i < no_of_elements ? 2 : sum - 2*(no_of_elements - 1)) << " ";
+        }
+        cout << "\n";
+
+        cout << "1\n";
+    }
+    else
+    {
+        cout << "NO\n";
+    }
+
+    return 0;
+}
