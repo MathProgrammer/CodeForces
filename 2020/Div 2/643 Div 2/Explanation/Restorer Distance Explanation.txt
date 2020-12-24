@@ -1,0 +1,107 @@
+What is the cost to make each tower = height H ?
+
+We can set M = min(M, A + R) because moving a block is the same as
+adding and removing.
+
+For every height H, we will calculate the number of 'extra' and 'missing' blocks.
+We can do this using prefix sums and binary search.
+
+We will first move min(extra, missing).
+
+After that, if we still have extra blocks, we will add them.
+If we still have missing blocks, we will remove them.
+
+-----
+
+It is a piecewise linear function.
+So, we can check the value of the function at all H[i], along with 1 additional value
+
+(S/n) - both floor and ceil.
+
+As this is the point where we 'transition' from having more missing blocks to more extra blocks.
+
+-----
+
+We can also use ternary search like I did.
+
+But the proof for unimodality is complicated.
+
+-----
+
+long long calculate(long long h)
+{
+    int l = lower_bound(all(height), h) - height.begin() - 1;
+    int r = upper_bound(all(height), h) - height.begin();
+
+    long long missing_blocks = l*h - sum_till[l];
+    long long extra_blocks = sum_till[no_of_elements] - sum_till[r - 1] - h*(no_of_elements - r + 1);
+
+    long long cost = relocate*min(missing_blocks, extra_blocks);
+
+    if(missing_blocks > extra_blocks)
+    {
+        cost += add*(missing_blocks - extra_blocks);
+    }
+    else if(extra_blocks > missing_blocks)
+    {
+        cost += destroy*(extra_blocks - missing_blocks);
+    }
+
+    //Overflow
+    if(cost < 0)
+    {
+        cost = oo;
+    }
+
+    return cost;
+}
+
+
+-----
+
+Now, let us perform ternary search and find out the best value of H
+
+int main()
+{
+    cin >> no_of_elements >> add >> destroy >> relocate;
+    relocate = min(relocate, add + destroy);
+
+    height.resize(no_of_elements + 1);
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        cin >> height[i];
+    }
+
+    sort(all(height));
+
+    sum_till.resize(no_of_elements + 1);
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        sum_till[i] = sum_till[i - 1] + height[i];
+    }
+
+    const long long RANGE = 2;
+    long long left = height[1], right = height[no_of_elements];
+    while(right - left > RANGE)
+    {
+        long long mid_1 = left + (right - left)/3, mid_2 = right - (right - left)/3;
+
+        if(calculate(mid_1) > calculate(mid_2))
+        {
+            left = mid_1;
+        }
+        else
+        {
+            right = mid_2;
+        }
+    }
+
+    long long answer = min(calculate(left), calculate(right));
+    for(long long i = left; i <= right; i++)
+    {
+        answer = min(answer, calculate(i));
+    }
+
+    cout << answer << "\n";
+    return 0;
+}
