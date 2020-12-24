@@ -1,0 +1,38 @@
+The red card is greater than the blue card if they have some prefix
+where R[i] = B[i] and then R[i] > B[i]
+
+Let us iterate over the possibility of the first unequal card.
+
+If there are more cards where R[i] > B[i], red is the winner
+If B[i] > R[i], blue is the winner.
+
+-----
+
+void solve()
+{
+    int length;
+    string R, B;
+    cin >> length >> R >> B;
+
+    int red_cards = 0, blue_cards = 0;
+    for(int i = 0; i < length; i++)
+    {
+        if(R[i] > B[i])
+        {
+            red_cards++;
+        }
+        else if(B[i] > R[i])
+        {
+            blue_cards++;
+        }
+    }
+
+    if(red_cards == blue_cards)
+    {
+        cout << "EQUAL\n";
+    }
+    else
+    {
+        cout << (red_cards > blue_cards ? "RED\n" : "BLUE\n");
+    }
+}

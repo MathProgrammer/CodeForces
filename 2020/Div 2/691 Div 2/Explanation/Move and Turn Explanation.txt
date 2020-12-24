@@ -1,0 +1,43 @@
+We will be making independent horizontal steps and vertical steps of n/2.
+
+Let us see the number of possibilities of horizontal steps.
+
+K right 0 left = K
+(K - 1) right 1 left = K - 2
+(K - 2) right 2 left = K - 4
+.
+.
+0 right K left = -K
+
+Each of these (K + 1) steps lead to a different result.
+
+-----
+
+If n is odd, then we will make one more horizontal step than vertical step
+or other way around.
+
+-----
+
+int main()
+{
+    int length;
+    cin >> length;
+
+    int horizontal_steps = length/2, vertical_steps = length/2;
+    long long horizontal_results = (horizontal_steps + 1);
+    long long vertical_results = (vertical_steps + 1);
+
+    long long answer;
+
+    if(length%2 == 1)
+    {
+        answer = (horizontal_results + 1)*(vertical_results) + (horizontal_results)*(vertical_results + 1);
+    }
+    else
+    {
+        answer = horizontal_results*vertical_results;
+    }
+
+    cout << answer << "\n";
+    return 0;
+}
