@@ -29,7 +29,7 @@ From a given vertex, the ant can make 3 moves.
 
 Case 1 : If the ant is on vertex D, then he can move to either vertex A, B or C.
 
-f(n, D) = 3 f(n-1, D)
+f(n, D) = 3 f(n-1, A/B/C)
 
 Case 2 : If the ant is on A, B or C, then he can move to either the destination or one of it's other two non-destination neighbours.
 
