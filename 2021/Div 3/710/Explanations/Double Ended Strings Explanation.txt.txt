@@ -1,0 +1,43 @@
+Let f(La, Ra, Lb, Rb) be true if A[La][Ra] = B[Lb][Rb] 
+
+f(La, Ra, Lb, Rb) = (A[La] = B[Lb]) + f(La + 1, Ra, Lb + 1, Rb) 
+
+Find out the length of the maximum matching string 
+
+-----
+
+void solve()
+{
+    string A, B;
+    cin >> A >> B;
+
+    memset(matches, false, sizeof(matches));
+
+    int max_length = 0, changes = A.size() + B.size();
+    for(int length = 1; length <= min(A.size(), B.size()); length++)
+    {
+        for(int a_left = 0, a_right = a_left + length - 1; a_right < A.size(); a_left++, a_right++)
+        {
+            for(int b_left = 0, b_right = b_left + length - 1; b_right < B.size(); b_left++, b_right++)
+            {
+                if(length == 1)
+                {
+                    matches[a_left][a_right][b_left][b_right] = (A[a_left] == B[b_left]);
+                }
+                else
+                {
+                    matches[a_left][a_right][b_left][b_right] = ( (A[a_left] == B[b_left]) && (matches[a_left + 1][a_right][b_left + 1][b_right]) );
+                }
+
+                if(matches[a_left][a_right][b_left][b_right])
+                {
+                    max_length = length;
+
+                    changes = (a_left) + (A.size() - 1 - a_right) + (b_left) + (B.size() - 1 - b_right);
+                }
+            }
+        }
+    }
+
+    cout << changes << "\n";
+}

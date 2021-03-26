@@ -1,0 +1,46 @@
+We will be greedy. We will try to keep the x's as far as possible but not more than K. 
+The question says that it is always guarnateed that no to X's are more than K apart. 
+
+Store the indices of all the X's in a vector and then greedily perform the changes.
+
+-----
+
+void solve()
+{
+    int length, k;
+    cin >> length >> k;
+
+    string S;
+    cin >> S;
+
+    vector <int> positions;
+    for(int i = 0; i < S.size(); i++)
+    {
+        if(S[i] == '*')
+        {
+            positions.push_back(i);
+        }
+    }
+
+    vector <int> changes;
+    changes.push_back(positions[0]);
+    for(int i = 0; i < positions.size(); i++)
+    {
+        if(positions[i] - changes.back() > k)
+        {
+            changes.push_back(positions[i - 1]);
+        }
+
+        if(i + 1 == positions.size())
+        {
+            if(positions[i] != changes.back())
+            {
+                changes.push_back(positions[i]);
+            }
+        }
+
+    }
+
+    cout << changes.size() << "\n";
+
+}

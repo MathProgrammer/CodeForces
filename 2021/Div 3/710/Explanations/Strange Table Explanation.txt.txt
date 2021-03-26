@@ -1,0 +1,20 @@
+When they are numbered 'column' wise, the number for cell (r, c) is R(c - 1) + r 
+
+When, they are numbered 'row' wise, the number for cell (r, c) is C(r - 1) + c 
+
+First, find out (r, c) and then the other number. 
+
+-----
+
+void solve()
+{
+    long long rows, columns, x;
+    cin >> rows >> columns >> x;
+
+    long long column_no = (x/rows) + (x%rows != 0);
+    long long row_no = x - rows*(column_no - 1);
+
+    long long new_no = columns*(row_no - 1) + column_no;
+
+    cout << new_no << "\n";
+}
