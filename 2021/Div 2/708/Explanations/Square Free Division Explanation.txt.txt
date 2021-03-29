@@ -1,0 +1,95 @@
+1. Reduce each integer to it's square free form i.e. 
+	Keep only those primes which occur an odd number of times in the prime factorisation of n an odd number of times. 
+	Now, if PQ is a perfect square, then P = Q
+
+2. The problem is now reduced to this - 
+
+Divide the array into minimum number of segments after K changes such that each segment consists of distinct elements. 
+
+3. For each i, find out left(i, j). which is the earliest left point of a segment ending at i 
+that has only distinct elements after j changes. 
+
+4. Use Left(i, j) to compute f(i, j) which is the minimum number of segments for the first i elements after j changes. 
+Iterate over the number of changes on the last segments and find out the left point accordingly. 
+
+-----
+
+How to find out the best left ? 
+
+We will do an O(n) scan for each k using two pointers L and R. 
+We will maintain the invariant that the segment [L, R] has exactly k duplicates and [L, R] is the longest such segment. 
+Left(R, k) = L 
+
+And then, we will decrease R. 
+
+L and R touch each element once so it is O(n) complexity. 
+
+Overall complexity for this is O(nk)
+
+
+vector <vector <int> > best_left(no_of_elements + 1, vector <int> (no_of_changes + 1));
+    for(int change = 0; change <= no_of_changes; change++)
+    {
+        int left = no_of_elements + 1, right = no_of_elements, duplicates = 0;
+
+        while(right >= 1)
+        {
+            while(left >= 1)
+            {
+                if(duplicates == change && frequency[A[left - 1]] > 0)
+                {
+                    break;
+                }
+
+                if(frequency[A[left - 1]] > 0)
+                {
+                    duplicates++;
+                }
+
+                frequency[A[left - 1]]++;
+                left--;
+            }
+
+            best_left[right][change] = max(left, 1); //cout << "For " << right << " best " << left << "\n";
+
+            if(frequency[A[right]] > 1)
+            {
+                duplicates--;
+            }
+
+            frequency[A[right]]--;
+            right--;
+        }
+    }
+
+-----
+
+Here is how we calculate the DP 
+
+vector <vector <int> > minimum_segments(no_of_elements + 1, vector <int> (no_of_changes + 1, oo));
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        for(int changes = 0; changes <= no_of_changes; changes++)
+        {
+            if(changes > 0)
+            {
+                minimum_segments[i][changes] = minimum_segments[i][changes - 1];
+            }
+
+            for(int last_changes = 0; last_changes <= changes; last_changes++)
+            {
+                int left = best_left[i][last_changes];
+
+                if(left == 1)
+                {
+                    minimum_segments[i][changes] = 1;
+                    continue;
+                }
+
+                minimum_segments[i][changes] = min(minimum_segments[i][changes],
+                                                    minimum_segments[left - 1][changes - last_changes] + 1);
+
+            }
+        }
+    }
+

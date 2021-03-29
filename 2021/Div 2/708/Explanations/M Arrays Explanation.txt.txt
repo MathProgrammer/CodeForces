@@ -1,0 +1,47 @@
+Reduce A[i] to (A[i] mod m) for all elements. 
+
+After that, all the 0's go to 1 array. 
+If M is even, all the M/2 also go to one array. 
+
+Other wise look at each pair (i, j) such that i + j = 0 (mod m) separetly 
+
+We will make an array like (i, j, i, j, i) (i) (i) (i) (i) 
+
+The number of arrays if their frequencies differ by more than 1 is |F[i] - F[j]|
+
+------
+
+void solve()
+{
+    int no_of_elements, m;
+    cin >> no_of_elements >> m;
+
+    vector <int> A(no_of_elements + 1);
+    vector <int> frequency(m + 1);
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        cin >> A[i];
+
+        frequency[A[i]%m]++;
+    }
+
+    int arrays = (frequency[0] > 0 ? 1 : 0);
+    for(int i = 1, j = m - 1; i <= j; i++, j--)
+    {
+        if(frequency[i] == 0 && frequency[j] == 0)
+        {
+            continue;
+        }
+
+        if(i == j || abs(frequency[i] - frequency[j]) <= 1)
+        {
+            arrays++;
+        }
+        else
+        {
+            arrays += abs(frequency[i] - frequency[j]);
+        }
+    }
+
+    cout << arrays << "\n";
+}

@@ -1,0 +1,33 @@
+Pad it with (K - 3) ones and then reuse the solution for (N - (k - 3)) 
+
+1. If n is odd - 1, N/2, N/2 
+2. (n mod 4) = 2, - 2, (N - 2)/2, (N - 2)/2, LCM = (N - 2)/2, because (N - 2)/2 is also even
+3. (n mod 4) = n/2, n/4, n/4, LCM = n/2
+
+-----
+
+void solve_3(int n)
+{
+    switch(n%4)
+    {
+        case 1 :
+        case 3 : cout << "1 " << n/2 << " " << n/2 << "\n"; return;
+ 
+        case 2 : cout << "2 " << (n - 2)/2 << " " << (n - 2)/2 << "\n"; return;
+        case 0 : cout << n/2 << " " << n/4 << " " << n/4 << "\n"; return;
+    }
+}
+ 
+void solve()
+{
+    int n, k;
+    cin >> n >> k;
+ 
+    for(int i = 1; i <= k - 3; i++)
+    {
+        cout << "1 ";
+    }
+ 
+    solve_3(n - (k - 3));
+}
+ 
