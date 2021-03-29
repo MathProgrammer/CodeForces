@@ -54,20 +54,20 @@ void solve()
     {
         cin >> A[i];
 
-        A[i] = value[A[i]]; //cout << A[i] << " ";
+        A[i] = value[A[i]];
 
         frequency[A[i]] = 0;
     }
-    //cout << "\n";
+
 
     vector <vector <int> > best_left(no_of_elements + 1, vector <int> (no_of_changes + 1));
     for(int change = 0; change <= no_of_changes; change++)
-    {   //cout << "Change = " << change << "\n";
+    {
         int left = no_of_elements + 1, right = no_of_elements, duplicates = 0;
 
         while(right >= 1)
         {
-            while(left >= 1)
+            while(left > 1)
             {
                 if(duplicates == change && frequency[A[left - 1]] > 0)
                 {
@@ -83,7 +83,7 @@ void solve()
                 left--;
             }
 
-            best_left[right][change] = max(left, 1); //cout << "For " << right << " best " << left << "\n";
+            best_left[right][change] = left; //cout << "For " << right << " best " << left << "\n";
 
             if(frequency[A[right]] > 1)
             {
@@ -95,7 +95,6 @@ void solve()
         }
     }
 
-    int answer = oo;
     vector <vector <int> > minimum_segments(no_of_elements + 1, vector <int> (no_of_changes + 1, oo));
     for(int i = 1; i <= no_of_elements; i++)
     {
@@ -123,12 +122,7 @@ void solve()
         }
     }
 
-    for(int i = 0; i <= no_of_changes; i++)
-    {
-        answer = min(answer, minimum_segments[no_of_elements][i]);
-    }
-
-    cout << answer << "\n";
+    cout << minimum_segments[no_of_elements][no_of_changes] << "\n";
 }
 
 int main()
