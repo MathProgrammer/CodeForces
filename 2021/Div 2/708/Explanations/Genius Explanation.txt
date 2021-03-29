@@ -1,7 +1,7 @@
 The primary insight of this problem is how to visualise the edge weights in between going from one problem to another. 
 
 Suppose we go from problem i to problem j, the weight (complexity) will be a string of 1's in binary 
-where the bits [j + 1, i] will be set. 
+where the bits [j, i - 1] will be set. 
 
 -----
 
