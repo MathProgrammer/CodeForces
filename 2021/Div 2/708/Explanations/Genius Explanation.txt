@@ -1,0 +1,89 @@
+The primary insight of this problem is how to visualise the edge weights in between going from one problem to another. 
+
+Suppose we go from problem i to problem j, the weight (complexity) will be a string of 1's in binary 
+where the bits [j + 1, i] will be set. 
+
+-----
+
+Let f(i) be the maximum score if the last problem we solve is problem i
+
+For each i, we will check every possibility for the second last problem j but we have to be careful to do this in such a way 
+that the weights are increasing. 
+
+f(i) = max(f(i), f(j) + |S[i] - S[j]|) 
+
+-----
+
+We have to make sure that the last problem we have solved at problem j is of lower weight than [i-j] 
+One of the ways to do this is to add another dimension to the DP. 
+
+f(i, k) = Be the maximum score ending at problem i, if the last problem solved was problem k. 
+
+So, for updating f(i, j), we will use all f(j, k) where [k-j] < [j-i] 
+
+The problem with this is, which vertex do we start with ? 
+Suppose we are first finding out f(1, _), but the best path to 1, might be 5 -> 10 -> 1
+But we have not yet computed f(10, 5)
+
+So, there is a problem regarding which vertex to start with and how to update the transition correctly. 
+
+-----
+
+There is an ingenious insight to solve this issue. 
+Instead of iterating over the vertices, we will iterate over the edges. 
+We will visit the edges in ascending order of their weight. 
+(Our binary interpretation of the edges already told us that they were unique.) 
+Since we are visiting the edges in ascending order, we can freely 
+
+update f(i) = max{f(i), f(j) + |S[i] - S[j]}, and rest assured that the last problem at j was of lower weight than [i-j]. 
+
+However, since we are iterating over edges and not vertices, we have to be sure to update both vertices. 
+
+So, when we visit edge [i-j] 
+
+update f(i) = max{f(i), f(j) + |S[i] - S[j]|} and 
+f(j) = max{f(j), f(i) + |S[i] - S[j]}
+
+-----
+
+void solve()
+{
+    int no_of_problems;
+    cin >> no_of_problems;
+
+    vector <int> tag(no_of_problems + 1), score(no_of_problems + 1);
+    for(int i = 1; i <= no_of_problems; i++)
+    {
+        cin >> tag[i];
+    }
+
+    for(int i = 1; i <= no_of_problems; i++)
+    {
+        cin >> score[i];
+    }
+
+    vector <long long> score_ending_at(no_of_problems + 1);
+    for(int i = 1; i <= no_of_problems; i++)
+    {
+        for(int j = i - 1; j > 0; j--)
+        {
+            if(tag[i] == tag[j])
+            {
+                continue;
+            }
+
+            long long current_i = score_ending_at[i], current_j = score_ending_at[j], score_here = abs(score[i] - score[j]);
+
+            score_ending_at[i] = max(score_ending_at[i], current_j + score_here);
+            score_ending_at[j] = max(score_ending_at[j], current_i + score_here);
+        }
+    }
+
+    long long answer = 0;
+    for(int i = 1; i <= no_of_problems; i++)
+    {
+        answer = max(answer, score_ending_at[i]);
+    }
+
+    cout << answer << "\n";
+}
