@@ -1,0 +1,15 @@
+Keep checking consecutive integers till we get an integer that meets the condition. 
+
+-----
+
+void solve()
+{
+    long long n;
+    cin >> n;
+
+    long long answer = n;
+    while(__gcd(answer, sum_of_digits(answer)) == 1)
+        answer++;
+
+    cout << answer << "\n";
+}
