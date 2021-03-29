@@ -46,6 +46,13 @@ f(j) = max{f(j), f(i) + |S[i] - S[j]}
 
 -----
 
+How to visit the edges in ascending order ? 
+
+Iterate over the higher bit i from i = 0 to N - 1
+Iterate over the lower bit from j = i - 1 to 0
+
+-----
+
 void solve()
 {
     int no_of_problems;
