@@ -1,0 +1,42 @@
+# $A[p + i] + A[p - i] = 2k$ is invariant
+
+- In the beginning, $A[p + 1] = k + k/2$ and $A[p - 1] = k/2 + 0$
+    - $A[p + 1] + A[p - 1] = 2k$
+    - After the first second, everybody other than $A[p - 1], A[p], A[p + 1]$ has $k$ cards exactly.
+- Let us say this is true for the first $x$ seconds. In the $x + 1$ second, $A[p + x + 1]$
+- Everybody to the right of the impostor has more than $k$ cards.
+- Suppose there are $10000$ people.
+    - Divide into chunks of $100$
+        - $[1 - 100]$
+        - $[101 - 200]$
+        - $[201 - 300]$
+    - After $101$ operations, there will be $100$ people with more than $k$ cards.
+    - It should have at have spilled over to at least one other chunk.
+    - I will spend $200$ moves ($2$ rounds) only checking the first person of each chunk.
+
+    ---
+
+    - Suppose the impostor is in chunk $73$ at position $64$
+        - After $37$ moves, the infection spreads to chunk $74$
+            - After $1$ move, the infection is in $65$
+            - After $2$ moves, the infection is in $66$
+            - After $36$ moves, the infection is in $100$
+            - After $37$-th move, the infection goes to first person of chunk $74$
+        - When you reach the chunk $74$, you will reach in the $74$th move. So, you are in time to catch the infection.
+        - In this scenario, $100$ moves are sufficient.
+
+        ---
+
+- Suppose the impostor is in chunk $7$ at position $64$
+- After $37$ moves, the infection spreads to chunk $8$
+- But, you are visiting chunk $8$ at second $8$. So, you are too early to catch the infection.
+
+Our strategy is 
+
+- At $1$ second we go to chunk $1$
+- At $2$ second, we go to chunk $2$
+
+---
+
+- Use $200$ moves to find out someone who has $> k$ cards
+- Then use binary search to find the first person on his left who has $\le k$ cards.
