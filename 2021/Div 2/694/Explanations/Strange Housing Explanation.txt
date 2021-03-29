@@ -1,0 +1,81 @@
+- We have to choose some non-adjacent vertices in the graph such that when we delete all edges that are not connected to one of these vertices, we still are connected.
+- Colour vertex $1$ white
+    - Colour all the children of a white vertex black.
+        - Black vertices lie between two white children. This is the invariant that we are maintaining.
+    - Colour all the grand children of the white vertex as white.
+        - It is important to colour all the grand children of white vertex as white rather than visit a black vertex and paint all of it's children white. 
+          The reason is that some black vertices might be connected to each other. So, we would end up repainting them white, which would not be correct.
+- If there is some vertex which is uncoloured in the end, then it means that the graph was not connected in the beginning
+
+------
+
+void solve()
+{
+    int no_of_vertices, no_of_edges;
+    cin >> no_of_vertices >> no_of_edges;
+ 
+    vector <vector <int> > graph(no_of_vertices + 1);
+    for(int i = 1; i <= no_of_edges; i++)
+    {
+        int u, v;
+        cin >> u >> v;
+ 
+        graph[u].push_back(v);
+        graph[v].push_back(u);
+    }
+ 
+    const int UNCOLOURED = -1, BLACK = 0, WHITE = 1;
+    vector <int> colour(no_of_vertices + 1, UNCOLOURED);
+    queue <int> Q;
+    colour[1] = WHITE;
+    for(int child : graph[1])
+    {
+        colour[child] = BLACK;
+ 
+        Q.push(child);
+    }
+ 
+    while(!Q.empty())
+    {
+        int v = Q.front(); Q.pop();
+ 
+        for(int child : graph[v])
+        {
+            if(colour[child] == UNCOLOURED)
+            {
+                colour[child] = WHITE;
+ 
+                for(int grandchild : graph[child])
+                {
+                    colour[grandchild] = BLACK;
+ 
+                    Q.push(grandchild);
+                }
+            }
+        }
+    }
+ 
+    vector <int> answer;
+    for(int i = 1; i  <= no_of_vertices; i++)
+    {
+        if(colour[i] == WHITE)
+        {
+            answer.push_back(i);
+        }
+ 
+        if(colour[i] == UNCOLOURED)
+        {
+            cout << "NO\n";
+            return;
+        }
+    }
+ 
+    cout << "YES\n";
+    cout << answer.size() << "\n";
+    for(int v :  answer)
+    {
+        cout << v << " ";
+    }
+ 
+    cout << "\n";
+}
