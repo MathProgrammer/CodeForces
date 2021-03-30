@@ -1,0 +1,82 @@
+- It is always possible to travel through the points so let us travel in ascending order of $r$ since we can never go backwards.
+- Let us look at the quantity $D = r - c$ for each node.
+    - When we move from an even cell to an odd cell, $D$ increases by $1$
+    - When we move from an odd cell to an odd cell, $D$ remains the same.
+- Let $D_1$ be the difference of the source and $D_2$ the difference of the target.
+- If $D_1 = D_2$, then
+    - If we are on an odd cell, we just keep sliding till we hit the target. No additional edges.
+    - If we are on an even cell, we have to keep making a new edge to $(r + 1, c + 1)$, which will also be even. So it will cost $r_2 - r_1$
+
+---
+
+- If $D_1 < D_2$, then
+    - We can only increase the value of $D$ by moving from $(r, c) \to (r + 1, c)$
+        - This is the normal even transition.
+    - So, we will go along the following path till $D_1 = D_2$
+    - $E \to O \to E \to O \to \dots \to O$
+    - We don't have to make any edge from $E \to O$ but have to make half the edges from $O \to E$
+    - Keep in mind that we can add in any number of legal $O \to O$ transitions in between so that we finish our path on the destination cell $(r_2 - c_2)$
+    - If $D_1 - D_2$ is odd, then
+        - We will be making exactly half the number of new edges if we begin on an even cell.
+        - We will be making one more than half new edges if we begin on an odd cell.
+
+    ---
+
+- Make sure that the path ends on an odd cell so we have the situation $D_1 = D_2$ on an odd cell as discussed above so cost is $0$.
+
+---
+
+- If $D_1 > D_2$, then the answer is not possible because
+    - Either $r_1 > r_2$ or $c_1 > c_2$ and we can never go backwards
+
+------
+
+int is_even(long long r, long long c)
+{
+    return ( (r + c)%2 == 0 );
+}
+
+void solve()
+{
+    int no_of_elements;
+    cin >> no_of_elements;
+
+    vector < pair <int, int> > P(no_of_elements + 1, make_pair(1, 1));
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        cin >> P[i].first;
+    }
+
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        cin >> P[i].second;
+    }
+
+    sort(P.begin(), P.end());
+
+    long long distance = 0;
+    for(int i = 0; i + 1 <= no_of_elements; i++)
+    {
+        int source_difference = P[i].first - P[i].second;
+        int target_difference = P[i + 1].first - P[i + 1].second;
+        int extra_difference = target_difference - source_difference;
+
+        if(extra_difference == 0)
+        {
+            distance += (is_even(P[i].first, P[i].second) ? P[i + 1].first - P[i].first : 0);
+
+            continue;
+        }
+
+        if(is_even(P[i].first, P[i].second))
+        {
+            distance += ( extra_difference/2 );
+        }
+        else
+        {
+            distance += extra_difference/2 + extra_difference%2;
+        }
+    }
+
+    cout << distance << "\n";
+}
