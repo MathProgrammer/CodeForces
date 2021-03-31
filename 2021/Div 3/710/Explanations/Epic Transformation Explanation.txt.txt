@@ -1,0 +1,44 @@
+If any pile has > N/2 stones, that pile will remain standing even at the end. 
+
+Otherwise, we are reducing the piles by 2 at each step. 
+Let us take a stone from the two highest piles.
+Since the largest pile has < N/2 stones in the beginning, it will always have < N/2 stones at every step. 
+When the game ends, it cannot have 2 stones
+
+In the end, there will be either 0 or 1 stones depending on the parity, which is invariant.
+
+-----
+
+void solve()
+{
+    int no_of_elements;
+    cin >> no_of_elements;
+
+    map <int, int> frequency;
+    vector <int> A(no_of_elements + 1);
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        cin >> A[i];
+
+        frequency[A[i]]++;
+    }
+
+    vector <int> pile;
+    for(auto it = frequency.begin(); it != frequency.end(); it++)
+    {
+        pile.push_back(it->second);
+    }
+
+    sort(pile.begin(), pile.end());
+
+    if(2*pile.back() > no_of_elements)
+    {
+        int remaining = no_of_elements - pile.back();
+
+        cout << no_of_elements - 2*remaining << "\n";
+
+        return;
+    }
+
+    cout << no_of_elements%2 << "\n";
+}
