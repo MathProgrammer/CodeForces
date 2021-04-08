@@ -1,0 +1,106 @@
+## Grundy Revision
+
+- The grundy number of a state from which we cannot make a move is $0$.
+    - The grundy number of a state is the $mex$ of the grundy numbers of the states it can transition to.
+    - The reason is that it is similar to a pile with that many stones. We can either take some stones or add stones but not leave it as it is.
+    - NIM does not change if we are allowed to add stones.
+
+---
+
+## Grundy Number of $(N, Mask)$
+
+- Let $g(n, m)$ be the grundy number of a pile with $n$ stones and $m$ represents a bitmask where the $i$-th bit is set if we are allowed to take $i$ stones from the pile
+- When we take $i$ stones from a pile, the size of the pile becomes $(n - i)$ and the mask also does not have the $i$-th bit set anymore.
+- We can find out the $g(n, 111 ... 1)$ and find the answer by taking the XOR of all the piles.
+
+## Why is this practical $?$
+
+- The bitmasks can be as large as $2^{60}$ so how can we compute them $?$
+- We will do it recursively and only evaluate those states which we need.
+- Suppose we take a stone of size $25$ from $60$, not only does the size of the pile reduce to $35$, the eligible moves is also at most $35$, so all bits in $[36, 60]$ will be removed.
+    - This is a great optimisation and allows us to find the grundy of the states quickly.
+
+-----
+
+map < pair <int, long long>, int > grundy;
+
+int is_bit_set(long long n, int bit)
+{
+    return ( (n & (1LL << bit)) != 0);
+}
+
+long long unset(long long n, int bit)
+{
+    n ^= (1LL << bit);
+
+    return n;
+}
+
+int get_grundy(int n, long long mask)
+{
+    //Not possible to take more than N from this pile - Bits are 0 indexed
+    for(int higher_bit = n; higher_bit < MAX_BIT; higher_bit++)
+    {
+        if(is_bit_set(mask, higher_bit))
+        {
+            mask = unset(mask, higher_bit);
+        }
+    }
+    //cout << "State(" << n << "," << mask << ")\n";
+    pair <int, long long> pair_here = make_pair(n, mask);
+
+    if(grundy.find(pair_here) != grundy.end())
+    {
+        return grundy[pair_here];
+    }
+
+    vector <int> visited(MAX_BIT, false);
+    for(int bit = 0; bit < n; bit++)
+    {
+        if(is_bit_set(mask, bit))
+        {
+            long long new_mask = unset(mask, bit);
+            int new_state = get_grundy(n - bit - 1, new_mask); //cout << "Visited " << new_state << "\n";
+
+            visited[new_state] = true;
+        }
+    }
+
+    int mex = 0;
+    for(int bit = 0; bit < MAX_BIT; bit++)
+    {
+        if( visited[bit])
+        {
+            continue;
+        }
+
+        mex = bit;
+        break;
+    }
+
+    grundy[pair_here] = mex;
+
+    return grundy[pair_here];
+
+}
+
+int main()
+{
+    int no_of_piles;
+    cin >> no_of_piles;
+
+    grundy[make_pair(0, 0)] = 0;
+
+    int pile_xor = 0;
+    for(int i = 1; i <= no_of_piles; i++)
+    {
+        int x;
+        cin >> x;
+
+        pile_xor ^= get_grundy(x, (1LL << x) - 1);
+    }
+
+    int second_player_win = (pile_xor == 0);
+    cout << (second_player_win ? "YES" : "NO") << "\n";
+    return 0;
+}
