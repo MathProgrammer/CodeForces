@@ -1,0 +1,80 @@
+# Visit each banana at most twice
+
+- Suppose we had to do it naively. How would we do it $?$
+    - For each time step, visit all the bananas that we have gotten previously and then perform the current operation $Y$ times and mark their states as visited.
+    - We just need one observation.
+    - Suppose we start at $b_1$ and are performing addition.
+        - We only need to keep going as long as the integers generated weren't reachable.
+        - $b_1 + x, b_1 + 2x, b_1 + 3x, \dots , b_1 + kx$
+        - Suppose some $b_k = b_1 + kx$ is already visited.
+        - We will stop here and break.
+        - The reason is that if when we pick $b_k$ and start performing this same operation $Y$ times, we will get all the same states and more.
+            - If we continue applying on $b_1$, we will get $b_1 + (k + 1)x, b_1 + (k + 2)x, \dots , b_1 + Yx$
+            - If we start from $b_k$, we will get $b_k + x, b_k + 2x, \dots , b_k + Yx$
+            - The elements visited after $b_k$ from $b_1$ will be a subset (prefix) of the elements visited starting from $b_k$. So, instead of continuing from $b_1$, we will stop and start afresh from $b_k$
+
+    ---
+
+    - Each element is visited at most twice. If we start applying operations from $x$, we would only have visited from the most recent integer in $[x - Y, X]$ that was already visited.
+        - So, $x$ is only visited twice.
+        - This is similar to a two pointer idea and.
+
+-----
+
+
+long long ceil(long long n, long long d)
+{
+    return (n/d) + (n%d != 0);
+}
+
+long long operate(int type, long long b, long long x)
+{
+    switch(type)
+    {
+        case ADD : return ceil(b*MOD + x, MOD);
+
+        case MULTIPLY : return ceil(b*x, MOD);
+    }
+}
+
+int main()
+{
+    int no_of_timesteps, target_bananas;
+    cin >> no_of_timesteps >> target_bananas;
+
+    vector <int> can_get(target_bananas + 1, -1), previous_get(target_bananas + 1, false);
+    can_get[0] = 0;
+
+    for(int i = 1; i <= no_of_timesteps; i++)
+    {
+        int type;
+        long long x, repetition;
+        cin >> type >> x >> repetition;
+        previous_get = can_get;
+
+        for(int b = 0; b <= target_bananas; b++)
+        {   //cout << "From " << b << "\n";
+            if(previous_get[b] != -1)
+            {
+                for(long long t = 1, next = b; t <= repetition; t++)
+                {
+                    next = operate(type, next, x); //cout << "Getting " << next << "\n";
+
+                    if(next > target_bananas || previous_get[next] != -1)
+                    {
+                        break;
+                    }
+
+                    can_get[next] = i; //cout << "Can get " << next << " = " << can_get[next] << "\n";
+                }
+            }
+        }
+    }
+
+    for(int i = 1; i <= target_bananas; i++)
+    {
+        cout << can_get[i] << " ";
+    }
+
+    return 0;
+}
