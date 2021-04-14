@@ -1,0 +1,25 @@
+Sort the array A. 
+
+The unique element is either the first element or the last. 
+
+-----
+
+void solve()
+{
+    int no_of_elements;
+    cin >> no_of_elements;
+ 
+    vector < pair<int, int> > A(no_of_elements + 1);
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        cin >> A[i].first;
+ 
+        A[i].second = i;
+    }
+ 
+    sort(A.begin(), A.end());
+ 
+    int index = (A[1].first == A[2].first ? A[no_of_elements].second : A[1].second);
+ 
+    cout << index << "\n";
+}
