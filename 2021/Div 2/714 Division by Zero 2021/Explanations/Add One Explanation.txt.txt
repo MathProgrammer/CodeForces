@@ -1,0 +1,67 @@
+Let f(i) be the length of 10 after i moves. 
+
+How to build the recurrence for f(i) ? 
+In 10 moves, every digit becomes a 2 digit number except the 9, which becomes a 3 digit number (109)
+
+9 -> 
+10 -> 
+21 
+32
+43
+54
+65
+76
+87
+98
+109
+
+f(i) = 2f(i - 10) + Number of 9's
+f(i) = f(i - 10) + f(i - 10) + Number of 9's
+f(i) = f(i - 10) + f(i - 9)
+
+After one move from (i - 10), all the digits remain single digits except 9 which becomes 2 digits 
+f(i - 9) = f(i - 10) + Number of 9's
+
+-----
+
+In order to find the length of d after i moves, we will first calculate the number of mvoes to make it = 10 
+and then use f(i - (10 - d)) 
+
+-----
+
+void precompute()
+{
+    for(int i = 0; i <= 8; i++)
+    {
+        length[i] = 2;
+    }
+
+    length[9] = 3;
+
+    for(int i = 10; i < MAX_N; i++)
+    {
+        length[i] = (length[i - 9] + length[i - 10])%MOD;
+    }
+}
+
+void solve()
+{
+    int n, no_of_operations;
+    cin >> n >> no_of_operations;
+
+    long long answer = 0;
+    while(n > 0)
+    {
+        int digit = n%10;
+
+        long long this_length = (no_of_operations < 10 - digit ? 1 : length[no_of_operations - (10 - digit)]);
+
+        //cout << "D = " << digit << " this = " << this_length << "\n";
+
+        n /= 10;
+
+        answer = (answer + this_length)%MOD;
+    }
+
+    cout << answer << "\n";
+}
