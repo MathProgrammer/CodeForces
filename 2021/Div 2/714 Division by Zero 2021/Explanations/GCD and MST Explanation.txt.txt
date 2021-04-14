@@ -1,0 +1,88 @@
+Let us visit the vertices in ascending order and check how many edges has this as the weight. 
+
+If A[i] >= P, then we will stop because we no longer need to check anything and can just add the P-edges
+
+Now, which vertices will have A[i] as the weight ? 
+
+Check the nearest j to the i as long as A[i, j] or A[j, i] are >= A[i] and divisible by A[i] 
+
+We will add another condition. 
+
+Maintain a vector is_connected, which is true if A[i] is connected to the vertex A[i + 1], 
+either directly or indirectly. 
+
+When we are going left, we will stop at the first vertex j where is_connected[i] is true 
+Since A[i] has been connected to A[j - 1] already, placing another edge between A[i], A[j] will create a cycle. 
+Moreover, we are visiting the weights in ascending order so A[j] has been connected to A[j - 1] with less expensive edges.
+
+When we are going right, we will stop at the first vertex j where is_connected[j - 1] is true because this means that 
+A[j], A[j - 1] are already connected and A[j] was connected to the tree using lighter edges
+
+-----
+
+void solve()
+{
+    int no_of_elements, p;
+    cin >> no_of_elements >> p;
+
+    vector <int> A(no_of_elements + 1);
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        cin >> A[i];
+    }
+
+    vector <int> is_connected_right(no_of_elements + 1, false);
+    vector < pair <int, int> > values;
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        values.push_back(make_pair(A[i], i));
+    }
+
+    sort(values.begin(), values.end());
+
+    long long weight = 0;
+    for(int i = 0; i < values.size(); i++)
+    {
+        int gcd = values[i].first, index = values[i].second;
+
+        if(gcd >= p)
+        {
+            break;
+        }
+
+        for(int j = index - 1; j >= 1; j--)
+        {
+            if(A[j] < gcd || A[j]%gcd != 0 || is_connected_right[j])
+            {
+                break;
+            }
+
+            is_connected_right[j] =  true;
+
+            weight += gcd;
+        }
+
+        for(int j = index + 1; j <= no_of_elements; j++)
+        {
+            if(A[j] < gcd || A[j]%gcd != 0 || is_connected_right[j - 1])
+            {
+                break;
+            }
+
+            is_connected_right[j - 1] = true;
+
+            weight += gcd;
+        }
+    }
+
+    for(int i = 1; i <= no_of_elements - 1; i++)
+    {
+        if(!is_connected_right[i])
+        {
+            weight += p;
+        }
+    }
+
+    cout << weight << "\n";
+}
+

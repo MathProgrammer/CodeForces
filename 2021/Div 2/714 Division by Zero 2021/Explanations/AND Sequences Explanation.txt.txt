@@ -1,0 +1,55 @@
+A[1] = AND(A[2], A[3], ... , A[n]) 
+
+Since AND(x, x) = x 
+
+AND(A[1], AND(A[2], A[3], ... , A[n]) ) = AND(A[1], ... , A[n]) = A[1] 
+
+Similarly, AND(A[1], ... , A[n - 1]) = A[n] 
+
+So, the AND of the whole array is A[1] = A[n] 
+
+------
+
+We will place the array AND at A[1] and at A[n]
+
+Since the AND of the whole array is x, AND(x, any subset of A) = x 
+
+So, as long as A[1] = A[n] = x, the AND of every prefix and every suffix is equal
+
+If there is any other element at A[1], then A[1] =/= AND(A[2], ... , A[n])
+
+-----
+
+1. Find out the frequency of every element. 
+2. Count the number of ways to place the array AND at the two ends 
+3. The remaining (n - 2) elements can be permuted in (n - 2)! ways
+
+------
+
+void solve()
+{
+    int no_of_elements;
+    cin >> no_of_elements;
+
+    vector <int> A(no_of_elements + 1);
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        cin >> A[i];
+    }
+
+    long long array_and = (1LL << 60) - 1;
+    map <int, int> frequency;
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        array_and &= A[i];
+
+        frequency[A[i]]++;
+    }
+
+    const int MOD = 1e9 + 7;
+    long long answer = choose_2(frequency[array_and], MOD)*factorial(no_of_elements - 2, MOD);
+
+    answer %= MOD;
+
+    cout << answer << "\n";
+}

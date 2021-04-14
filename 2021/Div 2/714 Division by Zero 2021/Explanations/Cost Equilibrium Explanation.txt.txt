@@ -1,0 +1,106 @@
+# The sinks must occur before or after the sources
+
+- The final value $S/n$ is uniquely determined.
+    - Elements greater than the final value have to be the source and those smaller have to be the sink
+    - The final value, source and sink are determined uniquely.
+
+## How much does each element contribute to the sum $?$
+
+- Suppose $A(i)$ is a source and there are $L$ sinks  it contributed to that occur before it and $R$ sinks that occur after it.
+    - It will contribute $Li - Ri = (L - R)i$
+    - The contribution of each sink or source can be appropriately varied by changing the values it shares with the sinks on the left and right.
+    - However, if all the sinks are on the left, it will contribute $Li$ exactly and no more or less.
+    - If all the sinks are on the right, it will contribute $-Ri$ exactly and no more or less
+- If all the sinks occur after all the sources or vice versa, the cost is uniquely determined.
+
+---
+
+## How to count the permutations $?$
+
+- We can count the number of ways to permute the sinks and sources among themselves using multinomial coefficients. (Since duplicates are allowed).
+- The $E$ elements which are already equal to the final value can be placed $N - E + 1$ gaps
+    - This is given by stars and bars as it is the number of ways to distribute $E$ stars using $N$ bars. $(N + 1$ gaps $)$
+
+    $$\binom{N - E}{E}$$
+
+- The sinks and sources can be permuted as groups in $2!$ ways so multiply the answer by $2$
+
+---
+
+## The Exceptions
+
+- If there are $0$ sinks or $0$ sources, any permutation of the array is acceptable. So, count all of them using the multinomial coefficient
+- If there is exactly $1$ sink or exactly $1$ source, the contribution to the sum will always be the same regardless of how the sinks (or sources) are distributed to it's left or right.
+    - $1$ sink or $1$ source is a special case because the cost is uniquely determined.
+    - We need to count all permutations in this case too.
+
+-----
+
+int main()
+{
+    precompute();
+
+    int no_of_elements;
+    cin >> no_of_elements;
+
+    map <int, int> frequency;
+    long long sum = 0;
+    vector <int> A(no_of_elements + 1);
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        cin >> A[i];
+
+        sum += A[i];
+
+        frequency[A[i]]++;
+    }
+
+    if(sum%no_of_elements != 0)
+    {
+        cout << "0\n";
+
+        return 0;
+    }
+
+    int final_value = (sum/no_of_elements);
+
+    vector <long long> F, source_frequency, sink_frequency;
+
+    for(auto it = frequency.begin(); it != frequency.end(); it++)
+    {
+        if(it->first > final_value)
+        {
+            source_frequency.push_back(it->second);
+        }
+        else if(it->first < final_value)
+        {
+            sink_frequency.push_back(it->second);
+        }
+
+        F.push_back(it->second);
+    }
+
+    long long answer;
+    if(source_frequency.size() == 0 || sink_frequency.size() == 0 ||
+       (source_frequency.size() == 1 && source_frequency[0] == 1) || (sink_frequency.size() == 1 && sink_frequency[0] == 1) )
+    {
+        answer = multinomial(F);
+
+        cout << answer << "\n";
+
+        return 0;
+    }
+
+    long long sources = multinomial(source_frequency), sink = multinomial(sink_frequency);
+    long long equal_values = frequency[final_value], spaces = no_of_elements - equal_values + 1;
+
+    long long remaining = stars_and_bars(equal_values, spaces - 1);
+
+    answer = (sources*sink)%MOD;
+    answer = (answer*remaining)%MOD;
+    answer = (answer*2)%MOD;;
+
+    cout << answer << "\n";
+
+    return 0;
+}
