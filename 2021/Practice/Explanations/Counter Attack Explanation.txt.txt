@@ -1,0 +1,108 @@
+We have to count the number of components in the complement graph. 
+We also need a way to query if two vertices are connected. 
+
+
+We will also maintain a set of all unvisited vertices. 
+Pick up the first vertex in the unvisited set. 
+Erase it 
+Keep traversing the unvisited set till there is a vertex with which there is no edge and then repeat
+
+-----
+
+Why does this work ? 
+
+It looks like it should time out since we are going through the whole unvisited set for each vertex. 
+
+Let us count the number of times we will pick a vertex from the unvisited set. 
+We perform two operations 
+1. Pick up a vertex 
+2. Skip it and go to next element in the set
+
+There are N vertices in the set and each will be picked one time, after which it will be erased. 
+How many times do we pick a vertex and skip it ? 
+We will skip a vertex only if it has an edge with the current vertex. 
+Since there are M edges, we can perform at most M skips.  
+
+So the number of 'touches' we do to the unvisited set is O(N + M) 
+We do N steps of Type 1 and at most M steps of Type 2
+
+Each has a O(log N) factor 
+
+Had to optimise the constant factor so used an adjacency vector instead of adjacency set.
+
+-----
+
+set <int> unvisited;
+vector <int> graph[MAX_N];
+vector <vector <int> > components;
+
+void dfs(int v)
+{
+    unvisited.erase(v);
+    //C.push_back(v);
+    components.back().push_back(v);
+
+    for(auto it = unvisited.begin(); it != unvisited.end(); )
+    {
+        if(binary_search(graph[v].begin(), graph[v].end(), (*it)))
+        {
+            it++;
+        }
+        else
+        {
+            int child = *it;
+
+            dfs(child);
+
+            it = unvisited.lower_bound(child);
+        }
+    }
+}
+
+int main()
+{
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+
+    int no_of_vertices, no_of_edges;
+    cin >> no_of_vertices >> no_of_edges;
+
+    for(int i = 1; i <= no_of_edges; i++)
+    {
+        int u, v;
+        cin >> u >> v;
+
+        graph[u].push_back(v);
+        graph[v].push_back(u);
+    }
+
+    for(int i = 1; i <= no_of_vertices; i++)
+    {
+        unvisited.insert(i);
+
+        sort(graph[i].begin(), graph[i].end());
+    }
+
+    while(unvisited.size() > 0)
+    {
+        int v = *(unvisited.begin());
+
+        vector <int> C;
+        components.push_back(C);
+        dfs(v);
+    }
+
+    cout << components.size() << "\n";
+    for(int c = 0; c < components.size(); c++)
+    {
+        cout << components[c].size() << " ";
+        for(int v : components[c])
+        {
+            cout << v << " ";
+        }
+
+        cout << "\n";
+    }
+
+    return 0;
+}

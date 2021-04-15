@@ -1,0 +1,135 @@
+Let us compress consecutive vertices of the same colour into one vertex. 
+After this transformation, we have a tree where every pair of consecutive vertices have a different colour. 
+
+Let us look at the diameter of the tree - The longest distance between two nodes. 
+
+- Let us look at the diameter of this tree. The length of the diameter reduces by at most $2$ in each step and stops when it is $0$
+- Let us make sure that it reduces by exactly $2$ at each step.
+- There might be multiple diameters so choose the 'center' of the diameter. Find a vertex $v$ such that the distance to any vertex does not exceed $\lceil d/2 \rceil$
+    - When we perform the operation on $v$ $\lceil d/2 \rceil$ times, the distance from $v$ to any other vertex will be $0$ since it moves one step closer to it's leaves at every step.
+    - So, we have shown that it is possible in $\lceil d/2 \rceil$ steps and also shown that it cannot happen faster.
+
+------
+
+int main()
+{
+    int no_of_vertices;
+    cin >> no_of_vertices;
+ 
+    for(int i = 1; i <= no_of_vertices; i++)
+    {
+        cin >> colour[i];
+    }
+ 
+    int no_of_edges = no_of_vertices - 1;
+    for(int i = 1; i <= no_of_edges; i++)
+    {
+        int u, v;
+        cin >> u >> v;
+ 
+        graph[u].push_back(v);
+        graph[v].push_back(u);
+    }
+ 
+    int component_no = 0;
+    for(int i = 1; i <= no_of_vertices; i++)
+    {
+        if(component[i] == 0)
+        {
+            dfs_component(i, 0, ++component_no);
+        }
+    }
+ 
+    for(int i = 1; i <= no_of_vertices; i++)
+    {
+        for(int child : graph[i])
+        {
+            int child_component = component[child], this_component = component[i];
+ 
+            if(child_component != this_component)
+            {   
+                component_graph[this_component].push_back(child_component);
+                component_graph[child_component].push_back(this_component);
+            }
+        }
+    }
+ 
+    int diameter = get_component_graph_diameter(component_no);
+ 
+    int answer = ceil(diameter, 2);
+ 
+    cout << answer << "\n";
+    return 0;
+}
+
+------
+
+To find the diameter, we 
+
+1. Root the tree arbitrarily and find the furthest node from it u 
+2. Calculate the distance of the furthest node from u (v)
+3. The diameter is u-v
+
+------
+
+int get_component_graph_diameter(int n)
+{
+    const int oo = 1e9;
+ 
+    int root = 1;
+    vector <int> distance(n + 1, oo);
+    distance[root] = 0;
+ 
+    queue <int> Q;
+    Q.push(root);
+    while(Q.size() > 0)
+    {
+        int v = Q.front(); Q.pop();
+ 
+        for(int child_v : component_graph[v])
+        {
+            if(distance[v] + 1 < distance[child_v])
+            {
+                distance[child_v] = distance[v] + 1;
+                Q.push(child_v);
+            }
+        }
+    }
+ 
+    for(int i = 1; i <= n; i++)
+    {
+        if(distance[i] > distance[root])
+        {
+            root = i;
+        }
+    }
+ 
+    for(int i = 1; i <= n; i++)
+    {
+        distance[i] = oo;
+    }
+    distance[root] = 0;
+ 
+    Q.push(root);
+    while(Q.size() > 0)
+    {
+        int v = Q.front(); Q.pop();
+ 
+        for(int child_v : component_graph[v])
+        {   
+            if(distance[v] + 1 < distance[child_v])
+            {
+                distance[child_v] = distance[v] + 1;
+                Q.push(child_v);
+            }
+        }
+    }
+ 
+    int diameter = 0;
+    for(int i = 1; i <= n; i++)
+    {
+        diameter = max(diameter, distance[i]); 
+		}
+ 
+    return diameter;
+}
