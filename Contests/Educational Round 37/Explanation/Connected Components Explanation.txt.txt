@@ -1,0 +1,96 @@
+We have to count the number of components in the complement graph. 
+We also need a way to query if two vertices are connected. 
+
+Instead of using an adjacency vector, we will use adjacency sets. 
+
+We will also maintain a set of all unvisited vertices. 
+Pick up the first vertex in the unvisited set. 
+Erase it 
+Keep traversing the unvisited set till there is a vertex with which there is no edge and then repeat
+
+-----
+
+Why does this work ? 
+
+It looks like it should time out since we are going through the whole unvisited set for each vertex. 
+
+Let us count the number of times we will pick a vertex from the unvisited set. 
+We perform two operations 
+1. Pick up a vertex 
+2. Skip it and go to next element in the set
+
+There are N vertices in the set and each will be picked one time, after which it will be erased. 
+How many times do we pick a vertex and skip it ? 
+We will skip a vertex only if it has an edge with the current vertex. 
+Since there are M edges, we can perform at most M skips.  
+
+So the number of 'touches' we do to the unvisited set is O(N + M) 
+We do N steps of Type 1 and at most M steps of Type 2
+
+Each has a O(log N) factor 
+
+-----
+
+int dfs_component_size(int v)
+{
+    unvisited.erase(v);
+ 
+    int size_here = 1;
+ 
+    for(set <int> :: iterator it = unvisited.begin(); it != unvisited.end(); )
+    {   //printf("here %d\n", *it);
+        if(complement_graph[v].count(*it) == 0)
+        {
+            int child = *it;
+ 
+            size_here += dfs_component_size(child);
+ 
+            it = unvisited.lower_bound(child);
+        }
+        else
+        {
+            it++;
+        }
+    }
+ 
+    return size_here;
+}
+ 
+int main()
+{
+    int no_of_vertices, no_of_edges;
+    scanf("%d %d", &no_of_vertices, &no_of_edges);
+ 
+    for(int i = 1; i <= no_of_vertices; i++)
+        unvisited.insert(i);
+ 
+    for(int i = 1; i <= no_of_edges; i++)
+    {
+        int u, v;
+        scanf("%d %d", &u, &v);
+ 
+        complement_graph[u].insert(v);
+        complement_graph[v].insert(u);
+    }
+ 
+    int no_of_components = 0;
+    vector <int> component_size;
+ 
+    for(int i = 1; i <= no_of_vertices; i++)
+    {
+        if(unvisited.count(i) == 1)
+        {
+            no_of_components++;
+ 
+            component_size.push_back(dfs_component_size(i));
+        }
+    }
+ 
+    sort(all(component_size));
+ 
+    printf("%d\n", no_of_components);
+    for(int i = 0; i < no_of_components; i++)
+        printf("%d ", component_size[i]);
+ 
+    return 0;
+}
