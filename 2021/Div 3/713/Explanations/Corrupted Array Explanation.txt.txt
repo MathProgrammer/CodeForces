@@ -1,0 +1,68 @@
+Let us sort A. 
+
+B[n + 1] must either be the last element or the second last element. 
+
+Check if it is the second last element. 
+
+If not, iterate over every possibility for x as it is the last element. 
+
+------
+
+void solve()
+{
+    int no_of_elements;
+    cin >> no_of_elements;
+ 
+    vector <int> B(no_of_elements + 3);
+    for(int i = 1; i <= no_of_elements + 2; i++)
+    {
+        cin >> B[i];
+    }
+ 
+    sort(B.begin(), B.end());
+ 
+    vector <long long> sum_till(no_of_elements + 3, 0);
+    for(int i = 1; i <= no_of_elements + 2; i++)
+    {
+        sum_till[i] = sum_till[i - 1] + B[i];
+    }
+ 
+    int found = false;
+    int x = no_of_elements + 1;
+    if(sum_till[no_of_elements] == B[no_of_elements + 1])
+    {
+        found = true;
+    }
+ 
+    for(int i = 1; i <= no_of_elements + 1; i++)
+    {
+        if(sum_till[no_of_elements + 1] - B[i] == B[no_of_elements + 2])
+        {
+            x = i;
+ 
+            found = true;
+ 
+            break;
+        }
+    }
+ 
+    if(!found)
+    {
+        cout << "-1\n";
+ 
+        return;
+    }
+ 
+    for(int i = 1; i <= no_of_elements + 1; i++)
+    {
+        if(i == x)
+        {
+            continue;
+        }
+ 
+        cout << B[i] << " ";
+    }
+ 
+    cout << "\n";
+}
+ 
