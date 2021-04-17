@@ -1,0 +1,44 @@
+- We know $x < y \< z$ so we will count the number of triplets where $z < x + y$
+- $x + y \in [A + B, A + C]$
+- For every possible sum, we will calculate the number of ways of getting it.
+    - If we fix a value of $x$, we can get every value from $x + B \to x + C$
+    - We can do this with a linear sweep.
+- For every possible $z$, we will count the number of ways to get any sum $> z$, 
+	which can be gotten using a suffix sum over the number of ways array.
+
+-----
+
+
+int main()
+{
+    int A, B, C, D;
+    cin >> A >> B >> C >> D;
+
+    vector <long long> no_of_starts(B + C + 5, 0), no_of_finishes(B + C + 5, 0);
+    for(int x = A; x <= B; x++)
+    {
+        no_of_starts[x + B]++;
+        no_of_finishes[x + C + 1]++;
+    }
+
+    vector <long long> no_of_ways(B + C + 5, 0);
+    for(int i = B; i <= B + C; i++)
+    {
+        no_of_ways[i] = no_of_ways[i - 1] + no_of_starts[i] - no_of_finishes[i];
+    }
+
+    vector <long long> suffix_sum(B + C + 5, 0);
+    for(int i = B + C; i >= B; i--)
+    {
+        suffix_sum[i] = suffix_sum[i + 1] + no_of_ways[i];
+    }
+
+    long long no_of_triangles = 0;
+    for(int z = C; z <= min(D, B + C); z++)
+    {
+        no_of_triangles += suffix_sum[z + 1];
+    }
+
+    cout << no_of_triangles << "\n";
+    return 0;
+}
