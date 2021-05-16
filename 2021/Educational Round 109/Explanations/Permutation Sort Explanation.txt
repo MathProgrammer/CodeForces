@@ -1,0 +1,54 @@
+1. If the array is already sorted, we need 0 moves.
+
+2. Suppose A[1] = 1, then we can apply the operation to [2, N] and sort the array in 1 move 
+
+3. In most other cases 2 moves should be enough 
+[1, n - 1] and [2, n]
+
+3. If A[1] = n or A[n] = 1, then this will not be enough. 
+We need to do another move to bring 1 or n out of the extreme positions as we are not 
+allowed to apply the operation on the entire array. 
+
+-----
+
+void solve()
+{
+    int no_of_elements;
+    cin >> no_of_elements;
+
+    vector <int> A(no_of_elements + 1);
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        cin >> A[i];
+    }
+
+    int sorted = true;
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        if(A[i] != i)
+        {
+            sorted = false;
+        }
+    }
+
+    int steps;
+
+    if(sorted)
+    {
+        steps = 0;
+    }
+    else if(A[1] == 1 || A[no_of_elements] == no_of_elements)
+    {
+        steps = 1;
+    }
+    else if(A[no_of_elements] == 1 && A[1] == no_of_elements)
+    {
+        steps = 3;
+    }
+    else
+    {
+        steps = 2;
+    }
+
+    cout << steps << "\n";
+}
