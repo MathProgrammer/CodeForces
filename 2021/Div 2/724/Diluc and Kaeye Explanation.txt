@@ -1,0 +1,60 @@
+If the array is partitioned into K parts, each of which have a ratio of p/q 
+
+The ratio of the whole array is p/q
+
+Look at the ratio of the the current subarray [1, i]. Suppose it is (P/Q) in the lowest terms. 
+We need to search for the rightmost occurrence of the same ratio.
+Suppose it is j 
+ 
+P(i) = 1 + P(j)
+
+Where P(i) is the number of parts that we can divide [1, i] in. 
+This is optimal because [j + 1, i] is the smallest part with ratio P/Q that ends at i. 
+And we are adding the maximum number of parts that end at j
+
+-----
+
+void solve()
+{
+    int length;
+    string S;
+    cin >> length >> S;
+ 
+    vector <int> sum_d(length, 0), sum_k(length, 0);
+    for(int i = 0; i < length; i++)
+    {
+        if(i > 0)
+        {
+            sum_d[i] = sum_d[i - 1];
+            sum_k[i] = sum_k[i - 1];
+        }
+ 
+        switch(S[i])
+        {
+            case 'D': sum_d[i]++; break;
+            case 'K': sum_k[i]++; break;
+        }
+    }
+ 
+    map <pair <int, int>, int> last_occurrence;
+    vector <int> answer(length, 1);
+    for(int i = 0; i < length; i++)
+    {
+        pair <int, int> ratio_here = make_pair(sum_d[i], sum_k[i]);
+        ratio_here.first /= __gcd(sum_d[i], sum_k[i]);
+        ratio_here.second /= __gcd(sum_d[i], sum_k[i]);
+ 
+        if(last_occurrence.find(ratio_here) != last_occurrence.end())
+        {
+            answer[i] = 1 + answer[last_occurrence[ratio_here]];
+        }
+ 
+        last_occurrence[ratio_here] = i;
+    }
+ 
+    for(int i = 0; i < length; i++)
+    {
+        cout << answer[i] << " ";
+    }
+    cout << "\n";
+}
