@@ -1,0 +1,42 @@
+The optimal answer consists of some prefix repeated again and again. 
+We will perform some number of deletes and then only perform duplications. 
+
+Suppose, we perform a deletion step after a duplication step and then do another duplication, 
+if we get a smaller string, we could just do the same deletion before the first deletion step and get a smaller string. 
+
+Go through all prefixes and iterate over the final string and choose the minimum
+
+-----
+
+string concatenate_prefix(string S, int prefix, int k)
+{
+    string answer;
+    for(int i = 0; i < k; i++)
+    {
+        answer += S[i%prefix];
+    }
+    return answer;
+}
+
+int main()
+{
+    int length, k;
+    cin >> length >> k;
+    string S;
+    cin >> S;
+
+    string answer = concatenate_prefix(S, length, k);
+    for(int i = 1; i <= S.size(); i++)
+    {
+        string current = concatenate_prefix(S, i, k);
+        if(current < answer)
+        {
+            answer = current;
+        }
+
+    }
+
+    cout << answer << "\n";
+
+    return 0;
+}
