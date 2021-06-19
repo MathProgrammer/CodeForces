@@ -1,0 +1,78 @@
+Let us first solve the problem for 1 segment. 
+
+Let f1(i) be the maximum segment of length i ending on or before i 
+
+f1(i) = max{f1(i - 1), sum[i - k + 1, i]} 
+
+---- 
+
+Now, we will iterate over every possible beginning of the second segment. 
+
+If the second segment starts at i, the value is sum[i, i + k - 1]
+
+We will match it with f1(i - 1) 
+
+Best_value(i) = f1(i - 1) + sum[i, i + k - 1] 
+
+-----
+
+We will choose the maximum of Best_value through the array 
+
+Since we need to give a and b and not just the maximum value, 
+store the best possible a in another array parallelly 
+
+best_a(i) holds the best a for any segment ending on or before i 
+
+-----
+
+int main()
+{
+    int no_of_elements, segment_length;
+    cin >> no_of_elements >> segment_length;
+
+    vector <long long> A(no_of_elements + 1);
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        cin >> A[i];
+    }
+
+    vector <long long> sum_till(no_of_elements + 1);
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        sum_till[i] = A[i] + sum_till[i - 1];
+    }
+
+    vector <long long> best_segment_1_till(no_of_elements + 1);
+    vector <int> best_a(no_of_elements + 1);
+    for(int i = segment_length; i <= no_of_elements; i++)
+    {
+        long long this_segment = sum_till[i] - sum_till[i - segment_length];
+        best_segment_1_till[i] = best_segment_1_till[i - 1];
+        best_a[i] = best_a[i - 1];
+
+        if(this_segment > best_segment_1_till[i - 1])
+        {
+            best_a[i] = i - segment_length + 1;
+
+            best_segment_1_till[i] = this_segment;
+        }
+    }
+
+    long long answer = 0, a, b;
+    for(int i = segment_length + 1; i + segment_length - 1 <= no_of_elements; i++)
+    {
+        long long segment_2 = sum_till[i + segment_length - 1] - sum_till[i - 1];
+        //cout << "i = " << i << " 1 = " << best_segment_1_till[i - 1] << " 2 = " << segment_2 << "\n";
+
+        if(best_segment_1_till[i - 1] + segment_2 > answer)
+        {
+            answer = best_segment_1_till[i - 1] + segment_2;
+
+            a = best_a[i - 1];
+            b = i;
+        }
+    }
+
+    cout << a << " " << b << "\n";
+    return 0;
+}
