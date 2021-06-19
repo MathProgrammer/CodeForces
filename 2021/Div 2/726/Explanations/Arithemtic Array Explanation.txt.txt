@@ -1,0 +1,38 @@
+(a1 + a2 + ... + ak)/k = 1 => (a1 + a2 + ... + ak) = k 
+
+If the sum is < N, then we only need to append one element to make the sum = N + 1 
+
+If the sum is > N, we will keep appending 0's till the sum is equal to the number of elements 
+
+-----
+
+void solve()
+{
+    int no_of_elements;
+    cin >> no_of_elements;
+
+    int sum = 0;
+    vector <int> A(no_of_elements + 1);
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        cin >> A[i];
+        sum += A[i];
+    }
+
+    int answer = 0;
+
+    if(sum > no_of_elements)
+    {
+        answer = sum - no_of_elements;
+    }
+    else if(sum < no_of_elements)
+    {
+        answer = 1;
+    }
+    else if(sum == no_of_elements)
+    {
+        answer = 0;
+    }
+
+    cout << answer << "\n";
+}

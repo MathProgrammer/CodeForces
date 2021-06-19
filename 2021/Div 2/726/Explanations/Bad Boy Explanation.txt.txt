@@ -1,0 +1,17 @@
+We will choose the end point that is furthest from (i, j), and then put the other yo-yo at the diagonally opposite end.
+
+------
+
+void solve()
+{
+    int rows, columns, i, j;
+    cin >> rows >> columns >> i >> j;
+
+    int x1 = (2*i <= rows ? rows : 1);
+    int y1 = (2*j <= columns ? columns : 1);
+
+    int x2 = (x1 == 1 ? rows : 1);
+    int y2 = (y1 == 1 ? columns : 1);
+
+    cout << x1 << " " << y1 << " " << x2 << " " << y2 << "\n";
+}

@@ -1,0 +1,54 @@
+If there are x pairs (A[i], A[i + 1]) such that A[i] <= A[i + 1] 
+in the original sorted array, we can have (x - 1) such pairs in the answer. 
+
+Originally, there are (N - 1) such pairs, so the answer will have at least (N - 2)
+
+First, sort the array and choose the pair (A[i], A[i + 1]) that has the minimum A[i + 1] - A[i] 
+Now, the answer array is this - 
+
+A[i] + A[i + 2, N] + A[1, i - 2] + A[i] 
+
+
+------
+
+void solve()
+{
+    int no_of_elements;
+    cin >> no_of_elements;
+
+    vector <int> A(no_of_elements + 1);
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        cin >> A[i];
+    }
+
+    sort(all(A));
+    int best_1 = 1;
+    for(int i = 2; i <= no_of_elements; i++)
+    {
+        if(A[i] - A[i - 1] < A[best_1 + 1] - A[best_1])
+        {
+            best_1 = i - 1;
+        }
+    }
+
+    vector <int> answer(no_of_elements + 1);
+    answer[1] = A[best_1];
+    answer[no_of_elements] = A[best_1 + 1];
+
+    int p = 2;
+    for(int i = best_1 + 2; i <= no_of_elements; i++)
+    {
+        answer[p++] = A[i];
+    }
+    for(int i = 1; i < best_1; i++)
+    {
+        answer[p++] = A[i];
+    }
+
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        cout << answer[i] << " ";
+    }
+    cout << "\n";
+}

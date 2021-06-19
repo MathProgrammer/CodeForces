@@ -1,0 +1,91 @@
+The game ends when n is prime or = 1 
+All primes are odd integers, except 2. 
+
+If we had a strategy where we could ensure that n is odd after our turn and even before our turn, 
+we would ensure that the final state only occurs after our move. 
+
+We can do this whenever n is not a power of 2 !
+
+------
+
+When n is not a power of 2, n has at least one odd divisor. 
+We will subtract that to give our opponent an odd integer. 
+
+All of an odd integer's divisors are odd. 
+Subtracting any of them gives us an even integer. 
+Further, we get an even integer that is not a power of 2. 
+
+The reason is that if d|N => d|(N - d) because N = 0 (mod d) => N - d = 0 (mod d)
+
+So, even integers that are not powers of 2 are winning and odd integers are losing. 
+
+------
+
+What happens for 2^p ? 
+When we have a power of 2, subtracting one of it's divisors results in either an even integer that is not a power of 2 or 2^{p - 1} 
+
+Converting it to an integer that is not a power of 2 is a losing move as the other player can win 
+with the strategy outlined above. 
+
+2^1 is winning for the second player
+2^2 is winning for the first player.
+2^3 is winning for the second player and so on. 
+
+Suppose by Mathematical Induction, that all odd powers of 2 are winning for Player 2 and even powers for Player 1 till 2^k
+2^{k + 1} is winning for the first player only if 2^k is winning for the second player.
+
+So, 2^{k + 1} is winning only if (k + 1) is even.
+
+------
+
+Practical Solution During the Contest - Pattern Recognition
+
+- I precomputed the answer of the first $100$ integers and 
+found that the second player was winning all odd integers and the first player was winning all even integers.
+- After getting $WA$ on the second test case, I looked for exceptions to this rule till $10^6$. 
+
+I checked if there are any even integers where the second player wins or odd integers where the first player wins.
+    - I found out that the second player wins whenever $n = 2^p$ and $p$ is odd
+
+void precompute()
+{
+    int N = 1e7;
+    vector <int> winner(N + 1, 0);
+    for(int i = 1; i <= N; i++)
+    {
+        //cout << i << " ";
+        if(i == 1 || is_prime(i))
+        {
+            //cout << " Winner = 2 Prime\n";
+            winner[i] = 2;
+            continue;
+        }
+ 
+        for(int d = 2; d*d <= i; d++)
+        {
+            if(i%d != 0)
+            {
+                continue;
+            }
+ 
+            if(winner[i - d] == 2 || winner[i - i/d] == 2)
+            {
+                winner[i] = 1;
+                //cout << "Winner 1\n";
+                continue;
+            }
+        }
+        if(winner[i] == 0)
+            winner[i] = 2;
+        //cout << "Winner 2\n";
+    }
+ 
+    cout << "***\n";
+    for(int i = 1; i <= N; i++)
+    {
+        if(winner[i]%2 == i%2)
+        {cout << "i = " << i << " Winner = " << winner[i] << "\n";
+         factorise(i);
+        }
+    }
+}
