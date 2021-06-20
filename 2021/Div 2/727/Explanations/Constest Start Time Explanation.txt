@@ -1,0 +1,42 @@
+Every body takes the same amount of time for a contest. A person conflicts only with those people who started after him. 
+
+We need to count the number of new beginnings in [i.x, i.x + T] 
+This is the same as counting the number of multiples of x in [0, T] = (T/x)
+
+However, a person will not have (T/x) conflicts if there aren't (T/x) people remaining. 
+
+The last person has 0 conflicts 
+The second last has 1 
+The third last hast 2 
+.
+The (T/x)-th has (T/x) - 1 
+
+So, for the last (T/x) - 1 people, the number of conflicts is 
+
+0 + 1 + 2 + 3 + ... + (T/x) - 1 
+
+For everyone else, the conflicts is (T/x)
+
+------
+
+long long get_sum(long long n)
+{
+    return (n*(n + 1))/2;
+}
+
+void solve()
+{
+    int no_of_contestants, start_time, duration;
+    cin >> no_of_contestants >> start_time >> duration;
+
+    long long answer;
+    long long batch_1 = min(no_of_contestants, duration/start_time);
+
+    answer = get_sum(batch_1 - 1);
+    no_of_contestants -= batch_1;
+
+    long long one_contestant_intersections = duration/start_time;
+    answer += no_of_contestants*(one_contestant_intersections);
+
+    cout << answer << "\n";
+}
