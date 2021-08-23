@@ -1,6 +1,14 @@
 In the optimal value, every vertex will either be set to the left or right extreme. 
 
-Let us suppose that this is not the case. 
+Let us consider some assignment of values to the tree and let v be some vertex which is not set to it's optimal value. 
+We will show that assigning v = L[v] or v = R[v] will not result in a smaller answer 
+And the answer will either increase or stay the same. 
+
+- Let there be X neighbours with value smaller than v and Y neighbours with a larger value.
+- If X > Y, we can set v = R_v and get a larger answer.
+    - Increasing v by 1, increases the sum by X - Y
+- Similarly, if X < Y, we can set  v = L_v for a larger answer.
+- If X = Y, we can set it to either L_v, R_v and the answer will not change.
 
 -----
 
