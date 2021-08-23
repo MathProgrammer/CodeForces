@@ -1,0 +1,42 @@
+In the optimal value, every vertex will either be set to the left or right extreme. 
+
+Let us suppose that this is not the case. 
+
+-----
+
+Let f(v, L) and f(v, R) be the maximum value for the subtree rooted at v, if v is set 
+to L[v] or R[v] respectively. 
+
+In order to transition, we will visit each of it's children c 
+and check if it's better for this child to be set to it's left or right extreme. 
+
+f(v, L) += max{|L[v] - L[c]| + f(c, L), |L[v] - R[c]| + f(c, R)}
+f(v, R) += max{|R[v] - L[c]| + f(c, L), |R[v] - R[c]| + f(c, R)}
+
+-----
+
+void dfs(int v, int parent_v)
+{
+    for(int child_v : tree[v])
+    {
+        if(child_v == parent_v)
+        {
+            continue;
+        }
+
+        dfs(child_v, v);
+
+        long long using_left_value_at_child = abs(left_value[v] - left_value[child_v]) + maximum_at[child_v][L];
+        long long using_right_value_at_child = abs(left_value[v] - right_value[child_v]) + maximum_at[child_v][R];
+
+        maximum_at[v][L] += max(using_left_value_at_child, using_right_value_at_child);
+
+        using_left_value_at_child = abs(right_value[v] - left_value[child_v]) + maximum_at[child_v][L];
+        using_right_value_at_child = abs(right_value[v] - right_value[child_v]) + maximum_at[child_v][R];
+
+        maximum_at[v][R] += max(using_left_value_at_child, using_right_value_at_child);
+    }
+
+    /*cout << "At " << v << " L = " << left_value[v] << " Maximum = " << maximum_at[v][L] << "\n";
+    cout << "At " << v << " R = " << right_value[v] << " Maximum = " << maximum_at[v][R] << "\n";*/
+}
