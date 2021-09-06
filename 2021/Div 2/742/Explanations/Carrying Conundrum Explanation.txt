@@ -1,0 +1,32 @@
+We are performing regular addition on the odd and even digits seperately . 
+
+-----
+
+#include <iostream>
+
+using namespace std;
+
+void solve()
+{
+    string n;
+    cin >> n;
+
+    long long odd_places = 0, even_places = 0;
+    for(int i = 0; i < n.size(); i++)
+    {
+        int digit = n[i] - '0';
+
+        switch(i%2)
+        {
+            case 1 : odd_places = odd_places*10 + digit;
+                     break;
+
+            case 0 : even_places = even_places*10 + digit;
+                    break;
+        }
+    }
+
+    long long total_ways = (odd_places + 1)*(even_places + 1) - 2;
+
+    cout << total_ways << "\n";
+}
