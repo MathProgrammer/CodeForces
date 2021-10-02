@@ -1,0 +1,19 @@
+#include <iostream>
+#include <bits/stdc++.h>
+using namespace std;
+int pos[100005];
+int ans;
+int main()
+{
+    int n;
+    scanf("%d",&n);
+    ans=INT_MIN;
+    for(int i=1;i<=n;i++){
+            int x;
+    scanf("%d",&x);
+        pos[x]=pos[x-1]+1;
+        ans=max(ans,pos[x]);
+    }
+    // ans is length of longest segment 
+cout<<n-ans<<endl;
+    return 0;
