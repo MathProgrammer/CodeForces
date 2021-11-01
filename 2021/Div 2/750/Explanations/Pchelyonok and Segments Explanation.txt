@@ -1,0 +1,80 @@
+ How to use smaller subproblems to build the solution $?$
+
+- In order to know if we can make the $P$-th partition here, we need to know if it is possible to make $P - 1, P - 2, \dots , 1$ partitions from $[i + P]$.
+- Let $f(i, P)$ be the maximum sum that the $P$-th partition can have if it begins anywhere on or after $i$ and is followed by all the smaller partitions.
+- $f(i, P) = \max\{f(i + 1, P), S[i, i + P - 1]\}$
+    - We need to be careful and first check that $S[i, i + P - 1] < f(i + P, P - 1)$ in order to maintain the decreasing sum condition.
+
+---
+
+## Why are we taking the maximum sum $?$
+
+- We need to ensure that the sum of the $P$-th segment should be smaller than the $P - 1$ segment.
+- Since, we are going from right to left, we might as well choose the maximum possible sum for each segment greedily.
+- We can use an exchange argument to show that the number of segments will never decrease by choosing a greater sum segment beginning on or after the same index.
+- The answer is the largest $k$ for which $f(1, k) > 0$
+
+---
+
+## Why is this not $O(n^2)$ $?$
+
+- The maximum $k$ is such that $\frac{k(k + 1)}{2} \le n \implies k(k + 1) \le 2n \implies k^2 < 2n$
+- So, $k < \sqrt{2n}$
+- This is actually $O(n \sqrt{n})$ because of how quickly the triangular numbers grow.
+
+-----
+
+```cpp
+void solve()
+{
+    int no_of_elements;
+    cin >> no_of_elements;
+
+    vector <long long> A(no_of_elements + 5, 0);
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        cin >> A[i];
+    }
+
+    vector <long long> sum_from(no_of_elements + 5, 0);
+    for(int i = no_of_elements; i >= 1; i--)
+    {
+        sum_from[i] = A[i] + sum_from[i + 1];
+    }
+
+    long long max_k = get_largest_k(no_of_elements);
+
+    vector <vector <long long> > max_segment_sum(no_of_elements + 5, vector <long long> (max_k + 1));
+    for(int i = no_of_elements; i >= 1; i--)
+    {
+        for(int segment_size = 1; segment_size <= max_k; segment_size++)
+        {
+            max_segment_sum[i][segment_size] = max_segment_sum[i + 1][segment_size];
+
+            if(i + segment_size - 1 > no_of_elements)
+            {
+                continue;
+            }
+
+            long long sum_here = sum_from[i] - sum_from[i + segment_size];
+
+            if(segment_size == 1 || sum_here < max_segment_sum[i + segment_size][segment_size - 1])
+            {
+                max_segment_sum[i][segment_size] = max(max_segment_sum[i][segment_size], sum_here);
+            }
+        }
+    }
+
+    int answer = 0;
+    for(int segment_size = max_k; segment_size >= 1; segment_size--)
+    {
+        if(max_segment_sum[1][segment_size] > 0)
+        {
+            answer = segment_size;
+            break;
+        }
+    }
+
+    cout << answer << "\n";
+}
+```
