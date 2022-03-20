@@ -1,0 +1,87 @@
+Notice that the sum of the whole set remains invariant through the process. 
+
+Begin at the initial cake, and perform the operation on the largest piece presently in the set. 
+
+If the largest element is already present in the original, then discard it and move on to the next greatest element. 
+
+If the largest element in our set is smaller than the largest element we have not yet reached in the given array, 
+it is not possible. 
+
+----
+
+Please note that it is not possible to begin with the final array and greedily merge the smallest two elements 
+and see if we finish at the final array 
+
+Here is the counter example - 
+
+6
+1 1 1 1 1 1 
+
+Step 1 - 2 1 1 1 1
+Step 2 - 2 2 1 1 
+Step 3 - 2 2 2
+Step 4 - 4 2 
+Step 5 - 
+Not possible 
+
+But, actually 
+
+Step 1 - 2 1 1 1 1
+Step 2 - 3 1 1 1
+Step 3 - 3 2 1
+Step 4 - 3 3 
+Step 5 - 6
+
+It is possible 
+
+It is not always optimal to merge smallest 2
+
+------
+
+void solve()
+{
+    int no_of_elements;
+    cin >> no_of_elements;
+
+    long long sum = 0, minimum = 1e12, maximum = 0;
+    multiset <long long> S, original_S;
+    vector <long long> A(no_of_elements + 1);
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        cin >> A[i];
+
+        original_S.insert(A[i]);
+
+        sum += A[i];
+        minimum = min(minimum, A[i]);
+        maximum = max(maximum, A[i]);
+    }
+
+    S.insert(sum);
+
+    int possible = true;
+    while(S.size() > 0 && *(S.begin()) >= minimum && *(S.rbegin()) >= *(original_S.rbegin()))
+    {
+        auto it1 = (S.rbegin());
+        long long x = *it1;
+
+        if(original_S.count(x) > 0)
+        {
+            original_S.erase(original_S.find(x));
+            S.erase(S.find(x));
+
+            continue;
+        }
+
+        S.erase(S.find(x));
+        long long new_x = x/2, new_y = x/2 + (x%2 != 0);
+
+
+        S.insert(new_x);
+        S.insert(new_y);
+    }
+
+    possible = (S.size() == 0);
+
+    cout << (possible ? "YES" : "NO") << "\n";
+}
