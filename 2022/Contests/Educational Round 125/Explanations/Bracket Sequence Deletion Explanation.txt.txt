@@ -1,0 +1,60 @@
+If we meet a (
+
+Then () is a regular balanced string 
+
+And (( is a palindrome 
+
+No matter what, (x is always a good string and we will extract it 
+
+-----
+
+If we meet a )
+
+Then, we cannot get a balanced string since it starts with ) 
+
+We can only get a palindrome 
+
+All we need to do is find the next closed bracket ! 
+
+) ((((( ... ( ) 
+
+is a palindrome !
+
+-----
+
+void solve()
+{
+    int length;
+    string S;
+    cin >> length >> S;
+
+    int minimum_moves = 0, remaining = length;
+    for(int i = 0; i  + 1 < length; i++)
+    {
+        if(S[i] == '(')
+        {
+            minimum_moves++;
+            remaining -= 2;
+            i++;
+        }
+        else if(S[i] == ')')
+        {
+            int j = i + 1;
+            while(j < length && S[j] != ')')
+            {
+                j++;
+            }
+
+            if(j == length)
+            {
+                break;
+            }
+
+            minimum_moves++;
+            remaining -= (j - i + 1); //cout << "i = " << i << " j = " << j << "\n";
+            i = j;
+        }
+    }
+
+    cout << minimum_moves << " " << remaining << "\n";
+}

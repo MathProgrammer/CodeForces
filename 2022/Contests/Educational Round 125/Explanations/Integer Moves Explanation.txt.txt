@@ -1,0 +1,44 @@
+We can always reach (x, y) in at most 2 moves 
+
+If we are at the origin, then we need 0 moves 
+If (x^2 + y^2) is a perfect square, then we need only 1 move 
+Otherwise, we will go from (0, 0) -> (x, 0) -> (y, 0) in 2 moves !
+
+We will always need at most 2 moves !
+
+------
+
+int is_square(int n)
+{
+    for(int i = 1; i*i <= n; i++)
+    {
+        if(i*i == n)
+        {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+void solve()
+{
+    int x, y;
+    cin >> x >> y;
+
+    int answer = 0;
+    if(x == 0 && y == 0)
+    {
+        answer = 0;
+    }
+    else if(is_square(x*x + y*y))
+    {
+        answer = 1;
+    }
+    else
+    {
+        answer = 2;
+    }
+
+    cout << answer << "\n";
+}

@@ -1,0 +1,27 @@
+Be greedy and Set A[i] = A[i] + X, unless it exceeds the limit 
+
+------
+
+void solve()
+{
+    int no_of_elements, x, y, max_limit;
+    cin >> no_of_elements >> max_limit >> x >> y;
+
+    long long sum = 0;
+    vector <long long> A(no_of_elements + 1);
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        if(A[i - 1] + x <= max_limit)
+        {
+            A[i] = A[i - 1] + x;
+        }
+        else
+        {
+            A[i] = A[i - 1] - y;
+        }
+
+        sum += A[i];
+    }
+
+    cout << sum << "\n";
+}
