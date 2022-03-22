@@ -1,0 +1,85 @@
+Let us consider a monster (D, H) and a unit (d, h). 
+
+Time taken by monster to kill 1 unit = h/D 
+Time taken by unit to kill monster = H/d 
+
+We need to ensure that the time taken by the monster is strictly more than the time we take to kill the monster 
+
+h/D > H/d 
+h*d > H*D 
+
+We can treat all the monsters as products (D x H)
+
+For a given unit, we need to find the minimum integer c, such that 
+
+h x (c x d) > H x D 
+
+-----
+
+Another condition is that c <= C/C[i] 
+
+-----
+
+Now, instead of checking the amount of damage a monster can take, let us try to calculate the maximum 
+product we can reach with C[i] coins 
+
+Maximum_product[C[i]] = max(H[i] x D[i]) initially 
+
+The key insight to propagate this DP is that we can buy multiple sets of the same unit 
+
+If we buy C coin sets of the i-th unit 
+
+Maximum_product[C[i] x C] = max(C x H[i] X D[i]) 
+
+-----
+
+We can then binary search the answer for each query 
+
+-----
+
+int main()
+{
+    int no_of_elements, max_cost;
+    cin >> no_of_elements >> max_cost;
+
+    vector <long long> cost(no_of_elements + 1), damage(no_of_elements + 1), health(no_of_elements + 1);
+    vector <long long> max_product(max_cost + 1, 0);
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        cin >> cost[i] >> damage[i] >> health[i];
+
+        max_product[cost[i]] = max(max_product[cost[i]], damage[i]*health[i]);
+    }
+
+
+    for(int c = 1; c <= max_cost; c++)
+    {
+        for(int coin_sets = 1; c*1LL*coin_sets <= max_cost; coin_sets++)
+        {
+            max_product[c*coin_sets] = max(max_product[c*coin_sets], max_product[c]*coin_sets);
+        }
+    }
+
+    vector <long long> max_product_till(max_cost + 1);
+    for(int i = 1; i <= max_cost; i++)
+    {
+        max_product_till[i] = max(max_product[i], max_product_till[i - 1]);
+    }
+
+    int no_of_monsters;
+    cin >> no_of_monsters;
+
+    for(int i = 1; i <= no_of_monsters; i++)
+    {
+        long long damage_here, health_here;
+        cin >> damage_here >> health_here;
+
+        long long product = damage_here*health_here;
+
+        int minimum_coins = upper_bound(all(max_product_till), product) - max_product_till.begin();
+
+        cout << (minimum_coins <= max_cost ? minimum_coins : -1) << "\n";
+    }
+
+    return 0;
+}
