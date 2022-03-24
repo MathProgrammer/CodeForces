@@ -1,0 +1,32 @@
+Let us take the minimum and maximum elements of this array 
+
+A[i] - A[1] + A[n] - A[i] = A[n] - A[i] 
+
+-----
+
+void solve()
+{
+    int no_of_elements;
+    cin >> no_of_elements;
+
+    vector <int> A(no_of_elements + 1);
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        cin >> A[i];
+    }
+
+    int minimum = 1, maximum = 1;
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        if(A[i] >= A[maximum])
+        {
+            maximum = i;
+        }
+        else if(A[i] < A[minimum])
+        {
+            minimum = i;
+        }
+    }
+
+    cout << minimum << " " << maximum << "\n";
+}

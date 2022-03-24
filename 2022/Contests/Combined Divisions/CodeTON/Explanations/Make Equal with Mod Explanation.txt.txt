@@ -1,0 +1,66 @@
+Notice that we can never change a 0 or 1 
+If there is a 0 or 1, it will remain 0 or 1 throughout all the operations that we do. 
+
+The next observation to make is that we can set every element = 0 
+We can start with the largest element and make all elements = 0 by choosing x = max of the current array 
+
+This works, except when there is a 1 in the array 
+
+-----
+
+When there is a 1 in the array, we can follow a similar algorithm and set all elements = 1, 
+by choosing X = Array Max - 1 at each step 
+
+The only exception is when we have 2 consecutive elements. 
+When we have 2 consecutive elements, we can never make both elements = 1 
+
+We will finish at a situation where m = 1 and m + 1 = 2 or m = 0 and m + 1 = 2
+In both cases, we can not make 0 or 2 = 1 by any operation
+
+Now, it is impossible. 
+
+------
+
+It is impossible when there is a 1 in the array and there are consecutive elements in the array 
+
+Otherwise, we can make all elements = 0 or 1 depending on whether the array has a 1 or not. 
+
+-----
+
+void solve()
+{
+    int no_of_elements;
+    cin >> no_of_elements;
+
+    vector <long long> A(no_of_elements + 1);
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        cin >> A[i];
+    }
+
+    vector <int> present(3, false);
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        if(A[i] <= 2)
+        {
+            present[A[i]] = true;
+        }
+    }
+
+    int possible = true;
+    if(present[1])
+    {
+        sort(A.begin(), A.end());
+
+        for(int i = 1; i + 1 <= no_of_elements; i++)
+        {
+            if(A[i] + 1 == A[i + 1])
+            {
+                possible = false;
+                break;
+            }
+        }
+    }
+
+    cout << (possible ? "Yes" : "No") << "\n";
+}
