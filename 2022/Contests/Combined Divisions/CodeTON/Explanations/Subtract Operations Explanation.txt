@@ -1,0 +1,49 @@
+Suppose we subtract the whole array by X in the first step 
+
+Each A2[i] = A[i] - x 
+
+Suppose we subtract the whole array by Y = A2[j] in the second step 
+
+Each A3[i] = A2[i] - Y = (A[i] - X) - (A[j] - X)
+
+Where A[i], A2[i] and A3[i] represent the state of A[i] at time 1, 2, 3 respectively
+
+X gets cancelled out twice. 
+
+Every operation cancels out everything that was subtracted in the previous step. 
+
+What we will be left with in the end is the difference of 2 elements A[i] - A[j] 
+
+We have to check if there is a pair who's difference is K in the original array. 
+
+------
+
+void solve()
+{
+    int no_of_elements, k;
+    cin >> no_of_elements >> k;
+
+    vector <long long> A(no_of_elements + 1);
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        cin >> A[i];
+    }
+
+    map <int, int> present;
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        present[A[i]] = true;
+    }
+
+    int possible = false;
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        if(present[A[i] - k] || present[A[i] + k])
+        {
+            possible = true;
+            break;
+        }
+    }
+
+    cout << (possible ? "Yes" : "No") << "\n";
+}
