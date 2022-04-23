@@ -1,0 +1,78 @@
+Let the value of the original array be |A[1] - A[2]| + |A[2] - A[3]| + ... + |A[n - 1] - A[n]| 
+
+Let the smallest and largest element of the array be L and R respectively. 
+
+-----
+
+Let us notice that if we have an integer x, A[i] < x < A[i + 1], we can place x in between A[i] and A[i + 1] with no change in the cost. 
+
+(A[i + 1] - x) + (x - A[i]) = A[i + 1] - A[i]
+
+-----
+
+We can place all integers in the range [L, R] within the array in such a way that it does not increase the cost. 
+
+Now, we only need to deal with the prefix [1, L - 1] and the suffix [R + 1, X] 
+
+There are 3 options for both of these 
+
+1. Before the first number 
+2. After the last number 
+3. In between two numbers. 
+
+Suppose we place 1, 2, 3, ... , L - 1 in between A[i - 1] and A[i + 1], let us count the total difference in cost 
+
+Old Cost = A[i] - A[i - 1] 
+New Cost = A[i] - (L - 1) + (L - 1) - (L - 1) ... - 1 + (A[i - 1] - 1) = (A[i] - 1) + (A[i - 1] - 1)
+Difference = 2(A[i] - 1)
+
+-----
+
+ 
+void solve()
+{
+    int no_of_elements, extra;
+    cin >> no_of_elements >> extra;
+ 
+    vector <long long> A(no_of_elements + 1);
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        cin >> A[i];
+    }
+ 
+    long long value = 0;
+    long long minimum = A[1], maximum = A[1];
+    for(int i = 2; i <= no_of_elements; i++)
+    {
+        minimum = min(minimum, A[i]);
+        maximum = max(maximum, A[i]);
+ 
+        value += abs(A[i] - A[i - 1]);
+    }
+ 
+    if(minimum > 1)
+    {
+        long long minimum_contribution = min(A[1] - 1, A[no_of_elements] - 1);
+ 
+        for(int i = 2; i <= no_of_elements; i++)
+        {
+            minimum_contribution = min(minimum_contribution, (A[i] - 1)*2);
+        }
+ 
+        value += minimum_contribution;
+    }
+ 
+    if(maximum < extra)
+    {
+        long long maximum_contribution = min(extra - A[1], extra - A[no_of_elements]);
+ 
+        for(int i = 2; i <= no_of_elements; i++)
+        {
+            maximum_contribution = min(maximum_contribution, (extra - A[i])*2);
+        }
+ 
+        value += maximum_contribution;
+    }
+ 
+    cout << value << "\n";
+}
