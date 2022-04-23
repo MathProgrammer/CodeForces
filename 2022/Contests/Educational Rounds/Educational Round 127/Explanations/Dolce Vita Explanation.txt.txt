@@ -1,0 +1,76 @@
+Let us keep an array which will tell us the maximum number of times we can buy a prefix of length i 
+
+Let P[i] be the perfix sum of A[1, ... i] 
+
+We can buy the prefix for i days if 
+
+P[i] + (x - 1)i <= Budget 
+
+We can binary search for the value of x for each array element. 
+
+------
+
+After that, we will try to find out the number of times we have bought a segment ending at i, exactly 
+
+In order to do this, we will notice that we can buy the prefix ending at i 
+
+no_of_days[i] - no_of_days[i + 1] times. 
+
+-----
+
+
+void solve()
+{
+    int no_of_elements, budget;
+    cin >> no_of_elements >> budget;
+
+    vector <int> A(no_of_elements + 1);
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        cin >> A[i];
+    }
+
+    sort(A.begin(), A.end());
+
+    vector <long long> prefix_sum(no_of_elements + 1);
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        prefix_sum[i] = prefix_sum[i - 1] + A[i];
+    }
+
+    vector <int> no_of_days_used(no_of_elements + 2, 0);
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        if(prefix_sum[i] > budget)
+        {
+            break;
+        }
+
+        long long low = 1, high = 1e9 + 1;
+        while(high - low > 1)
+        {
+            long long mid = (low + high)/2;
+
+            if(( prefix_sum[i] + (mid - 1)*i ) > budget)
+            {
+                high = mid;
+            }
+            else
+            {
+                low = mid;
+            }
+        }
+
+        no_of_days_used[i] = low;
+
+        //cout << "i = " << i << " Days = " << no_of_days_used[i] << "\n";
+    }
+
+    long long answer = 0;
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        answer += (no_of_days_used[i] - no_of_days_used[i + 1])*i;
+    }
+
+    cout << answer << "\n";
+}

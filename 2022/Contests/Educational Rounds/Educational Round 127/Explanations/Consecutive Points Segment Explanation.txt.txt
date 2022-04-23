@@ -1,0 +1,43 @@
+The beginning element is either A[i] - 1, A[i], A[i] + 1 
+
+Let us notice that the first element uniquely determines the whole sequence. 
+
+We will check if any of these 3 options leads to a consecutive segment.
+
+-----
+
+int is_possible(vector <int> &A, int n)
+{
+    for(int i = 1, current = n; i < A.size(); i++, current++)
+    {
+        if(abs(A[i] - current) > 1)
+        {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+void solve()
+{
+    int no_of_elements;
+    cin >> no_of_elements;
+
+    vector <int> A(no_of_elements + 1);
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        cin >> A[i];
+    }
+
+    int possible = false;
+    for(int beginning = A[1] - 1; beginning <= A[1] + 1; beginning++)
+    {
+        if(is_possible(A, beginning))
+        {
+            possible = true;
+        }
+    }
+
+    cout << (possible ? "Yes" : "No") << "\n";
+}

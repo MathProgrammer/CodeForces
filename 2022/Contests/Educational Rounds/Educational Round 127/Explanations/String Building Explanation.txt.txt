@@ -1,0 +1,43 @@
+If the length of the segment is even, we can just keep using blocks of 2 
+If the length of the segment is odd, we can use one blocks of 3, after which it is even and reduced to the case above. 
+
+The only time it is impossible is when the length of the segment is 1. 
+
+-----
+
+void solve()
+{
+    string S;
+    cin >> S;
+
+    int possible = (S.size() == 1 ? false : true);
+    for(int i = 0; i < S.size(); i++)
+    {
+        if(i == 0)
+        {
+            if(S[i] != S[i + 1])
+            {
+                possible = false;
+            }
+            continue;
+        }
+
+        if(i + 1 == S.size())
+        {
+            if(S[i] != S[i - 1])
+            {
+                possible = false;
+            }
+
+            break;
+        }
+
+        if(S[i - 1] != S[i] && S[i] != S[i + 1])
+        {
+            possible = false;
+            break;
+        }
+    }
+
+    cout << (possible ? "YES" : "NO") << "\n";
+}
