@@ -1,0 +1,109 @@
+Whenever we have to count tuples or triplets, the main idea is to fix the middle and then find each half. 
+
+In this, let us try to fix the pair [b, c] 
+
+How do we count the number of tuples (a, b, c, d) when [b, c] is fixed ? 
+
+-----
+
+To do this, let us see the candidates for a and d ? 
+
+All elements in [1, b - 1] which are smaller than A[c] can be 'a'. 
+
+All elements in [c + a, d] which are smaller than A[b] can be 'd'. 
+
+The number of tuples here is 
+
+a_candidates x d_candidates. 
+
+-----
+
+Now, how do we calculate the number of elements in [1, b - 1] smaller than A[c] for every pair (b, c) ? 
+
+Let us imagine that we have an empty array - B 
+
+We will insert the elements of A in B in their index, one by one - in ascending order. 
+
+For example, if A = {5, 3, 6, 1, 4, 2}
+
+B = {0, 0, 0, 0, 0, 0} 
+{0, 0, 0, 1, 0, 0}
+{0, 0, 0, 1, 0, 2} 
+{0, 3, 0, 1, 0, 2} 
+{0, 3, 0, 1, 4, 2} 
+{5, 3, 0, 1, 4, 2} 
+{5, 3, 6, 1, 4, 2} 
+
+We will insert the elements one by one and use it to precalculate 
+
+Prefix_smaller(b, c) and Suffix_smaller(b, c) for every pair (b, c) in the array. 
+
+----
+
+Suppose we insert A[i] at position i 
+
+We will do the following - 
+
+1. First, let c = i
+
+Then iterate over all b in [1, i - 1] and count the number of inserted elements. 
+
+2. Then, let b = i
+
+Then iterate over all c in [i + 1, n] and count the number of inserted elements. 
+
+-----
+
+void solve()
+{
+    int no_of_elements;
+    cin >> no_of_elements;
+
+    vector <int> A(no_of_elements + 1);
+    vector <int> index(no_of_elements + 1);
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        cin >> A[i];
+
+        index[A[i]] = i;
+    }
+
+    for(int b = 1; b <= no_of_elements; b++)
+    {
+        for(int c = b + 1; c <= no_of_elements; c++)
+        {
+            prefix_smaller[b][c] = suffix_smaller[b][c] = 0;
+        }
+    }
+
+    vector <int> prefix_insertions(no_of_elements + 1, 0);
+    for(int element = 1; element <= no_of_elements; element++)
+    {
+        for(int i = index[element]; i <= no_of_elements; i++)
+        {
+            prefix_insertions[i]++;
+        }
+
+        for(int c = index[element], b = 1; b < c; b++)
+        {
+            prefix_smaller[b][c] = prefix_insertions[b - 1];
+        }
+
+        for(int b = index[element], c = b + 1; c <= no_of_elements; c++)
+        {
+            suffix_smaller[b][c] = prefix_insertions[no_of_elements] - prefix_insertions[c];
+        }
+    }
+
+    long long answer = 0;
+    for(int b = 2; b + 2 <= no_of_elements; b++)
+    {
+        for(int c = b + 1; c + 1 <= no_of_elements; c++)
+        {
+            long long no_of_a = prefix_smaller[b][c], no_of_d = suffix_smaller[b][c];
+            answer += no_of_a*no_of_d;
+        }
+    }
+
+    cout << answer << "\n";
+}
