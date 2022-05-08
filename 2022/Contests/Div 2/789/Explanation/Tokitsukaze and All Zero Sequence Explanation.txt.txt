@@ -1,0 +1,51 @@
+If there is even one 0 in the array, we can make all non-0 elements = 0 in 1 move each. 
+
+If there is at least one pair of equal elements, we can create a 0 in 1 move and make the other elements 0 in (n - 1) moves. 
+
+Otherwise, we will two elements, make them equal in one move and then use n moves from the case above. 
+Total = (n + 1) moves here. 
+
+-----
+
+void solve()
+{
+    int no_of_elements;
+    cin >> no_of_elements;
+
+    vector <int> A(no_of_elements + 1);
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        cin >> A[i];
+    }
+
+    sort(all(A));
+    int non_zero = 0, equal_pairs = 0;
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        if(A[i] > 0)
+        {
+            non_zero++;
+        }
+
+        if(i < no_of_elements && A[i] == A[i + 1])
+        {
+            equal_pairs++;
+        }
+    }
+
+    int answer = 0;
+    if(non_zero < no_of_elements)
+    {
+        answer = non_zero;
+    }
+    else if(equal_pairs > 0)
+    {
+        answer = no_of_elements;
+    }
+    else
+    {
+        answer = no_of_elements + 1;
+    }
+
+    cout << answer << "\n";
+}
