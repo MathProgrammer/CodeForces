@@ -1,0 +1,136 @@
+#include <iostream>
+#include <vector>
+#include <cstring>
+
+using namespace std;
+
+#define LEFT(n) (2*n)
+#define RIGHT(n) (2*n + 1)
+
+const int MAX_N = 1e5 + 5;
+int sum_tree[3*MAX_N][2];
+
+void update(int n, int left, int right, int index, int value, int tree_index)
+{
+    if(index < left || right < index)
+    {
+        return;
+    }
+
+    if(left == right)
+    {
+        sum_tree[n][tree_index] = value;
+        //cout << (tree_index == 0 ? "Row" : "Column") << " Sum Tree [" << left << "," << right << "] = " << sum_tree[n][tree_index] << "\n";
+        return;
+    }
+
+    int mid = (left + right)/2;
+    update(LEFT(n), left, mid, index, value, tree_index);
+    update(RIGHT(n), mid + 1, right, index, value, tree_index);
+
+    sum_tree[n][tree_index] = sum_tree[LEFT(n)][tree_index] + sum_tree[RIGHT(n)][tree_index];
+    //cout << (tree_index == 0 ? "Row" : "Column") << " Sum Tree [" << left << "," << right << "] = " << sum_tree[n][tree_index] << "\n";
+}
+
+int get_sum(int n, int left, int right, int query_left, int query_right, int tree_index)
+{
+    if(query_right < left || right < query_left)
+    {
+        return 0;
+    }
+
+    if(query_left <= left && right <= query_right)
+    {
+        return sum_tree[n][tree_index];
+    }
+
+    int mid = (left + right)/2;
+    int left_sum = get_sum(LEFT(n), left, mid, query_left, query_right, tree_index);
+    int right_sum = get_sum(RIGHT(n), mid + 1, right, query_left, query_right, tree_index);
+
+    return (left_sum + right_sum);
+}
+
+int main()
+{
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+
+    int n, no_of_queries;
+    cin >> n >> no_of_queries;
+
+    memset(sum_tree, 0, sizeof(sum_tree));
+
+    const int ROW = 0, COLUMN = 1;
+    vector <int> row_attackers(n + 1, 0), column_attackers(n + 1, 0);
+    for(int i = 1; i <= no_of_queries; i++)
+    {
+        const int ADD = 1, REMOVE = 2, RECTANGLE = 3;
+        int query;
+        cin >> query;
+
+        switch(query)
+        {
+            case ADD: {
+                            int x, y;
+                            cin >> x >> y;
+
+                            row_attackers[x]++;
+                            if(row_attackers[x] == 1)
+                            {
+                                update(1, 1, n, x, 1, ROW);
+                            }
+
+                            column_attackers[y]++;
+                            if(column_attackers[y] == 1)
+                            {
+                                update(1, 1, n, y, 1, COLUMN);
+                            }
+                      }
+                      break;
+
+            case REMOVE : {
+                                int x, y;
+                                cin >> x >> y;
+
+                                row_attackers[x]--;
+                                if(row_attackers[x] == 0)
+                                {
+                                    update(1, 1, n, x, 0, ROW);
+                                }
+
+                                column_attackers[y]--;
+                                if(column_attackers[y] == 0)
+                                {
+                                    update(1, 1, n, y, 0, COLUMN);
+                                }
+                          }
+                          break;
+
+            case RECTANGLE :{
+                                int x1, y1, x2, y2;
+                                cin >> x1 >> y1 >> x2 >> y2;
+
+                                if(x1 > x2)
+                                {
+                                    swap(x1, x2);
+                                }
+
+                                if(y1 > y2)
+                                {
+                                    swap(y1, y2);
+                                }
+
+                                int attacked_rows = get_sum(1, 1, n, x1, x2, ROW);
+                                int attacked_columns = get_sum(1, 1, n, y1, y2, COLUMN);
+                                //cout << "Rows attacked = " << attacked_rows << " Columns attacked = " << attacked_columns << "\n";
+
+                                int every_cell_attacked = ( (attacked_rows == x2 - x1 + 1) || (attacked_columns == y2 - y1 + 1) );
+                                cout << (every_cell_attacked ? "Yes" : "No") << "\n";
+                          }
+        }
+    }
+
+    return 0;
+}
+ 
